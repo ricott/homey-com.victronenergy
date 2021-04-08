@@ -1,11 +1,11 @@
 {
   "type": "string",
   "title": {
-    "en": "Status",
-    "sv": "Status"
+    "en": "Alarm",
+    "sv": "Alarm"
   },
   "getable": true,
   "setable": false,
   "uiComponent": "sensor",
-  "icon": "/assets/operational_status.svg"
+  "icon": "/assets/alarm_status.svg"
 }

@@ -2,6 +2,7 @@
 
 const { Device } = require('homey');
 const VictronGX = require('../../lib/victron.js');
+const { GX_v1 } = require('../../lib/devices/gx_v1.js');
 const enums = require('../../lib/enums.js');
 const dateFormat = require("dateformat");
 
@@ -15,7 +16,9 @@ class GXDevice extends Device {
             name: this.getName(),
             address: this.getSettings().address,
             port: this.getSettings().port,
-            refreshInterval: this.getSettings().refreshInterval
+            refreshInterval: this.getSettings().refreshInterval,
+            vebusAlarms: 'Ok',
+            vebusWarnings: 'Ok'
         };
 
         this.setupGXSession();
@@ -50,6 +53,51 @@ class GXDevice extends Device {
         });
     }
 
+    updateSettingIfChanged(key, newValue, oldValue) {
+        if (newValue != oldValue) {
+            this.updateSetting(key, newValue);
+        }
+    }
+
+    handleAlarmStatuses(message) {
+        let alarmArr = [];
+        let warningArr = [];
+        Object.keys(message).forEach(function (key) {
+            if (key.startsWith('alarm')) {
+                if (message[key] == 1) {
+                    //We have a warning
+                    warningArr.push(GX_v1[key].comment);
+                } else if (message[key] == 2) {
+                    //We have an alarm
+                    alarmArr.push(GX_v1[key].comment);
+                }
+            }
+        });
+
+        let alarmMsg = 'Ok'
+        if (alarmArr.length > 0) {
+            alarmMsg = alarmArr.join(', ');
+        }
+        this.updateSettingIfChanged('vebusAlarms', alarmMsg, this.gx.vebusAlarms);
+        this.gx.vebusAlarms = alarmMsg;
+
+        let warningMsg = 'Ok'
+        if (warningArr.length > 0) {
+            warningMsg = warningArr.join(', ');
+        }
+        this.updateSettingIfChanged('vebusWarnings', warningMsg, this.gx.vebusWarnings);
+        this.gx.vebusWarnings = warningMsg;
+
+        let status = 'Ok';
+        if (alarmArr.length > 0) {
+            status = 'Alarm';
+        } else if (warningArr.length > 0) {
+            status = 'Warning';
+        }
+
+        return status;
+    }
+
     _initializeEventListeners() {
         let self = this;
 
@@ -64,16 +112,19 @@ class GXDevice extends Device {
             pvPower += message.acPVOutputL1 + message.acPVOutputL2 + message.acPVOutputL3;
             pvPower += message.dcPV;
 
+            //Calculate self consumption
             let consumption = pvPower - message.batteryPower + grid;
             self._updateProperty('measure_power.consumption', consumption);
             self._updateProperty('measure_power.grid', grid);
             self._updateProperty('measure_power.PV', pvPower);
             self._updateProperty('measure_power.battery', message.batteryPower);
-            self._updateProperty('operational_status', enums.decodeBatteryState(message.batteryState));
+            self._updateProperty('vebus_status', enums.decodeVEBusStatus(message.veBusStatus));
+            let alarmStatus = self.handleAlarmStatuses(message);
+            self._updateProperty('alarm_status', alarmStatus);
+            self._updateProperty('battery_status', enums.decodeBatteryStatus(message.batteryStatus));
             self._updateProperty('battery_capacity', message.batterySOC);
             self._updateProperty('measure_voltage.battery', message.batteryVoltage);
             self._updateProperty('measure_current.battery', message.batteryCurrent);
-
         });
 
         self.gx.api.on('error', error => {
@@ -109,19 +160,32 @@ class GXDevice extends Device {
             if (this.isCapabilityValueChanged(key, value)) {
                 this.setCapabilityValue(key, value);
 
-                if (key == 'operational_status') {
+                if (key == 'battery_status') {
                     let tokens = {
                         status: value
                     }
-                    this.driver.triggerDeviceFlow('operational_status_changed', tokens, this);
-                    
+                    this.driver.triggerDeviceFlow('battery_status_changed', tokens, this);
+
+                } else if (key == 'vebus_status') {
+                    let tokens = {
+                        status: value
+                    }
+                    this.driver.triggerDeviceFlow('vebus_status_changed', tokens, this);
+
                 } else if (key == 'battery_capacity') {
                     let tokens = {
                         soc: value
                     }
                     this.driver.triggerDeviceFlow('soc_changed', tokens, this);
-                }
 
+                } else if (key == 'alarm_status') {
+                    let tokens = {
+                        status: value,
+                        alarms: this.gx.vebusAlarms,
+                        warnings: this.gx.vebusWarnings
+                    }
+                    this.driver.triggerDeviceFlow('alarm_status_changed', tokens, this);
+                }
             } else {
                 //Update value to refresh timestamp in app
                 this.setCapabilityValue(key, value);

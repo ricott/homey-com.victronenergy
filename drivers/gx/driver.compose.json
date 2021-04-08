@@ -14,7 +14,9 @@
     "measure_power.grid",
     "measure_power.battery",
     "measure_power.PV",
-    "operational_status",
+    "vebus_status",
+    "alarm_status",
+    "battery_status",
     "battery_capacity",
     "measure_voltage.battery",
     "measure_current.battery"
@@ -129,6 +131,24 @@
           "label": {
             "en": "VRM portal ID",
             "sv": "VRM portal ID"
+          },
+          "value": ""
+        },
+        {
+          "id": "vebusAlarms",
+          "type": "label",
+          "label": {
+            "en": "VE Bus alarms",
+            "sv": "VE Bus alarm"
+          },
+          "value": ""
+        },
+        {
+          "id": "vebusWarnings",
+          "type": "label",
+          "label": {
+            "en": "VE Bus warnings",
+            "sv": "VE Bus varningar"
           },
           "value": ""
         }

@@ -1,14 +1,14 @@
 {
     "triggers": [
         {
-            "id": "operational_status_changed",
+            "id": "battery_status_changed",
             "title": {
-                "en": "Status changed",
-                "sv": "Status ändrades"
+                "en": "Battery status changed",
+                "sv": "Batteristatus ändrades"
             },
             "titleFormatted": {
-                "en": "Status changed to [[status]]",
-                "sv": "Status ändrades till [[status]]"
+                "en": "Battery status changed to [[status]]",
+                "sv": "Batteristatus ändrades till [[status]]"
             },
             "tokens": [
                 {
@@ -20,6 +20,76 @@
                     },
                     "example": {
                         "en": "Idle"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "vebus_status_changed",
+            "title": {
+                "en": "VE Bus status changed",
+                "sv": "VE Bus status ändrades"
+            },
+            "titleFormatted": {
+                "en": "VE Bus status changed to [[status]]",
+                "sv": "VE Bus status ändrades till [[status]]"
+            },
+            "tokens": [
+                {
+                    "name": "status",
+                    "type": "string",
+                    "title": {
+                        "en": "Status",
+                        "sv": "Status"
+                    },
+                    "example": {
+                        "en": "Bulk"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "alarm_status_changed",
+            "title": {
+                "en": "Alarm status changed",
+                "sv": "Alarm status ändrades"
+            },
+            "titleFormatted": {
+                "en": "Alarm status changed to [[status]] with [[alarms]] and [[warnings]]",
+                "sv": "Alarm status ändrades till [[status]] med [[alarms]] and [[warnings]]"
+            },
+            "tokens": [
+                {
+                    "name": "status",
+                    "type": "string",
+                    "title": {
+                        "en": "Status",
+                        "sv": "Status"
+                    },
+                    "example": {
+                        "en": "Alarm"
+                    }
+                },
+                {
+                    "name": "alarms",
+                    "type": "string",
+                    "title": {
+                        "en": "Alarms",
+                        "sv": "Alarm"
+                    },
+                    "example": {
+                        "en": "Temperature"
+                    }
+                },
+                {
+                    "name": "warnings",
+                    "type": "string",
+                    "title": {
+                        "en": "Warnings",
+                        "sv": "Varningar"
+                    },
+                    "example": {
+                        "en": "Grid lost"
                     }
                 }
             ]
@@ -51,46 +121,44 @@
     ],
     "conditions": [
         {
-            "id": "operational_status_condition",
+            "id": "battery_status_condition",
             "title": {
-                "en": "Status is !{{|not}}",
-                "sv": "Status är !{{|inte}}"
+                "en": "Battery status is !{{|not}}",
+                "sv": "Batteristatus är !{{|inte}}"
             },
             "titleFormatted": {
-                "en": "Status is !{{|not}} [[status]]",
-                "sv": "Status är !{{|inte}} [[status]]"
+                "en": "Battery status is !{{|not}} [[status]]",
+                "sv": "Batteristatus är !{{|inte}} [[status]]"
             },
             "args": [
                 {
                     "name": "status",
-                    "type": "dropdown",
+                    "type": "autocomplete",
                     "title": {
                         "en": "Status",
                         "sv": "Status"
-                    },
-                    "values": [
-                        {
-                            "id": "Idle",
-                            "label": {
-                                "en": "Idle",
-                                "sv": "Idle"
-                            }
-                        },
-                        {
-                            "id": "Charging",
-                            "label": {
-                                "en": "Charging",
-                                "sv": "Charging"
-                            }
-                        },
-                        {
-                            "id": "Discharging",
-                            "label": {
-                                "en": "Discharging",
-                                "sv": "Discharging"
-                            }
-                        }
-                    ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "vebus_status_condition",
+            "title": {
+                "en": "VE Bus status is !{{|not}}",
+                "sv": "VE Bus status är !{{|inte}}"
+            },
+            "titleFormatted": {
+                "en": "VE Bus status is !{{|not}} [[status]]",
+                "sv": "VE Bus status är !{{|inte}} [[status]]"
+            },
+            "args": [
+                {
+                    "name": "status",
+                    "type": "autocomplete",
+                    "title": {
+                        "en": "Status",
+                        "sv": "Status"
+                    }
                 }
             ]
         },

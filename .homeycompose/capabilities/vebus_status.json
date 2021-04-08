@@ -1,0 +1,11 @@
+{
+  "type": "string",
+  "title": {
+    "en": "VE Bus status",
+    "sv": "VE Bus status"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/vebus_status.svg"
+}

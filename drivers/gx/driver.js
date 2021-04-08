@@ -2,6 +2,7 @@
 
 const { Driver } = require('homey');
 const VictronGX = require('../../lib/victron.js');
+const enums = require('../../lib/enums.js');
 
 class GXDriver extends Driver {
 
@@ -15,24 +16,56 @@ class GXDriver extends Driver {
         this.log('Registering flows');
 
         // Register device triggers
-        this.flowCards['operational_status_changed'] = this.homey.flow.getDeviceTriggerCard('operational_status_changed');
+        this.flowCards['battery_status_changed'] = this.homey.flow.getDeviceTriggerCard('battery_status_changed');
+        this.flowCards['vebus_status_changed'] = this.homey.flow.getDeviceTriggerCard('vebus_status_changed');
+        this.flowCards['alarm_status_changed'] = this.homey.flow.getDeviceTriggerCard('alarm_status_changed');
         this.flowCards['soc_changed'] = this.homey.flow.getDeviceTriggerCard('soc_changed');
 
         //Conditions
-        this.flowCards['operational_status_condition'] =
-            this.homey.flow.getConditionCard('operational_status_condition')
+        this.flowCards['battery_status_condition'] =
+            this.homey.flow.getConditionCard('battery_status_condition')
                 .registerRunListener(async (args, state) => {
-                    this.log(`[${args.device.getName()}] Condition 'operational_status_condition' triggered`);
-                    let status = args.device.getCapabilityValue('operational_status');
-                    this.log(`[${args.device.getName()}] status: ${status}`);
-                    this.log(`[${args.device.getName()}] condition.status: ${args.status}`);
+                    this.log(`[${args.device.getName()}] Condition 'battery_status_condition' triggered`);
+                    let status = args.device.getCapabilityValue('battery_status');
+                    this.log(`[${args.device.getName()}] battery status: ${status}`);
+                    this.log(`[${args.device.getName()}] condition.status: ${args.status.name}`);
 
-                    if (status == args.status) {
+                    if (status == args.status.name) {
                         return true;
                     } else {
                         return false;
                     }
                 });
+
+        this.flowCards['battery_status_condition']
+            .registerArgumentAutocompleteListener('status',
+                async (query, args) => {
+                    return enums.getBatteryStatuses();
+                }
+            );
+
+        this.flowCards['vebus_status_condition'] =
+            this.homey.flow.getConditionCard('vebus_status_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'vebus_status_condition' triggered`);
+                    let status = args.device.getCapabilityValue('vebus_status');
+                    this.log(`[${args.device.getName()}] vebus status: ${status}`);
+                    this.log(`[${args.device.getName()}] condition.status: ${args.status.name}`);
+
+                    if (status == args.status.name) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+
+        this.flowCards['vebus_status_condition']
+            .registerArgumentAutocompleteListener('status',
+                async (query, args) => {
+                    return enums.getVEBusStatuses();
+                }
+            );
+
 
         this.flowCards['battery_soc_condition'] =
             this.homey.flow.getConditionCard('battery_soc_condition')
