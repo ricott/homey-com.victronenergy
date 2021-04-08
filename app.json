@@ -1,0 +1,705 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "com.victronenergy",
+  "version": "0.9.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "brandColor": "#4790d0",
+  "name": {
+    "en": "Victron Energy",
+    "sv": "Victron Energy"
+  },
+  "description": {
+    "en": "Blue Power",
+    "sv": "Blue Power"
+  },
+  "tags": {
+    "en": [
+      "victron",
+      "inverter",
+      "solar",
+      "gx",
+      "cerbo",
+      "pv",
+      "energy",
+      "modbus",
+      "battery"
+    ],
+    "sv": [
+      "victron",
+      "växelriktare",
+      "sol",
+      "gx",
+      "cerbo",
+      "pv",
+      "energi",
+      "modbus",
+      "batteri"
+    ]
+  },
+  "category": [
+    "energy"
+  ],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "bugs": {
+    "url": "https://github.com/ricott/homey-com.victronenergy/issues"
+  },
+  "source": "https://github.com/ricott/homey-com.victronenergy",
+  "author": {
+    "name": "Richard Barkestam",
+    "email": "richard@barkestam.se"
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "RBarkestam",
+        "currency": "EUR"
+      }
+    }
+  },
+  "flow": {
+    "triggers": [
+      {
+        "id": "operational_status_changed",
+        "title": {
+          "en": "Status changed",
+          "sv": "Status ändrades"
+        },
+        "titleFormatted": {
+          "en": "Status changed to [[status]]",
+          "sv": "Status ändrades till [[status]]"
+        },
+        "tokens": [
+          {
+            "name": "status",
+            "type": "string",
+            "title": {
+              "en": "Status",
+              "sv": "Status"
+            },
+            "example": {
+              "en": "Idle"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
+      },
+      {
+        "id": "soc_changed",
+        "title": {
+          "en": "SoC changed",
+          "sv": "SoC ändrades"
+        },
+        "titleFormatted": {
+          "en": "SoC changed to [[soc]]",
+          "sv": "SoC ändrades till [[soc]]"
+        },
+        "tokens": [
+          {
+            "name": "soc",
+            "type": "number",
+            "title": {
+              "en": "SoC (%)",
+              "sv": "SoC (%)"
+            },
+            "example": {
+              "en": "33.5"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "operational_status_condition",
+        "title": {
+          "en": "Status is !{{|not}}",
+          "sv": "Status är !{{|inte}}"
+        },
+        "titleFormatted": {
+          "en": "Status is !{{|not}} [[status]]",
+          "sv": "Status är !{{|inte}} [[status]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "status",
+            "type": "dropdown",
+            "title": {
+              "en": "Status",
+              "sv": "Status"
+            },
+            "values": [
+              {
+                "id": "Idle",
+                "label": {
+                  "en": "Idle",
+                  "sv": "Idle"
+                }
+              },
+              {
+                "id": "Charging",
+                "label": {
+                  "en": "Charging",
+                  "sv": "Charging"
+                }
+              },
+              {
+                "id": "Discharging",
+                "label": {
+                  "en": "Discharging",
+                  "sv": "Discharging"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "battery_soc_condition",
+        "title": {
+          "en": "Battery SoC is !{{below|above}}",
+          "sv": "Batteriets nivå är !{{under|över}}"
+        },
+        "titleFormatted": {
+          "en": "Battery SoC is !{{below|above}} [[soc]]",
+          "sv": "Batteriets SoC är !{{under|över}} [[soc]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "soc",
+            "type": "range",
+            "title": {
+              "en": "SoC",
+              "sv": "SoC"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 0.5,
+            "label": "%"
+          }
+        ]
+      },
+      {
+        "id": "consumption_power_condition",
+        "title": {
+          "en": "Consumption power is !{{below|above}}",
+          "sv": "Konsumtion effekt är !{{under|över}}"
+        },
+        "titleFormatted": {
+          "en": "Consumption power is !{{below|above}} [[power]]",
+          "sv": "Konsumtion effekt är !{{under|över}} [[power]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Power (W)",
+              "sv": "Effekt (W)"
+            },
+            "min": -3276800,
+            "max": 3276800,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "grid_power_condition",
+        "title": {
+          "en": "Grid power is !{{below|above}}",
+          "sv": "Elnät effekt är !{{under|över}}"
+        },
+        "titleFormatted": {
+          "en": "Grid power is !{{below|above}} [[power]]",
+          "sv": "Elnät effekt är !{{under|över}} [[power]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Power (W)",
+              "sv": "Effekt (W)"
+            },
+            "min": -3276800,
+            "max": 3276800,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "battery_power_condition",
+        "title": {
+          "en": "Battery power is !{{below|above}}",
+          "sv": "Batteri effekt är !{{under|över}}"
+        },
+        "titleFormatted": {
+          "en": "Battery power is !{{below|above}} [[power]]",
+          "sv": "Batteri effekt är !{{under|över}} [[power]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Power (W)",
+              "sv": "Effekt (W)"
+            },
+            "min": -3276800,
+            "max": 3276800,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "solar_power_condition",
+        "title": {
+          "en": "Solar power is !{{below|above}}",
+          "sv": "Solceller effekt är !{{under|över}}"
+        },
+        "titleFormatted": {
+          "en": "Solar power is !{{below|above}} [[power]]",
+          "sv": "Solceller effekt är !{{under|över}} [[power]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Power (W)",
+              "sv": "Effekt (W)"
+            },
+            "min": -3276800,
+            "max": 3276800,
+            "step": 1
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "enableCharger",
+        "title": {
+          "en": "Enable charger",
+          "sv": "Aktivera laddaren"
+        },
+        "titleFormatted": {
+          "en": "Enable charger",
+          "sv": "Aktivera laddaren"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
+      },
+      {
+        "id": "disableCharger",
+        "title": {
+          "en": "Disable charger",
+          "sv": "Deaktivera laddaren"
+        },
+        "titleFormatted": {
+          "en": "Disable charger",
+          "sv": "Deaktivera laddaren"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
+      },
+      {
+        "id": "enableInverter",
+        "title": {
+          "en": "Enable inverter",
+          "sv": "Aktivera växelriktaren"
+        },
+        "titleFormatted": {
+          "en": "Enable inverter",
+          "sv": "Aktivera växelriktaren"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
+      },
+      {
+        "id": "disableInverter",
+        "title": {
+          "en": "Disable inverter",
+          "sv": "Deaktivera växelriktaren"
+        },
+        "titleFormatted": {
+          "en": "Disable inverter",
+          "sv": "Deaktivera växelriktaren"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
+      },
+      {
+        "id": "update_grid_setpoint",
+        "title": {
+          "en": "Update grid setpoint",
+          "sv": "Uppdatera börvärde för elnät"
+        },
+        "titleFormatted": {
+          "en": "Update grid setpoint to [[power]]",
+          "sv": "Uppdatera börvärde för elnät till [[power]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Power (W)",
+              "sv": "Effekt (W)"
+            },
+            "min": -32768,
+            "max": 32767,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "limit_inverter",
+        "title": {
+          "en": "Limit inverter power",
+          "sv": "Begränsa växelriktarens effekt"
+        },
+        "titleFormatted": {
+          "en": "Limit inverter power to [[power]]",
+          "sv": "Begränsa växelriktarens effekt till [[power]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Power (W)",
+              "sv": "Effekt (W)"
+            },
+            "min": -1,
+            "max": 655360,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "limit_charger",
+        "title": {
+          "en": "Limit charger current",
+          "sv": "Begränsa laddarens ström"
+        },
+        "titleFormatted": {
+          "en": "Limit charger current to [[current]]",
+          "sv": "Begränsa laddarens ström till [[current]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "current",
+            "type": "number",
+            "title": {
+              "en": "Current (A)",
+              "sv": "Ström (A)"
+            },
+            "min": -32767,
+            "max": 32767,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "limit_grid_feedin",
+        "title": {
+          "en": "Limit grid feed-in power",
+          "sv": "Begränsa inmatningseffekt för elnätet"
+        },
+        "titleFormatted": {
+          "en": "Limit grid feed-in power to [[power]]",
+          "sv": "Begränsa inmatningseffekt för elnätet till [[power]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Power (W)",
+              "sv": "Effekt (W)"
+            },
+            "min": -3276800,
+            "max": 3276700,
+            "step": 1
+          }
+        ]
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "Victron GX",
+        "sv": "Victron GX"
+      },
+      "images": {
+        "xlarge": "drivers/gx/assets/images/xlarge.jpg",
+        "large": "drivers/gx/assets/images/large.jpg",
+        "small": "drivers/gx/assets/images/small.jpg"
+      },
+      "class": "sensor",
+      "capabilities": [
+        "measure_power.consumption",
+        "measure_power.grid",
+        "measure_power.battery",
+        "measure_power.PV",
+        "operational_status",
+        "battery_capacity",
+        "measure_voltage.battery",
+        "measure_current.battery"
+      ],
+      "capabilitiesOptions": {
+        "measure_power.consumption": {
+          "title": {
+            "en": "Consumption",
+            "sv": "Konsumtion"
+          }
+        },
+        "measure_power.grid": {
+          "title": {
+            "en": "Grid",
+            "sv": "Elnät"
+          }
+        },
+        "measure_power.battery": {
+          "title": {
+            "en": "Battery",
+            "sv": "Batteri"
+          }
+        },
+        "measure_power.PV": {
+          "title": {
+            "en": "Solar",
+            "sv": "Solceller"
+          }
+        },
+        "measure_voltage.battery": {
+          "title": {
+            "en": "Battery voltage",
+            "sv": "Batterispänning"
+          }
+        },
+        "measure_current.battery": {
+          "title": {
+            "en": "Battery current",
+            "sv": "Batterisström"
+          }
+        }
+      },
+      "pair": [
+        {
+          "id": "settings"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Settings",
+            "sv": "Inställningar"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "sv": "IP Adress"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "sv": "Port"
+              }
+            },
+            {
+              "id": "refreshInterval",
+              "type": "number",
+              "value": 5,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 3600
+              },
+              "label": {
+                "en": "Refresh interval",
+                "sv": "Uppdateringsfrekvens"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Information",
+            "sv": "Information"
+          },
+          "children": [
+            {
+              "id": "vrmId",
+              "type": "label",
+              "label": {
+                "en": "VRM portal ID",
+                "sv": "VRM portal ID"
+              },
+              "value": ""
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Debug",
+            "sv": "Felsökning"
+          },
+          "children": [
+            {
+              "id": "last_error",
+              "type": "textarea",
+              "label": {
+                "en": "Most recent API error",
+                "sv": "Senaste API felmeddelandet"
+              },
+              "value": ""
+            }
+          ]
+        }
+      ],
+      "id": "gx"
+    }
+  ],
+  "capabilities": {
+    "battery_capacity": {
+      "type": "number",
+      "decimals": 2,
+      "title": {
+        "en": "Battery SoC",
+        "sv": "Batteri SoC"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/battery_capacity.svg",
+      "units": {
+        "en": "%",
+        "sv": "%"
+      }
+    },
+    "operational_status": {
+      "type": "string",
+      "title": {
+        "en": "Status",
+        "sv": "Status"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/operational_status.svg"
+    }
+  }
+}

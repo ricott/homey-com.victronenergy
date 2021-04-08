@@ -1,0 +1,62 @@
+{
+  "id": "com.victronenergy",
+  "version": "0.9.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "brandColor": "#4790d0",
+  "name": {
+    "en": "Victron Energy",
+    "sv": "Victron Energy"
+  },
+  "description": {
+    "en": "Blue Power",
+    "sv": "Blue Power"
+  },
+  "tags": {
+    "en": [
+      "victron",
+      "inverter",
+      "solar",
+      "gx",
+      "cerbo",
+      "pv",
+      "energy",
+      "modbus",
+      "battery"
+    ],
+    "sv": [
+      "victron",
+      "växelriktare",
+      "sol",
+      "gx",
+      "cerbo",
+      "pv",
+      "energi",
+      "modbus",
+      "batteri"
+    ]
+  },
+  "category": [
+    "energy"
+  ],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "bugs": {
+    "url": "https://github.com/ricott/homey-com.victronenergy/issues"
+  },
+  "source": "https://github.com/ricott/homey-com.victronenergy",
+  "author": {
+    "name": "Richard Barkestam",
+    "email": "richard@barkestam.se"
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "RBarkestam",
+        "currency": "EUR"
+      }
+    }
+  }
+}

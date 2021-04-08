@@ -1,0 +1,361 @@
+{
+    "triggers": [
+        {
+            "id": "operational_status_changed",
+            "title": {
+                "en": "Status changed",
+                "sv": "Status ändrades"
+            },
+            "titleFormatted": {
+                "en": "Status changed to [[status]]",
+                "sv": "Status ändrades till [[status]]"
+            },
+            "tokens": [
+                {
+                    "name": "status",
+                    "type": "string",
+                    "title": {
+                        "en": "Status",
+                        "sv": "Status"
+                    },
+                    "example": {
+                        "en": "Idle"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "soc_changed",
+            "title": {
+                "en": "SoC changed",
+                "sv": "SoC ändrades"
+            },
+            "titleFormatted": {
+                "en": "SoC changed to [[soc]]",
+                "sv": "SoC ändrades till [[soc]]"
+            },
+            "tokens": [
+                {
+                    "name": "soc",
+                    "type": "number",
+                    "title": {
+                        "en": "SoC (%)",
+                        "sv": "SoC (%)"
+                    },
+                    "example": {
+                        "en": "33.5"
+                    }
+                }
+            ]
+        }
+    ],
+    "conditions": [
+        {
+            "id": "operational_status_condition",
+            "title": {
+                "en": "Status is !{{|not}}",
+                "sv": "Status är !{{|inte}}"
+            },
+            "titleFormatted": {
+                "en": "Status is !{{|not}} [[status]]",
+                "sv": "Status är !{{|inte}} [[status]]"
+            },
+            "args": [
+                {
+                    "name": "status",
+                    "type": "dropdown",
+                    "title": {
+                        "en": "Status",
+                        "sv": "Status"
+                    },
+                    "values": [
+                        {
+                            "id": "Idle",
+                            "label": {
+                                "en": "Idle",
+                                "sv": "Idle"
+                            }
+                        },
+                        {
+                            "id": "Charging",
+                            "label": {
+                                "en": "Charging",
+                                "sv": "Charging"
+                            }
+                        },
+                        {
+                            "id": "Discharging",
+                            "label": {
+                                "en": "Discharging",
+                                "sv": "Discharging"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "battery_soc_condition",
+            "title": {
+                "en": "Battery SoC is !{{below|above}}",
+                "sv": "Batteriets nivå är !{{under|över}}"
+            },
+            "titleFormatted": {
+                "en": "Battery SoC is !{{below|above}} [[soc]]",
+                "sv": "Batteriets SoC är !{{under|över}} [[soc]]"
+            },
+            "args": [
+                {
+                    "name": "soc",
+                    "type": "range",
+                    "title": {
+                        "en": "SoC",
+                        "sv": "SoC"
+                    },
+                    "min": 0,
+                    "max": 100,
+                    "step": 0.5,
+                    "label": "%"
+                }
+            ]
+        },
+        {
+            "id": "consumption_power_condition",
+            "title": {
+                "en": "Consumption power is !{{below|above}}",
+                "sv": "Konsumtion effekt är !{{under|över}}"
+            },
+            "titleFormatted": {
+                "en": "Consumption power is !{{below|above}} [[power]]",
+                "sv": "Konsumtion effekt är !{{under|över}} [[power]]"
+            },
+            "args": [
+                {
+                    "name": "power",
+                    "type": "number",
+                    "title": {
+                        "en": "Power (W)",
+                        "sv": "Effekt (W)"
+                    },
+                    "min": -3276800,
+                    "max": 3276800,
+                    "step": 1
+                }
+            ]
+        },
+        {
+            "id": "grid_power_condition",
+            "title": {
+                "en": "Grid power is !{{below|above}}",
+                "sv": "Elnät effekt är !{{under|över}}"
+            },
+            "titleFormatted": {
+                "en": "Grid power is !{{below|above}} [[power]]",
+                "sv": "Elnät effekt är !{{under|över}} [[power]]"
+            },
+            "args": [
+                {
+                    "name": "power",
+                    "type": "number",
+                    "title": {
+                        "en": "Power (W)",
+                        "sv": "Effekt (W)"
+                    },
+                    "min": -3276800,
+                    "max": 3276800,
+                    "step": 1
+                }
+            ]
+        },
+        {
+            "id": "battery_power_condition",
+            "title": {
+                "en": "Battery power is !{{below|above}}",
+                "sv": "Batteri effekt är !{{under|över}}"
+            },
+            "titleFormatted": {
+                "en": "Battery power is !{{below|above}} [[power]]",
+                "sv": "Batteri effekt är !{{under|över}} [[power]]"
+            },
+            "args": [
+                {
+                    "name": "power",
+                    "type": "number",
+                    "title": {
+                        "en": "Power (W)",
+                        "sv": "Effekt (W)"
+                    },
+                    "min": -3276800,
+                    "max": 3276800,
+                    "step": 1
+                }
+            ]
+        },
+        {
+            "id": "solar_power_condition",
+            "title": {
+                "en": "Solar power is !{{below|above}}",
+                "sv": "Solceller effekt är !{{under|över}}"
+            },
+            "titleFormatted": {
+                "en": "Solar power is !{{below|above}} [[power]]",
+                "sv": "Solceller effekt är !{{under|över}} [[power]]"
+            },
+            "args": [
+                {
+                    "name": "power",
+                    "type": "number",
+                    "title": {
+                        "en": "Power (W)",
+                        "sv": "Effekt (W)"
+                    },
+                    "min": -3276800,
+                    "max": 3276800,
+                    "step": 1
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "id": "enableCharger",
+            "title": {
+                "en": "Enable charger",
+                "sv": "Aktivera laddaren"
+            },
+            "titleFormatted": {
+                "en": "Enable charger",
+                "sv": "Aktivera laddaren"
+            }
+        },
+        {
+            "id": "disableCharger",
+            "title": {
+                "en": "Disable charger",
+                "sv": "Deaktivera laddaren"
+            },
+            "titleFormatted": {
+                "en": "Disable charger",
+                "sv": "Deaktivera laddaren"
+            }
+        },
+        {
+            "id": "enableInverter",
+            "title": {
+                "en": "Enable inverter",
+                "sv": "Aktivera växelriktaren"
+            },
+            "titleFormatted": {
+                "en": "Enable inverter",
+                "sv": "Aktivera växelriktaren"
+            }
+        },
+        {
+            "id": "disableInverter",
+            "title": {
+                "en": "Disable inverter",
+                "sv": "Deaktivera växelriktaren"
+            },
+            "titleFormatted": {
+                "en": "Disable inverter",
+                "sv": "Deaktivera växelriktaren"
+            }
+        },
+        {
+            "id": "update_grid_setpoint",
+            "title": {
+                "en": "Update grid setpoint",
+                "sv": "Uppdatera börvärde för elnät"
+            },
+            "titleFormatted": {
+                "en": "Update grid setpoint to [[power]]",
+                "sv": "Uppdatera börvärde för elnät till [[power]]"
+            },
+            "args": [
+                {
+                    "name": "power",
+                    "type": "number",
+                    "title": {
+                        "en": "Power (W)",
+                        "sv": "Effekt (W)"
+                    },
+                    "min": -32768,
+                    "max": 32767,
+                    "step": 1
+                }
+            ]
+        },
+        {
+            "id": "limit_inverter",
+            "title": {
+                "en": "Limit inverter power",
+                "sv": "Begränsa växelriktarens effekt"
+            },
+            "titleFormatted": {
+                "en": "Limit inverter power to [[power]]",
+                "sv": "Begränsa växelriktarens effekt till [[power]]"
+            },
+            "args": [
+                {
+                    "name": "power",
+                    "type": "number",
+                    "title": {
+                        "en": "Power (W)",
+                        "sv": "Effekt (W)"
+                    },
+                    "min": -1,
+                    "max": 655360,
+                    "step": 1
+                }
+            ]
+        },
+        {
+            "id": "limit_charger",
+            "title": {
+                "en": "Limit charger current",
+                "sv": "Begränsa laddarens ström"
+            },
+            "titleFormatted": {
+                "en": "Limit charger current to [[current]]",
+                "sv": "Begränsa laddarens ström till [[current]]"
+            },
+            "args": [
+                {
+                    "name": "current",
+                    "type": "number",
+                    "title": {
+                        "en": "Current (A)",
+                        "sv": "Ström (A)"
+                    },
+                    "min": -32767,
+                    "max": 32767,
+                    "step": 1
+                }
+            ]
+        },
+        {
+            "id": "limit_grid_feedin",
+            "title": {
+                "en": "Limit grid feed-in power",
+                "sv": "Begränsa inmatningseffekt för elnätet"
+            },
+            "titleFormatted": {
+                "en": "Limit grid feed-in power to [[power]]",
+                "sv": "Begränsa inmatningseffekt för elnätet till [[power]]"
+            },
+            "args": [
+                {
+                    "name": "power",
+                    "type": "number",
+                    "title": {
+                        "en": "Power (W)",
+                        "sv": "Effekt (W)"
+                    },
+                    "min": -3276800,
+                    "max": 3276700,
+                    "step": 1
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,156 @@
+{
+  "name": {
+    "en": "Victron GX",
+    "sv": "Victron GX"
+  },
+  "images": {
+    "xlarge": "drivers/gx/assets/images/xlarge.jpg",
+    "large": "drivers/gx/assets/images/large.jpg",
+    "small": "drivers/gx/assets/images/small.jpg"
+  },
+  "class": "sensor",
+  "capabilities": [
+    "measure_power.consumption",
+    "measure_power.grid",
+    "measure_power.battery",
+    "measure_power.PV",
+    "operational_status",
+    "battery_capacity",
+    "measure_voltage.battery",
+    "measure_current.battery"
+  ],
+  "capabilitiesOptions": {
+    "measure_power.consumption": {
+      "title": {
+        "en": "Consumption",
+        "sv": "Konsumtion"
+      }
+    },
+    "measure_power.grid": {
+      "title": {
+        "en": "Grid",
+        "sv": "Elnät"
+      }
+    },
+    "measure_power.battery": {
+      "title": {
+        "en": "Battery",
+        "sv": "Batteri"
+      }
+    },
+    "measure_power.PV": {
+      "title": {
+        "en": "Solar",
+        "sv": "Solceller"
+      }
+    },
+    "measure_voltage.battery": {
+      "title": {
+        "en": "Battery voltage",
+        "sv": "Batterispänning"
+      }
+    },
+    "measure_current.battery": {
+      "title": {
+        "en": "Battery current",
+        "sv": "Batterisström"
+      }
+    }
+  },
+  "pair": [
+    {
+      "id": "settings"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "settings": [
+    {
+      "type": "group",
+      "label": {
+        "en": "Settings",
+        "sv": "Inställningar"
+      },
+      "children": [
+        {
+          "id": "address",
+          "type": "text",
+          "value": "0.0.0.0",
+          "label": {
+            "en": "IP Address",
+            "sv": "IP Adress"
+          }
+        },
+        {
+          "id": "port",
+          "type": "number",
+          "value": 502,
+          "step": 1,
+          "label": {
+            "en": "Port",
+            "sv": "Port"
+          }
+        },
+        {
+          "id": "refreshInterval",
+          "type": "number",
+          "value": 5,
+          "step": 1,
+          "attr": {
+            "min": 1,
+            "max": 3600
+          },
+          "label": {
+            "en": "Refresh interval",
+            "sv": "Uppdateringsfrekvens"
+          }
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "label": {
+        "en": "Information",
+        "sv": "Information"
+      },
+      "children": [
+        {
+          "id": "vrmId",
+          "type": "label",
+          "label": {
+            "en": "VRM portal ID",
+            "sv": "VRM portal ID"
+          },
+          "value": ""
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "label": {
+        "en": "Debug",
+        "sv": "Felsökning"
+      },
+      "children": [
+        {
+          "id": "last_error",
+          "type": "textarea",
+          "label": {
+            "en": "Most recent API error",
+            "sv": "Senaste API felmeddelandet"
+          },
+          "value": ""
+        }
+      ]
+    }
+  ]
+}

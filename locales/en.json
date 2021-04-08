@@ -1,0 +1,11 @@
+{
+    "pair": {
+      "title": "Add a Victron GX device",
+      "nosettings": "Please fill in all the required fields.",
+      "intro": "Enter the IP address and port of your GX device.",
+      "address": "IP Address",
+      "port": "Port",
+      "connect": "Connect"
+    }
+  }
+  
