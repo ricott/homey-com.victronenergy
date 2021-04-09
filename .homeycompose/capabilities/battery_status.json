@@ -1,0 +1,11 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Battery status",
+    "sv": "Batteristatus"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/battery_status.svg"
+}
