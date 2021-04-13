@@ -16,8 +16,10 @@
     "en": [
       "victron",
       "inverter",
+      "charger",
       "solar",
       "gx",
+      "ccgx",
       "cerbo",
       "pv",
       "energy",
@@ -27,8 +29,10 @@
     "sv": [
       "victron",
       "växelriktare",
+      "laddare",
       "sol",
       "gx",
+      "ccgx",
       "cerbo",
       "pv",
       "energi",
@@ -40,8 +44,9 @@
     "energy"
   ],
   "images": {
-    "large": "/assets/images/large.png",
-    "small": "/assets/images/small.png"
+    "xlarge": "/assets/images/xlarge.jpg",
+    "large": "/assets/images/large.jpg",
+    "small": "/assets/images/small.jpg"
   },
   "bugs": {
     "url": "https://github.com/ricott/homey-com.victronenergy/issues"

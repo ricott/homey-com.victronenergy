@@ -1,0 +1,2 @@
+Övervaka batteriets laddnivå, egenkonsumptionen, produktion från solceller och elnätet. Skapa flöden för att bli notifierad om det uppstår ett larm eller en varning.
+Konfiguerar flöden för att deaktivera eller begränsa växelriktarens effekt om en bil laddar.Styr enkelt brytarens läge (mode) för ditt system; enbart laddning, enbart urladdning, på eller av. Alla Victron Energy Storage Systems (ESS) kontrollfunktioner är möjliga.

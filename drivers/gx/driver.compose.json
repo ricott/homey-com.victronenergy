@@ -4,7 +4,6 @@
     "sv": "Victron GX"
   },
   "images": {
-    "xlarge": "drivers/gx/assets/images/xlarge.jpg",
     "large": "drivers/gx/assets/images/large.jpg",
     "small": "drivers/gx/assets/images/small.jpg"
   },

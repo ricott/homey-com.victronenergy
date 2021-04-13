@@ -1,1 +1,2 @@
-Control your Victron equipment
+Instantly monitor the battery state of charge, power consumption, power harvest from PV, and mains. Create a flow to get notified if there is an alarm or a warning. 
+Build control flows to disable or limit the power of the inverter if a car is charging. Easily control the switch position (mode) of your system; Charger Only, Inverter Only, On or Off. All Victron Energy Storage Systems (ESS) standard actions are supported.
