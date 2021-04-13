@@ -17,6 +17,7 @@ class GXDevice extends Device {
             address: this.getSettings().address,
             port: this.getSettings().port,
             refreshInterval: this.getSettings().refreshInterval,
+            modbus_vebus_unitId: this.getSettings().modbus_vebus_unitId,
             vebusAlarms: '',
             vebusWarnings: ''
         };
@@ -28,6 +29,7 @@ class GXDevice extends Device {
         this.gx.api = new VictronGX({
             host: this.gx.address,
             port: this.gx.port,
+            vebusUnitId: this.gx.modbus_vebus_unitId,
             refreshInterval: this.gx.refreshInterval
         });
 

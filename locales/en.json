@@ -5,6 +5,7 @@
       "intro": "Enter the IP address and port of your GX device.",
       "address": "IP Address",
       "port": "Port",
+      "modbus_vebus": "com.victronenergy.vebus",
       "connect": "Connect"
     }
   }

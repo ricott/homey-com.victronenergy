@@ -833,8 +833,8 @@
         {
           "type": "group",
           "label": {
-            "en": "Settings",
-            "sv": "Inställningar"
+            "en": "Network",
+            "sv": "Nätverk"
           },
           "children": [
             {
@@ -869,6 +869,53 @@
                 "en": "Refresh interval",
                 "sv": "Uppdateringsfrekvens"
               }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Modbus TCP",
+            "sv": "Modbus TCP"
+          },
+          "children": [
+            {
+              "id": "modbus_system_unitId",
+              "type": "label",
+              "label": {
+                "en": "com.victronenergy.system",
+                "sv": "com.victronenergy.system"
+              },
+              "value": "100"
+            },
+            {
+              "id": "modbus_vebus_unitId",
+              "type": "dropdown",
+              "value": "227",
+              "label": {
+                "en": "com.victronenergy.vebus",
+                "sv": "com.victronenergy.vebus"
+              },
+              "values": [
+                {
+                  "id": "227",
+                  "label": {
+                    "en": "227"
+                  }
+                },
+                {
+                  "id": "242",
+                  "label": {
+                    "en": "242"
+                  }
+                },
+                {
+                  "id": "246",
+                  "label": {
+                    "en": "246"
+                  }
+                }
+              ]
             }
           ]
         },

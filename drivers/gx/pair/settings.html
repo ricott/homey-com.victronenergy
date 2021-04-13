@@ -5,10 +5,13 @@
             $('.gx-error').hide();
             var inputaddress = $('#address').val();
             var inputport = $('#port').val();
-            if (inputaddress != '' || inputport != '') {
+            var inputModbus = $('#modbus_vebus').val();
+            
+            if (inputaddress != '' || inputport != '' || inputModbus != '') {
                 var settings = {
                     address: inputaddress,
-                    port: inputport
+                    port: inputport,
+                    modbus_vebus: inputModbus
                 };
 
                 Homey.emit('settings', settings).then(function (result) {
@@ -73,6 +76,12 @@
         <input type="text" class="form-control" id="address" placeholder="192.168.0.0" required>
         <label for="port" data-i18n="pair.port">Port</label>
         <input type="text" class="form-control" id="port" value="502" required>
+        <label for="modbus_vebus" data-i18n="pair.modbus_vebus">com.victronenergy.vebus</label>
+        <select id="modbus_vebus">
+          <option value="227">227</option>
+          <option value="242">242</option>
+          <option value="246">246</option>
+        </select>
     </div>
     <div class="form-group buttons">
         <button id="connect" class="button" data-i18n="pair.connect">Connect</button>

@@ -314,6 +314,7 @@ class GXDriver extends Driver {
             let gx = new VictronGX({
                 host: settings.address,
                 port: settings.port,
+                vebusUnitId: settings.modbus_vebus,
                 autoClose: true
             });
 
@@ -344,7 +345,8 @@ class GXDriver extends Driver {
                     },
                     settings: {
                         address: settings.address,
-                        port: Number(settings.port)
+                        port: Number(settings.port),
+                        modbus_vebus_unitId: settings.modbus_vebus
                     }
                 });
             }
