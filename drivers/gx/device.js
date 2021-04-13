@@ -128,9 +128,7 @@ class GXDevice extends Device {
             self._updateProperty('battery_capacity', message.batterySOC);
             self._updateProperty('measure_voltage.battery', message.batteryVoltage);
             self._updateProperty('measure_current.battery', message.batteryCurrent);
-            //chargerDisabled=1 = disabled
-            self._updateProperty('enabled.charger', message.chargerDisabled == 1 ? false : true);
-            self._updateProperty('enabled.inverter', message.inverterDisabled == 1 ? false : true);
+            self._updateProperty('switch_position', enums.decodeSwitchPosition(message.switchPosition));
             
         });
 
@@ -193,21 +191,13 @@ class GXDevice extends Device {
                     }
                     this.driver.triggerDeviceFlow('alarm_status_changed', tokens, this);
 
-                } else if (key == 'enabled.charger') {
-                    let tokens = {}
-                    if (value) {
-                        this.driver.triggerDeviceFlow('charger_enabled', tokens, this);
-                    } else {
-                        this.driver.triggerDeviceFlow('charger_disabled', tokens, this);
+                } else if (key == 'switch_position') {
+                    let tokens = {
+                        mode: value
                     }
-                } else if (key == 'enabled.inverter') {
-                    let tokens = {}
-                    if (value) {
-                        this.driver.triggerDeviceFlow('inverter_enabled', tokens, this);
-                    } else {
-                        this.driver.triggerDeviceFlow('inverter_disabled', tokens, this);
-                    }
+                    this.driver.triggerDeviceFlow('switch_position_changed', tokens, this);
                 }
+                
             } else {
                 //Update value to refresh timestamp in app
                 this.setCapabilityValue(key, value);
@@ -247,6 +237,12 @@ class GXDevice extends Device {
         if (changedKeysArr.indexOf("port") > -1) {
             this.log('Port value was change to:', newSettings.port);
             this.gx.port = newSettings.port;
+            changeConn = true;
+        }
+
+        if (changedKeysArr.indexOf("modbus_vebus_unitId") > -1) {
+            this.log('Modbus UnitId for VEBus value was change to:', newSettings.modbus_vebus_unitId);
+            this.gx.modbus_vebus_unitId = newSettings.modbus_vebus_unitId;
             changeConn = true;
         }
 

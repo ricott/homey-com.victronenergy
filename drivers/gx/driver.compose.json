@@ -20,8 +20,7 @@
     "battery_capacity",
     "measure_voltage.battery",
     "measure_current.battery",
-    "enabled.charger",
-    "enabled.inverter"
+    "switch_position"
   ],
   "capabilitiesOptions": {
     "measure_power.consumption": {
@@ -58,18 +57,6 @@
       "title": {
         "en": "Battery current",
         "sv": "Batterisström"
-      }
-    },
-    "enabled.charger": {
-      "title": {
-        "en": "Charger enabled",
-        "sv": "Laddare aktiverad"
-      }
-    },
-    "enabled.inverter": {
-      "title": {
-        "en": "Inverter enabled",
-        "sv": "Växelriktare aktiverad"
       }
     }
   },

@@ -16,16 +16,35 @@ class GXDriver extends Driver {
         this.log('Registering flows');
 
         // Register device triggers
-        this.flowCards['charger_disabled'] = this.homey.flow.getDeviceTriggerCard('charger_disabled');
-        this.flowCards['charger_enabled'] = this.homey.flow.getDeviceTriggerCard('charger_enabled');
-        this.flowCards['inverter_disabled'] = this.homey.flow.getDeviceTriggerCard('inverter_disabled');
-        this.flowCards['inverter_enabled'] = this.homey.flow.getDeviceTriggerCard('inverter_enabled');
+        this.flowCards['switch_position_changed'] = this.homey.flow.getDeviceTriggerCard('switch_position_changed');
         this.flowCards['battery_status_changed'] = this.homey.flow.getDeviceTriggerCard('battery_status_changed');
         this.flowCards['vebus_status_changed'] = this.homey.flow.getDeviceTriggerCard('vebus_status_changed');
         this.flowCards['alarm_status_changed'] = this.homey.flow.getDeviceTriggerCard('alarm_status_changed');
         this.flowCards['soc_changed'] = this.homey.flow.getDeviceTriggerCard('soc_changed');
 
         //Conditions
+        this.flowCards['switch_position_condition'] =
+            this.homey.flow.getConditionCard('switch_position_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'switch_position_condition' triggered`);
+                    let mode = args.device.getCapabilityValue('switch_position');
+                    this.log(`[${args.device.getName()}] switch position: ${mode}`);
+                    this.log(`[${args.device.getName()}] condition.mode: ${args.mode.name}`);
+
+                    if (mode == args.mode.name) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+
+        this.flowCards['switch_position_condition']
+            .registerArgumentAutocompleteListener('mode',
+                async (query, args) => {
+                    return enums.getSwitchPositions();
+                }
+            );
+
         this.flowCards['battery_status_condition'] =
             this.homey.flow.getConditionCard('battery_status_condition')
                 .registerRunListener(async (args, state) => {
@@ -146,36 +165,29 @@ class GXDriver extends Driver {
                     }
                 });
 
-        this.flowCards['inverter_enabled_condition'] =
-            this.homey.flow.getConditionCard('inverter_enabled_condition')
-                .registerRunListener(async (args, state) => {
-                    this.log(`[${args.device.getName()}] Condition 'inverter_enabled_condition' triggered`);
-                    let enabled = args.device.getCapabilityValue('enabled.inverter');
-                    this.log(`[${args.device.getName()}] inverter enabled: ${enabled}`);
-
-                    if (enabled) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-
-        this.flowCards['charger_enabled_condition'] =
-            this.homey.flow.getConditionCard('charger_enabled_condition')
-                .registerRunListener(async (args, state) => {
-                    this.log(`[${args.device.getName()}] Condition 'charger_enabled_condition' triggered`);
-                    let enabled = args.device.getCapabilityValue('enabled.charger');
-                    this.log(`[${args.device.getName()}] charger enabled: ${enabled}`);
-
-                    if (enabled) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-
         //Actions
-        let actionName = 'update_grid_setpoint';
+        let actionName = 'set_switch_position';
+        this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
+            .registerRunListener(async (args) => {
+                this.log(`[${args.device.getName()}] Action 'set_switch_position' triggered`);
+                this.log(`[${args.device.getName()}] switch position: '${args.mode.id}' (${args.mode.name})`);
+
+                return args.device.gx.api.setSwitchPosition(args.mode.id)
+                    .then(function (result) {
+                        return Promise.resolve(true);
+                    }).catch(reason => {
+                        return Promise.reject('Failed to set switch position');
+                    });
+            });
+
+        this.flowCards[actionName]
+            .registerArgumentAutocompleteListener('mode',
+                async (query, args) => {
+                    return enums.getSwitchPositions();
+                }
+            );
+
+        actionName = 'update_grid_setpoint';
         this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
             .registerRunListener(async (args) => {
                 this.log(`[${args.device.getName()}] Action 'update_grid_setpoint' triggered`);
@@ -228,59 +240,6 @@ class GXDriver extends Driver {
                         return Promise.resolve(true);
                     }).catch(reason => {
                         return Promise.reject('Failed to set grid feed-in limit');
-                    });
-            });
-
-
-        actionName = 'enableCharger';
-        this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
-            .registerRunListener(async (args) => {
-                this.log(`[${args.device.getName()}] Action 'enableCharger' triggered`);
-
-                return args.device.gx.api.enableCharger()
-                    .then(function (result) {
-                        return Promise.resolve(true);
-                    }).catch(reason => {
-                        return Promise.reject('Failed to enable charger');
-                    });
-            });
-
-        actionName = 'disableCharger';
-        this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
-            .registerRunListener(async (args) => {
-                this.log(`[${args.device.getName()}] Action 'disableCharger' triggered`);
-
-                return args.device.gx.api.disableCharger()
-                    .then(function (result) {
-                        return Promise.resolve(true);
-                    }).catch(reason => {
-                        return Promise.reject('Failed to disable charger');
-                    });
-            });
-
-        actionName = 'enableInverter';
-        this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
-            .registerRunListener(async (args) => {
-                this.log(`[${args.device.getName()}] Action 'enableInverter' triggered`);
-
-                return args.device.gx.api.enableInverter()
-                    .then(function (result) {
-                        return Promise.resolve(true);
-                    }).catch(reason => {
-                        return Promise.reject('Failed to enable inverter');
-                    });
-            });
-
-        actionName = 'disableInverter';
-        this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
-            .registerRunListener(async (args) => {
-                this.log(`[${args.device.getName()}] Action 'disableInverter' triggered`);
-
-                return args.device.gx.api.disableInverter()
-                    .then(function (result) {
-                        return Promise.resolve(true);
-                    }).catch(reason => {
-                        return Promise.reject('Failed to disable inverter');
                     });
             });
 
