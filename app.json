@@ -63,6 +63,78 @@
   "flow": {
     "triggers": [
       {
+        "id": "charger_disabled",
+        "title": {
+          "en": "Charger disabled",
+          "sv": "Laddaren deaktiverad"
+        },
+        "titleFormatted": {
+          "en": "Charger disabled",
+          "sv": "Laddaren deaktiverad"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
+      },
+      {
+        "id": "charger_enabled",
+        "title": {
+          "en": "Charger enabled",
+          "sv": "Laddaren aktiverad"
+        },
+        "titleFormatted": {
+          "en": "Charger enabled",
+          "sv": "Laddaren aktiverad"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
+      },
+      {
+        "id": "inverter_disabled",
+        "title": {
+          "en": "Inverter disabled",
+          "sv": "Växelriktaren deaktiverad"
+        },
+        "titleFormatted": {
+          "en": "Inverter disabled",
+          "sv": "Växelriktaren deaktiverad"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
+      },
+      {
+        "id": "inverter_enabled",
+        "title": {
+          "en": "Inverter enabled",
+          "sv": "Växelriktaren aktiverad"
+        },
+        "titleFormatted": {
+          "en": "Inverter enabled",
+          "sv": "Växelriktaren aktiverad"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
+      },
+      {
         "id": "battery_status_changed",
         "title": {
           "en": "Battery status changed",
@@ -407,6 +479,42 @@
             "step": 1
           }
         ]
+      },
+      {
+        "id": "inverter_enabled_condition",
+        "title": {
+          "en": "Inverter is !{{enabled|disabled}}",
+          "sv": "Växelriktaren är !{{aktiverad|deaktiverad}}"
+        },
+        "titleFormatted": {
+          "en": "Inverter is !{{enabled|disabled}}",
+          "sv": "Växelriktaren är !{{aktiverad|deaktiverad}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
+      },
+      {
+        "id": "charger_enabled_condition",
+        "title": {
+          "en": "Charger is !{{enabled|disabled}}",
+          "sv": "Laddaren är !{{aktiverad|deaktiverad}}"
+        },
+        "titleFormatted": {
+          "en": "Charger is !{{enabled|disabled}}",
+          "sv": "Laddaren är !{{aktiverad|deaktiverad}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
       }
     ],
     "actions": [
@@ -597,6 +705,35 @@
             "step": 1
           }
         ]
+      },
+      {
+        "id": "update_minimum_soc",
+        "title": {
+          "en": "Update minimum SoC",
+          "sv": "Uppdatera lägsta SoC"
+        },
+        "titleFormatted": {
+          "en": "Update minimum SoC to [[soc]]",
+          "sv": "Uppdatera lägsta SoC till [[soc]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "soc",
+            "type": "number",
+            "title": {
+              "en": "SoC (%)",
+              "sv": "SoC (%)"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        ]
       }
     ]
   },
@@ -622,7 +759,9 @@
         "battery_status",
         "battery_capacity",
         "measure_voltage.battery",
-        "measure_current.battery"
+        "measure_current.battery",
+        "enabled.charger",
+        "enabled.inverter"
       ],
       "capabilitiesOptions": {
         "measure_power.consumption": {
@@ -659,6 +798,18 @@
           "title": {
             "en": "Battery current",
             "sv": "Batterisström"
+          }
+        },
+        "enabled.charger": {
+          "title": {
+            "en": "Charger enabled",
+            "sv": "Laddare aktiverad"
+          }
+        },
+        "enabled.inverter": {
+          "title": {
+            "en": "Inverter enabled",
+            "sv": "Växelriktare aktiverad"
           }
         }
       },
@@ -734,6 +885,15 @@
               "label": {
                 "en": "VRM portal ID",
                 "sv": "VRM portal ID"
+              },
+              "value": ""
+            },
+            {
+              "id": "essMode",
+              "type": "label",
+              "label": {
+                "en": "ESS Mode",
+                "sv": "ESS Mode"
               },
               "value": ""
             },
@@ -818,6 +978,16 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/assets/battery_status.svg"
+    },
+    "enabled": {
+      "title": {
+        "en": "Enabled",
+        "sv": "Aktiverad"
+      },
+      "type": "boolean",
+      "getable": true,
+      "setable": false,
+      "icon": "/assets/enabled.svg"
     },
     "vebus_status": {
       "type": "string",

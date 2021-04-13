@@ -1,3 +1,3 @@
 # Victron Energy
 
-Control your Victron equipment
+Use Homey to gain insights into your Victron GX setup and control it using flows

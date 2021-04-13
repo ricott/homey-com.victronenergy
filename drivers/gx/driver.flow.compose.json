@@ -1,6 +1,50 @@
 {
     "triggers": [
         {
+            "id": "charger_disabled",
+            "title": {
+                "en": "Charger disabled",
+                "sv": "Laddaren deaktiverad"
+            },
+            "titleFormatted": {
+                "en": "Charger disabled",
+                "sv": "Laddaren deaktiverad"
+            }
+        },
+        {
+            "id": "charger_enabled",
+            "title": {
+                "en": "Charger enabled",
+                "sv": "Laddaren aktiverad"
+            },
+            "titleFormatted": {
+                "en": "Charger enabled",
+                "sv": "Laddaren aktiverad"
+            }
+        },
+        {
+            "id": "inverter_disabled",
+            "title": {
+                "en": "Inverter disabled",
+                "sv": "Växelriktaren deaktiverad"
+            },
+            "titleFormatted": {
+                "en": "Inverter disabled",
+                "sv": "Växelriktaren deaktiverad"
+            }
+        },
+        {
+            "id": "inverter_enabled",
+            "title": {
+                "en": "Inverter enabled",
+                "sv": "Växelriktaren aktiverad"
+            },
+            "titleFormatted": {
+                "en": "Inverter enabled",
+                "sv": "Växelriktaren aktiverad"
+            }
+        },
+        {
             "id": "battery_status_changed",
             "title": {
                 "en": "Battery status changed",
@@ -282,6 +326,28 @@
                     "step": 1
                 }
             ]
+        },
+        {
+            "id": "inverter_enabled_condition",
+            "title": {
+                "en": "Inverter is !{{enabled|disabled}}",
+                "sv": "Växelriktaren är !{{aktiverad|deaktiverad}}"
+            },
+            "titleFormatted": {
+                "en": "Inverter is !{{enabled|disabled}}",
+                "sv": "Växelriktaren är !{{aktiverad|deaktiverad}}"
+            }
+        },
+        {
+            "id": "charger_enabled_condition",
+            "title": {
+                "en": "Charger is !{{enabled|disabled}}",
+                "sv": "Laddaren är !{{aktiverad|deaktiverad}}"
+            },
+            "titleFormatted": {
+                "en": "Charger is !{{enabled|disabled}}",
+                "sv": "Laddaren är !{{aktiverad|deaktiverad}}"
+            }
         }
     ],
     "actions": [
@@ -421,6 +487,30 @@
                     },
                     "min": -3276800,
                     "max": 3276700,
+                    "step": 1
+                }
+            ]
+        },
+        {
+            "id": "update_minimum_soc",
+            "title": {
+                "en": "Update minimum SoC",
+                "sv": "Uppdatera lägsta SoC"
+            },
+            "titleFormatted": {
+                "en": "Update minimum SoC to [[soc]]",
+                "sv": "Uppdatera lägsta SoC till [[soc]]"
+            },
+            "args": [
+                {
+                    "name": "soc",
+                    "type": "number",
+                    "title": {
+                        "en": "SoC (%)",
+                        "sv": "SoC (%)"
+                    },
+                    "min": 0,
+                    "max": 100,
                     "step": 1
                 }
             ]

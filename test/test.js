@@ -18,8 +18,8 @@ socket.on('connect', function () {
     Promise.all([
 
         //client225.readHoldingRegisters(3126, 1), //Inverter on/off/eco 2/4/5
-        //client100.readHoldingRegisters(826, 1),
-        client227.readHoldingRegisters(67, 1),
+        client100.readHoldingRegisters(2902, 1),
+        //client227.readHoldingRegisters(38, 1),
         //client227.readHoldingRegisters(39, 1),
 
     ]).then((results) => {

@@ -16,6 +16,10 @@ class GXDriver extends Driver {
         this.log('Registering flows');
 
         // Register device triggers
+        this.flowCards['charger_disabled'] = this.homey.flow.getDeviceTriggerCard('charger_disabled');
+        this.flowCards['charger_enabled'] = this.homey.flow.getDeviceTriggerCard('charger_enabled');
+        this.flowCards['inverter_disabled'] = this.homey.flow.getDeviceTriggerCard('inverter_disabled');
+        this.flowCards['inverter_enabled'] = this.homey.flow.getDeviceTriggerCard('inverter_enabled');
         this.flowCards['battery_status_changed'] = this.homey.flow.getDeviceTriggerCard('battery_status_changed');
         this.flowCards['vebus_status_changed'] = this.homey.flow.getDeviceTriggerCard('vebus_status_changed');
         this.flowCards['alarm_status_changed'] = this.homey.flow.getDeviceTriggerCard('alarm_status_changed');
@@ -142,6 +146,33 @@ class GXDriver extends Driver {
                     }
                 });
 
+        this.flowCards['inverter_enabled_condition'] =
+            this.homey.flow.getConditionCard('inverter_enabled_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'inverter_enabled_condition' triggered`);
+                    let enabled = args.device.getCapabilityValue('enabled.inverter');
+                    this.log(`[${args.device.getName()}] inverter enabled: ${enabled}`);
+
+                    if (enabled) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+
+        this.flowCards['charger_enabled_condition'] =
+            this.homey.flow.getConditionCard('charger_enabled_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'charger_enabled_condition' triggered`);
+                    let enabled = args.device.getCapabilityValue('enabled.charger');
+                    this.log(`[${args.device.getName()}] charger enabled: ${enabled}`);
+
+                    if (enabled) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
 
         //Actions
         let actionName = 'update_grid_setpoint';
@@ -250,6 +281,20 @@ class GXDriver extends Driver {
                         return Promise.resolve(true);
                     }).catch(reason => {
                         return Promise.reject('Failed to disable inverter');
+                    });
+            });
+
+        actionName = 'update_minimum_soc';
+        this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
+            .registerRunListener(async (args) => {
+                this.log(`[${args.device.getName()}] Action 'update_minimum_soc' triggered`);
+                this.log(`[${args.device.getName()}] soc: '${args.soc}'`);
+
+                return args.device.gx.api.writeESSMinimumSOC(args.soc)
+                    .then(function (result) {
+                        return Promise.resolve(true);
+                    }).catch(reason => {
+                        return Promise.reject('Failed to update grid setpoint');
                     });
             });
     }

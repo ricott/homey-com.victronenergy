@@ -4,21 +4,22 @@ var modbus = require('jsmodbus');
 var net = require('net');
 
 let socket = new net.Socket();
-let client = new modbus.client.TCP(socket, 100, 5000);
+let client100 = new modbus.client.TCP(socket, 100, 5000);
+let client227 = new modbus.client.TCP(socket, 227, 5000);
 let options = {
     host: "192.168.200.90",
     port: 502,
 };
 
 let buffer = Buffer.alloc(2);
-buffer.writeInt16BE(-1);
+buffer.writeInt16BE(2);
 
 socket.on('connect', function () {
     console.log(`Client connected on IP '${options.host}'`);
     Promise.all([
 
-        //client.writeSingleRegister(2704, buffer)
-        client.writeMultipleRegisters(2704, buffer)
+        client100.writeMultipleRegisters(2902, buffer) //Disable inverter
+        //client227.writeMultipleRegisters(39, buffer)
 
     ]).then((results) => {
 

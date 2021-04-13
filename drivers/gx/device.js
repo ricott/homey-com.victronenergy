@@ -17,8 +17,8 @@ class GXDevice extends Device {
             address: this.getSettings().address,
             port: this.getSettings().port,
             refreshInterval: this.getSettings().refreshInterval,
-            vebusAlarms: 'Ok',
-            vebusWarnings: 'Ok'
+            vebusAlarms: '',
+            vebusWarnings: ''
         };
 
         this.setupGXSession();
@@ -103,6 +103,7 @@ class GXDevice extends Device {
 
         self.gx.api.on('properties', message => {
             this.updateSetting('vrmId', message.vrmId);
+            this.updateSetting('essMode', enums.decodeESSState(message.essMode));
         });
 
         self.gx.api.on('readings', message => {
@@ -125,6 +126,10 @@ class GXDevice extends Device {
             self._updateProperty('battery_capacity', message.batterySOC);
             self._updateProperty('measure_voltage.battery', message.batteryVoltage);
             self._updateProperty('measure_current.battery', message.batteryCurrent);
+            //chargerDisabled=1 = disabled
+            self._updateProperty('enabled.charger', message.chargerDisabled == 1 ? false : true);
+            self._updateProperty('enabled.inverter', message.inverterDisabled == 1 ? false : true);
+            
         });
 
         self.gx.api.on('error', error => {
@@ -185,6 +190,21 @@ class GXDevice extends Device {
                         warnings: this.gx.vebusWarnings
                     }
                     this.driver.triggerDeviceFlow('alarm_status_changed', tokens, this);
+
+                } else if (key == 'enabled.charger') {
+                    let tokens = {}
+                    if (value) {
+                        this.driver.triggerDeviceFlow('charger_enabled', tokens, this);
+                    } else {
+                        this.driver.triggerDeviceFlow('charger_disabled', tokens, this);
+                    }
+                } else if (key == 'enabled.inverter') {
+                    let tokens = {}
+                    if (value) {
+                        this.driver.triggerDeviceFlow('inverter_enabled', tokens, this);
+                    } else {
+                        this.driver.triggerDeviceFlow('inverter_disabled', tokens, this);
+                    }
                 }
             } else {
                 //Update value to refresh timestamp in app
