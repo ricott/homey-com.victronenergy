@@ -191,6 +191,51 @@
           "value": ""
         },
         {
+          "id": "minimumSOC",
+          "type": "label",
+          "label": {
+            "en": "Minimum SoC (unless grid fails)",
+            "sv": "Lägsta SoC (om inte elnätet är frånkopplat)"
+          },
+          "value": ""
+        },
+        {
+          "id": "maxChargeCurrent",
+          "type": "label",
+          "label": {
+            "en": "Max charge current",
+            "sv": "Max laddström"
+          },
+          "value": ""
+        },
+        {
+          "id": "maxDischargePower",
+          "type": "label",
+          "label": {
+            "en": "Max discharge power",
+            "sv": "Max urladdningseffekt"
+          },
+          "value": ""
+        },
+        {
+          "id": "maxGridFeedinPower",
+          "type": "label",
+          "label": {
+            "en": "Max grid feed-in",
+            "sv": "Max inmatningseffekt till elnätet"
+          },
+          "value": ""
+        },
+        {
+          "id": "gridSetpointPower",
+          "type": "label",
+          "label": {
+            "en": "Grid setpoint",
+            "sv": "Börvärde för elnät"
+          },
+          "value": ""
+        },
+        {
           "id": "vebusAlarms",
           "type": "label",
           "label": {

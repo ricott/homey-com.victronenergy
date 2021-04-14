@@ -19,7 +19,8 @@ class GXDevice extends Device {
             refreshInterval: this.getSettings().refreshInterval,
             modbus_vebus_unitId: this.getSettings().modbus_vebus_unitId,
             vebusAlarms: '',
-            vebusWarnings: ''
+            vebusWarnings: '',
+            readings: {}
         };
 
         this.setupGXSession();
@@ -58,6 +59,12 @@ class GXDevice extends Device {
     updateSettingIfChanged(key, newValue, oldValue) {
         if (newValue != oldValue) {
             this.updateSetting(key, newValue);
+        }
+    }
+
+    updateNumericSettingIfChanged(key, newValue, oldValue, suffix) {
+        if (!isNaN(newValue)) {
+            this.updateSettingIfChanged(key, `${newValue}${suffix}`, `${oldValue}${suffix}`);
         }
     }
 
@@ -129,7 +136,15 @@ class GXDevice extends Device {
             self._updateProperty('measure_voltage.battery', message.batteryVoltage);
             self._updateProperty('measure_current.battery', message.batteryCurrent);
             self._updateProperty('switch_position', enums.decodeSwitchPosition(message.switchPosition));
-            
+
+            self.updateNumericSettingIfChanged('maxChargeCurrent', message.maxChargeCurrent, self.gx.readings.maxChargeCurrent, 'A');
+            self.updateNumericSettingIfChanged('maxDischargePower', message.maxDischargePower, self.gx.readings.maxDischargePower, 'W');
+            self.updateNumericSettingIfChanged('maxGridFeedinPower', message.maxGridFeedinPower, self.gx.readings.maxGridFeedinPower, 'W');
+            self.updateNumericSettingIfChanged('gridSetpointPower', message.gridSetpointPower, self.gx.readings.gridSetpointPower, 'W');
+            self.updateNumericSettingIfChanged('minimumSOC', message.minimumSOC, self.gx.readings.minimumSOC, '%');
+
+            //Store a copy of the json
+            self.gx.readings = message;
         });
 
         self.gx.api.on('error', error => {
@@ -197,7 +212,7 @@ class GXDevice extends Device {
                     }
                     this.driver.triggerDeviceFlow('switch_position_changed', tokens, this);
                 }
-                
+
             } else {
                 //Update value to refresh timestamp in app
                 this.setCapabilityValue(key, value);

@@ -1,12 +1,12 @@
 {
     "pair": {
-      "title": "Add a Victron GX device",
-      "nosettings": "Please fill in all the required fields.",
-      "intro": "Enter the IP address and port of your GX device.",
-      "address": "IP Address",
+      "title": "Lägg till en Victron GX enhet",
+      "nosettings": "Fyll i alla obligatoriska fält",
+      "intro": "Ange IP adress och port till din GX enhet",
+      "address": "IP Adress",
       "port": "Port",
       "modbus_vebus": "com.victronenergy.vebus",
-      "connect": "Connect"
+      "connect": "Koppla"
     }
   }
   

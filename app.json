@@ -470,6 +470,191 @@
             "step": 1
           }
         ]
+      },
+      {
+        "id": "charger_current_condition",
+        "title": {
+          "en": "Max charge current is !{{|not}}",
+          "sv": "Max laddström är !{{|inte}}"
+        },
+        "titleFormatted": {
+          "en": "Max charge current is !{{|not}} [[conditionType]] [[current]]",
+          "sv": "Max laddström är !{{|inte}} [[conditionType]] [[current]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "conditionType",
+            "type": "autocomplete",
+            "title": {
+              "en": "Condition",
+              "sv": "Villkor"
+            }
+          },
+          {
+            "name": "current",
+            "type": "number",
+            "title": {
+              "en": "Current (A)",
+              "sv": "Ström (A)"
+            },
+            "min": -32767,
+            "max": 32767,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "grid_setpoint_condition",
+        "title": {
+          "en": "Grid setpoint is !{{|not}}",
+          "sv": "Börvärde för elnät är !{{|inte}}"
+        },
+        "titleFormatted": {
+          "en": "Grid setpoint is !{{|not}} [[conditionType]] [[power]]",
+          "sv": "Börvärde för elnät är !{{|inte}} [[conditionType]] [[power]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "conditionType",
+            "type": "autocomplete",
+            "title": {
+              "en": "Condition",
+              "sv": "Villkor"
+            }
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Power (W)",
+              "sv": "Effekt (W)"
+            },
+            "min": -32768,
+            "max": 32767,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "inverter_power_condition",
+        "title": {
+          "en": "Max discharge power is !{{|not}}",
+          "sv": "Max urladdningseffekt är !{{|inte}}"
+        },
+        "titleFormatted": {
+          "en": "Max discharge power is !{{|not}} [[conditionType]] [[power]]",
+          "sv": "Max urladdningseffekt är !{{|inte}} [[conditionType]] [[power]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "conditionType",
+            "type": "autocomplete",
+            "title": {
+              "en": "Condition",
+              "sv": "Villkor"
+            }
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Power (W)",
+              "sv": "Effekt (W)"
+            },
+            "min": -1,
+            "max": 655360,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "grid_feedin_condition",
+        "title": {
+          "en": "Max grid feed-in power is !{{|not}}",
+          "sv": "Max inmatningseffekt till elnätet är !{{|inte}}"
+        },
+        "titleFormatted": {
+          "en": "Max grid feed-in power is !{{|not}} [[conditionType]] [[power]]",
+          "sv": "Max inmatningseffekt till elnätet är !{{|inte}} [[conditionType]] [[power]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "conditionType",
+            "type": "autocomplete",
+            "title": {
+              "en": "Condition",
+              "sv": "Villkor"
+            }
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Power (W)",
+              "sv": "Effekt (W)"
+            },
+            "min": -3276800,
+            "max": 3276700,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "minimum_soc_condition",
+        "title": {
+          "en": "Min SoC is !{{|not}}",
+          "sv": "Lägsta SoC är !{{|inte}}"
+        },
+        "titleFormatted": {
+          "en": "Min SoC is !{{|not}} [[conditionType]] [[soc]]",
+          "sv": "Lägsta SoC är !{{|inte}} [[conditionType]] [[soc]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "conditionType",
+            "type": "autocomplete",
+            "title": {
+              "en": "Condition",
+              "sv": "Villkor"
+            }
+          },
+          {
+            "name": "soc",
+            "type": "number",
+            "title": {
+              "en": "SoC (%)",
+              "sv": "SoC (%)"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        ]
       }
     ],
     "actions": [
@@ -531,12 +716,12 @@
       {
         "id": "limit_inverter",
         "title": {
-          "en": "Limit inverter power",
-          "sv": "Begränsa växelriktarens effekt"
+          "en": "Limit discharge power",
+          "sv": "Begränsa urladdningseffekt"
         },
         "titleFormatted": {
-          "en": "Limit inverter power to [[power]]",
-          "sv": "Begränsa växelriktarens effekt till [[power]]"
+          "en": "Limit discharge power to [[power]]",
+          "sv": "Begränsa urladdningseffekt till [[power]]"
         },
         "args": [
           {
@@ -560,11 +745,11 @@
       {
         "id": "limit_charger",
         "title": {
-          "en": "Limit charger current",
+          "en": "Limit charge current",
           "sv": "Begränsa laddarens ström"
         },
         "titleFormatted": {
-          "en": "Limit charger current to [[current]]",
+          "en": "Limit charge current to [[current]]",
           "sv": "Begränsa laddarens ström till [[current]]"
         },
         "args": [
@@ -836,6 +1021,51 @@
               "label": {
                 "en": "ESS Mode",
                 "sv": "ESS Mode"
+              },
+              "value": ""
+            },
+            {
+              "id": "minimumSOC",
+              "type": "label",
+              "label": {
+                "en": "Minimum SoC (unless grid fails)",
+                "sv": "Lägsta SoC (om inte elnätet är frånkopplat)"
+              },
+              "value": ""
+            },
+            {
+              "id": "maxChargeCurrent",
+              "type": "label",
+              "label": {
+                "en": "Max charge current",
+                "sv": "Max laddström"
+              },
+              "value": ""
+            },
+            {
+              "id": "maxDischargePower",
+              "type": "label",
+              "label": {
+                "en": "Max discharge power",
+                "sv": "Max urladdningseffekt"
+              },
+              "value": ""
+            },
+            {
+              "id": "maxGridFeedinPower",
+              "type": "label",
+              "label": {
+                "en": "Max grid feed-in",
+                "sv": "Max inmatningseffekt till elnätet"
+              },
+              "value": ""
+            },
+            {
+              "id": "gridSetpointPower",
+              "type": "label",
+              "label": {
+                "en": "Grid setpoint",
+                "sv": "Börvärde för elnät"
               },
               "value": ""
             },

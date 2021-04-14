@@ -3,6 +3,7 @@
 const { Driver } = require('homey');
 const VictronGX = require('../../lib/victron.js');
 const enums = require('../../lib/enums.js');
+const conditionHandler = require('../../lib/conditionHandler.js');
 
 class GXDriver extends Driver {
 
@@ -164,6 +165,101 @@ class GXDriver extends Driver {
                         return false;
                     }
                 });
+
+        this.flowCards['charger_current_condition'] =
+            this.homey.flow.getConditionCard('charger_current_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'charger_current_condition' triggered`);
+                    let current = args.device.gx.readings.maxChargeCurrent;
+                    this.log(`[${args.device.getName()}] max charge current: ${current}`);
+                    this.log(`[${args.device.getName()}] condition.type: ${args.conditionType.id}`);
+                    this.log(`[${args.device.getName()}] condition.current: ${args.current}`);
+
+                    return conditionHandler.evaluateNumericCondition(args.conditionType.id, args.current, current);
+                });
+
+        this.flowCards['charger_current_condition']
+            .registerArgumentAutocompleteListener('conditionType',
+                async (query, args) => {
+                    return conditionHandler.getNumberConditions();
+                }
+            );
+
+        this.flowCards['grid_setpoint_condition'] =
+            this.homey.flow.getConditionCard('grid_setpoint_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'grid_setpoint_condition' triggered`);
+                    let power = args.device.gx.readings.gridSetpointPower;
+                    this.log(`[${args.device.getName()}] grid setpoint power: ${power}`);
+                    this.log(`[${args.device.getName()}] condition.type: ${args.conditionType.id}`);
+                    this.log(`[${args.device.getName()}] condition.power: ${args.power}`);
+
+                    return conditionHandler.evaluateNumericCondition(args.conditionType.id, args.power, power);
+                });
+
+        this.flowCards['grid_setpoint_condition']
+            .registerArgumentAutocompleteListener('conditionType',
+                async (query, args) => {
+                    return conditionHandler.getNumberConditions();
+                }
+            );
+
+        this.flowCards['inverter_power_condition'] =
+            this.homey.flow.getConditionCard('inverter_power_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'inverter_power_condition' triggered`);
+                    let power = args.device.gx.readings.maxDischargePower;
+                    this.log(`[${args.device.getName()}] max inverter power: ${power}`);
+                    this.log(`[${args.device.getName()}] condition.type: ${args.conditionType.id}`);
+                    this.log(`[${args.device.getName()}] condition.power: ${args.power}`);
+
+                    return conditionHandler.evaluateNumericCondition(args.conditionType.id, args.power, power);
+                });
+
+        this.flowCards['inverter_power_condition']
+            .registerArgumentAutocompleteListener('conditionType',
+                async (query, args) => {
+                    return conditionHandler.getNumberConditions();
+                }
+            );
+
+        this.flowCards['grid_feedin_condition'] =
+            this.homey.flow.getConditionCard('grid_feedin_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'grid_feedin_condition' triggered`);
+                    let power = args.device.gx.readings.maxGridFeedinPower;
+                    this.log(`[${args.device.getName()}] max grid feed-in power: ${power}`);
+                    this.log(`[${args.device.getName()}] condition.type: ${args.conditionType.id}`);
+                    this.log(`[${args.device.getName()}] condition.power: ${args.power}`);
+
+                    return conditionHandler.evaluateNumericCondition(args.conditionType.id, args.power, power);
+                });
+
+        this.flowCards['grid_feedin_condition']
+            .registerArgumentAutocompleteListener('conditionType',
+                async (query, args) => {
+                    return conditionHandler.getNumberConditions();
+                }
+            );
+
+        this.flowCards['minimum_soc_condition'] =
+            this.homey.flow.getConditionCard('minimum_soc_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'minimum_soc_condition' triggered`);
+                    let soc = args.device.gx.readings.minimumSOC;
+                    this.log(`[${args.device.getName()}] minimum soc: ${soc}`);
+                    this.log(`[${args.device.getName()}] condition.type: ${args.conditionType.id}`);
+                    this.log(`[${args.device.getName()}] condition.soc: ${args.soc}`);
+
+                    return conditionHandler.evaluateNumericCondition(args.conditionType.id, args.soc, soc);
+                });
+
+        this.flowCards['minimum_soc_condition']
+            .registerArgumentAutocompleteListener('conditionType',
+                async (query, args) => {
+                    return conditionHandler.getNumberConditions();
+                }
+            );
 
         //Actions
         let actionName = 'set_switch_position';
