@@ -1,6 +1,6 @@
 {
   "id": "com.victronenergy",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#4790d0",
@@ -52,6 +52,7 @@
     "url": "https://github.com/ricott/homey-com.victronenergy/issues"
   },
   "source": "https://github.com/ricott/homey-com.victronenergy",
+  "homeyCommunityTopicId": 46219,
   "author": {
     "name": "Richard Barkestam",
     "email": "richard@barkestam.se"
