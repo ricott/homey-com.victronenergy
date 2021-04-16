@@ -241,27 +241,27 @@ class GXDevice extends Device {
         this.gx.name = name;
     }
 
-    async onSettings(oldSettings, newSettings, changedKeysArr) {
+    async onSettings({ oldSettings, newSettings, changedKeys }) {
         let changeConn = false;
-        if (changedKeysArr.indexOf("address") > -1) {
+        if (changedKeys.indexOf("address") > -1) {
             this.log('Address value was change to:', newSettings.address);
             this.gx.address = newSettings.address;
             changeConn = true;
         }
 
-        if (changedKeysArr.indexOf("port") > -1) {
+        if (changedKeys.indexOf("port") > -1) {
             this.log('Port value was change to:', newSettings.port);
             this.gx.port = newSettings.port;
             changeConn = true;
         }
 
-        if (changedKeysArr.indexOf("modbus_vebus_unitId") > -1) {
+        if (changedKeys.indexOf("modbus_vebus_unitId") > -1) {
             this.log('Modbus UnitId for VEBus value was change to:', newSettings.modbus_vebus_unitId);
             this.gx.modbus_vebus_unitId = newSettings.modbus_vebus_unitId;
             changeConn = true;
         }
 
-        if (changedKeysArr.indexOf("refreshInterval") > -1) {
+        if (changedKeys.indexOf("refreshInterval") > -1) {
             this.log('Refresh interval value was change to:', newSettings.refreshInterval);
             this.gx.refreshInterval = newSettings.refreshInterval;
             changeConn = true;

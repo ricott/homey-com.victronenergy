@@ -1,6 +1,6 @@
 {
   "id": "com.victronenergy",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#4790d0",
