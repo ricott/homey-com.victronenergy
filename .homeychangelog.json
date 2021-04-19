@@ -1,4 +1,8 @@
 {
+  "0.9.4": {
+    "en": "Improved error handling when the GX device is not found",
+    "sv": "Förbättrad felhantering när enheten inte hittas"
+  },
   "0.9.3": {
     "en": "Improved error handling for invalid UnitId",
     "sv": "Förbättrad felhantering när fel UnitId är valt"

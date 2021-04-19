@@ -362,7 +362,8 @@ class GXDriver extends Driver {
     async onPair(session) {
         let devices = [];
         let settings;
-        let deviceProperties;
+        let deviceProperties = {};
+        let discoveryError;
 
         session.setHandler('settings', async (data) => {
             settings = data;
@@ -378,6 +379,10 @@ class GXDriver extends Driver {
             });
 
             gx.on('error', error => {
+                //Lets capture the first error, if any
+                if (!discoveryError) {
+                    discoveryError = error;
+                }
                 this.log('Failed to read gx device properties', error);
             });
 
@@ -404,6 +409,11 @@ class GXDriver extends Driver {
                         modbus_vebus_unitId: settings.modbus_vebus
                     }
                 });
+            } else {
+                //We didn't find a GX device, but we have an error - then throw it
+                if (discoveryError) {
+                    throw discoveryError;
+                }
             }
 
             return devices;
