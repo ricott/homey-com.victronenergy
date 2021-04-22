@@ -107,6 +107,13 @@ class GXDevice extends Device {
         return status;
     }
 
+    calculateExcessSolar() {
+        let pvPower = this.getCapabilityValue('measure_power.PV');
+        let consumptionPower = this.getCapabilityValue('measure_power.consumption');
+
+        return pvPower - consumptionPower;
+    }
+
     _initializeEventListeners() {
         let self = this;
 
@@ -211,6 +218,12 @@ class GXDevice extends Device {
                         mode: value
                     }
                     this.driver.triggerDeviceFlow('switch_position_changed', tokens, this);
+
+                } else if (key == 'measure_voltage.battery') {
+                    let tokens = {
+                        voltage: value
+                    }
+                    this.driver.triggerDeviceFlow('battery_voltage_changed', tokens, this);
                 }
 
             } else {

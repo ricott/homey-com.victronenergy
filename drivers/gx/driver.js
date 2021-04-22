@@ -1,7 +1,7 @@
 'use strict';
 
 const { Driver } = require('homey');
-const VictronGX = require('../../lib/victron.js');
+const Discovery = require('../../lib/discovery.js');
 const enums = require('../../lib/enums.js');
 const conditionHandler = require('../../lib/conditionHandler.js');
 
@@ -22,6 +22,7 @@ class GXDriver extends Driver {
         this.flowCards['vebus_status_changed'] = this.homey.flow.getDeviceTriggerCard('vebus_status_changed');
         this.flowCards['alarm_status_changed'] = this.homey.flow.getDeviceTriggerCard('alarm_status_changed');
         this.flowCards['soc_changed'] = this.homey.flow.getDeviceTriggerCard('soc_changed');
+        this.flowCards['battery_voltage_changed'] = this.homey.flow.getDeviceTriggerCard('battery_voltage_changed');
 
         //Conditions
         this.flowCards['switch_position_condition'] =
@@ -160,6 +161,21 @@ class GXDriver extends Driver {
                     this.log(`[${args.device.getName()}] condition.power: ${args.power}`);
 
                     if (power < args.power) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+
+        this.flowCards['excess_solar_power_condition'] =
+            this.homey.flow.getConditionCard('excess_solar_power_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'excess_solar_power_condition' triggered`);
+                    let excess = args.device.calculateExcessSolar();
+                    this.log(`[${args.device.getName()}] excess solar power: ${excess}`);
+                    this.log(`[${args.device.getName()}] condition.power: ${args.power}`);
+
+                    if (excess < args.power) {
                         return true;
                     } else {
                         return false;
@@ -362,46 +378,30 @@ class GXDriver extends Driver {
     async onPair(session) {
         let devices = [];
         let settings;
-        let deviceProperties = {};
-        let discoveryError;
+        let discoveryResponse = {};
 
         session.setHandler('settings', async (data) => {
             settings = data;
-            let gx = new VictronGX({
-                host: settings.address,
-                port: settings.port,
-                vebusUnitId: settings.modbus_vebus,
-                autoClose: true
-            });
+            let discovery = new Discovery();
 
-            gx.on('properties', properties => {
-                deviceProperties = properties;
-            });
-
-            gx.on('error', error => {
-                //Lets capture the first error, if any
-                if (!discoveryError) {
-                    discoveryError = error;
-                }
-                this.log('Failed to read gx device properties', error);
-            });
-
-            //Wait 3 seconds to allow properties to be read
-            return sleep(3000).then(() => {
-                // Show the next view
+            discovery.on('result', message => {
+                discoveryResponse = message;
                 session.nextView();
-                return true;
             });
+
+            discovery.validateConnection(settings.address,
+                Number(settings.port),
+                Number(settings.modbus_vebus));
         });
 
         session.setHandler('list_devices', async (data) => {
 
-            if (deviceProperties.vrmId) {
-                this.log(`Found device: ${deviceProperties.vrmId}`);
+            if (discoveryResponse.outcome == 'success') {
+                this.log(`Found device: ${discoveryResponse.vrmId}`);
                 devices.push({
-                    name: `GX (${deviceProperties.vrmId})`,
+                    name: `GX (${discoveryResponse.vrmId})`,
                     data: {
-                        id: deviceProperties.vrmId
+                        id: discoveryResponse.vrmId
                     },
                     settings: {
                         address: settings.address,
@@ -409,11 +409,13 @@ class GXDriver extends Driver {
                         modbus_vebus_unitId: settings.modbus_vebus
                     }
                 });
-            } else {
-                //We didn't find a GX device, but we have an error - then throw it
-                if (discoveryError) {
-                    throw discoveryError;
-                }
+            } else if (discoveryResponse.outcome == 'connect_failure') {
+                this.log(discoveryResponse);
+                throw new Error(`Couldn't connect to host '${settings.address}' on port '${settings.port}'`);
+
+            } else if (discoveryResponse.outcome == 'vebus_failure') {
+                this.log(discoveryResponse);
+                throw new Error(`Connected successfully to GX device '${discoveryResponse.vrmId}', but com.victronenergy.vebus Unit ID '${settings.modbus_vebus}' is invalid`);
             }
 
             return devices;

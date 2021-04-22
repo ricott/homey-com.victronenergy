@@ -141,6 +141,30 @@
                     }
                 }
             ]
+        },
+        {
+            "id": "battery_voltage_changed",
+            "title": {
+                "en": "Battery voltage changed",
+                "sv": "Batterispänningen ändrades"
+            },
+            "titleFormatted": {
+                "en": "Battery voltage changed to [[voltage]]",
+                "sv": "Batterispänningen ändrades till [[voltage]]"
+            },
+            "tokens": [
+                {
+                    "name": "voltage",
+                    "type": "number",
+                    "title": {
+                        "en": "Voltage",
+                        "sv": "Spänning"
+                    },
+                    "example": {
+                        "en": "54.5"
+                    }
+                }
+            ]
         }
     ],
     "conditions": [
@@ -304,6 +328,32 @@
                 }
             ]
         },
+        {
+            "id": "excess_solar_power_condition",
+            "title": {
+                "en": "Excess solar power is !{{below|above}}",
+                "sv": "Solceller överskott effekt är !{{under|över}}"
+            },
+            "titleFormatted": {
+                "en": "Excess solar power is !{{below|above}} [[power]]",
+                "sv": "Solceller överskott effekt är !{{under|över}} [[power]]"
+            },
+            "args": [
+                {
+                    "name": "power",
+                    "type": "number",
+                    "title": {
+                        "en": "Power (W)",
+                        "sv": "Effekt (W)"
+                    },
+                    "min": -3276800,
+                    "max": 3276800,
+                    "step": 1
+                }
+            ]
+        }
+        
+        ,
         {
             "id": "solar_power_condition",
             "title": {
