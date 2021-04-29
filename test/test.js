@@ -19,8 +19,12 @@ socket.on('connect', function () {
 
         //client225.readHoldingRegisters(3126, 1), //Inverter on/off/eco 2/4/5
         //client100.readHoldingRegisters(2902, 1),
-        client227.readHoldingRegisters(33, 1),
+        //client227.readHoldingRegisters(33, 1),
         //client227.readHoldingRegisters(39, 1),
+
+        client225.readHoldingRegisters(1290, 1),
+        client225.readHoldingRegisters(1291, 1),
+
 
     ]).then((results) => {
         let endTime = new Date().getTime();

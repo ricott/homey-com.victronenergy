@@ -1062,6 +1062,252 @@
         {
           "type": "group",
           "label": {
+            "en": "Charge current control",
+            "sv": "Styrning av laddström"
+          },
+          "children": [
+            {
+              "id": "controlChargeCurrent",
+              "type": "radio",
+              "label": {
+                "en": "Control charge current",
+                "sv": "Styr laddström"
+              },
+              "hint": {
+                "en": "Setting this parameter to yes means that this app will start controlling the max charge current (DVCC) based on the parameters.",
+                "sv": "Sätts denna parameter till ja så kommer appen att börja styra max laddström (DVCC) baserat på parametrarna."
+              },
+              "value": "no",
+              "values": [
+                {
+                  "id": "yes",
+                  "label": {
+                    "en": "Yes",
+                    "sv": "Ja"
+                  }
+                },
+                {
+                  "id": "no",
+                  "label": {
+                    "en": "No",
+                    "sv": "Nej"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "chargeLevel1",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 0-9%"
+              }
+            },
+            {
+              "id": "chargeLevel2",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 10-19%"
+              }
+            },
+            {
+              "id": "chargeLevel3",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 20-29%"
+              }
+            },
+            {
+              "id": "chargeLevel4",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 30-39%"
+              }
+            },
+            {
+              "id": "chargeLevel5",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 40-49%"
+              }
+            },
+            {
+              "id": "chargeLevel6",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 50-59%"
+              }
+            },
+            {
+              "id": "chargeLevel7",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 60-69%"
+              }
+            },
+            {
+              "id": "chargeLevel8",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 70-74%"
+              }
+            },
+            {
+              "id": "chargeLevel9",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 75-79%"
+              }
+            },
+            {
+              "id": "chargeLevel10",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 80-84%"
+              }
+            },
+            {
+              "id": "chargeLevel11",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 85-89%"
+              }
+            },
+            {
+              "id": "chargeLevel12",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 90-94%"
+              }
+            },
+            {
+              "id": "chargeLevel13",
+              "type": "number",
+              "value": 50,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1000
+              },
+              "units": {
+                "en": "A"
+              },
+              "label": {
+                "en": "SoC: 95-100%"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
             "en": "Information",
             "sv": "Information"
           },
@@ -1094,7 +1340,7 @@
               "value": ""
             },
             {
-              "id": "maxChargeCurrent",
+              "id": "activeMaxChargeCurrent",
               "type": "label",
               "label": {
                 "en": "Max charge current",

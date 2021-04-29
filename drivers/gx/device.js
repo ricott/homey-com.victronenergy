@@ -1,9 +1,9 @@
 'use strict';
 
 const { Device } = require('homey');
-const VictronGX = require('../../lib/victron.js');
-const { GX_v1 } = require('../../lib/devices/gx_v1.js');
-const enums = require('../../lib/enums.js');
+const VictronGX = require('../../lib/victron');
+const { GX_v1 } = require('../../lib/devices/gx_v1');
+const enums = require('../../lib/enums');
 const dateFormat = require("dateformat");
 
 class GXDevice extends Device {
@@ -18,10 +18,14 @@ class GXDevice extends Device {
             port: this.getSettings().port,
             refreshInterval: this.getSettings().refreshInterval,
             modbus_vebus_unitId: this.getSettings().modbus_vebus_unitId,
+            //modbus_battery_unitId: 225,
+            controlChargeCurrent: this.getSettings().controlChargeCurrent,
             vebusAlarms: '',
             vebusWarnings: '',
             readings: {}
         };
+
+        this.log(`[${this.getName()}] Control charge current: ${this.gx.controlChargeCurrent}`);
 
         this.setupGXSession();
     }
@@ -31,6 +35,7 @@ class GXDevice extends Device {
             host: this.gx.address,
             port: this.gx.port,
             vebusUnitId: this.gx.modbus_vebus_unitId,
+            //batteryUnitId: this.gx.modbus_battery_unitId,
             refreshInterval: this.gx.refreshInterval
         });
 
@@ -114,6 +119,53 @@ class GXDevice extends Device {
         return pvPower - consumptionPower;
     }
 
+    calculateChargeCurrent(soc) {
+
+        let chargeCurrent = this.getSettings().chargeLevel13;
+        if (soc < 10) {
+            chargeCurrent = this.getSettings().chargeLevel1;
+        } else if (soc > 9 && soc < 20) {
+            chargeCurrent = this.getSettings().chargeLevel2;
+        } else if (soc > 19 && soc < 30) {
+            chargeCurrent = this.getSettings().chargeLevel3;
+        } else if (soc > 29 && soc < 40) {
+            chargeCurrent = this.getSettings().chargeLevel4;
+        } else if (soc > 39 && soc < 50) {
+            chargeCurrent = this.getSettings().chargeLevel5;
+        } else if (soc > 49 && soc < 60) {
+            chargeCurrent = this.getSettings().chargeLevel6;
+        } else if (soc > 59 && soc < 70) {
+            chargeCurrent = this.getSettings().chargeLevel7;
+        } else if (soc > 69 && soc < 75) {
+            chargeCurrent = this.getSettings().chargeLevel8;
+        } else if (soc > 74 && soc < 80) {
+            chargeCurrent = this.getSettings().chargeLevel9;
+        } else if (soc > 79 && soc < 85) {
+            chargeCurrent = this.getSettings().chargeLevel10;
+        } else if (soc > 84 && soc < 90) {
+            chargeCurrent = this.getSettings().chargeLevel11;
+        } else if (soc > 89 && soc < 95) {
+            chargeCurrent = this.getSettings().chargeLevel12;
+        } else if (soc > 94) {
+            chargeCurrent = this.getSettings().chargeLevel13;
+        }
+
+        return chargeCurrent;
+    }
+
+    async adjustChargeCurrent(soc, activeMaxChargeCurrent) {
+        if (this.gx.controlChargeCurrent == 'yes') {
+            let chargeCurrent = this.calculateChargeCurrent(soc);
+            if (activeMaxChargeCurrent != chargeCurrent) {
+                this.log(`SoC: ${soc}%, activeCurrent: ${activeMaxChargeCurrent}A, changing charge current to: ${chargeCurrent}A`);
+                this.gx.api.limitChargerCurrent(chargeCurrent)
+                    .catch(reason => {
+                        this.error(`Failed to set charge current to ${chargeCurrent}A`, reason);
+                    });
+            }
+        }
+    }
+
     _initializeEventListeners() {
         let self = this;
 
@@ -144,11 +196,13 @@ class GXDevice extends Device {
             self._updateProperty('measure_current.battery', message.batteryCurrent);
             self._updateProperty('switch_position', enums.decodeSwitchPosition(message.switchPosition));
 
-            self.updateNumericSettingIfChanged('maxChargeCurrent', message.maxChargeCurrent, self.gx.readings.maxChargeCurrent, 'A');
+            self.updateNumericSettingIfChanged('activeMaxChargeCurrent', message.maxChargeCurrent, self.gx.readings.maxChargeCurrent, 'A');
             self.updateNumericSettingIfChanged('maxDischargePower', message.maxDischargePower, self.gx.readings.maxDischargePower, 'W');
             self.updateNumericSettingIfChanged('maxGridFeedinPower', message.maxGridFeedinPower, self.gx.readings.maxGridFeedinPower, 'W');
             self.updateNumericSettingIfChanged('gridSetpointPower', message.gridSetpointPower, self.gx.readings.gridSetpointPower, 'W');
             self.updateNumericSettingIfChanged('minimumSOC', message.minimumSOC, self.gx.readings.minimumSOC, '%');
+
+            self.adjustChargeCurrent(message.batterySOC, message.maxChargeCurrent);
 
             //Store a copy of the json
             self.gx.readings = message;
@@ -278,6 +332,11 @@ class GXDevice extends Device {
             this.log('Refresh interval value was change to:', newSettings.refreshInterval);
             this.gx.refreshInterval = newSettings.refreshInterval;
             changeConn = true;
+        }
+
+        if (changedKeys.indexOf("controlChargeCurrent") > -1) {
+            this.log('Control charge current value was change to:', newSettings.controlChargeCurrent);
+            this.gx.controlChargeCurrent = newSettings.controlChargeCurrent;
         }
 
         if (changeConn) {
