@@ -23,6 +23,7 @@ class GXDriver extends Driver {
         this.flowCards['alarm_status_changed'] = this.homey.flow.getDeviceTriggerCard('alarm_status_changed');
         this.flowCards['soc_changed'] = this.homey.flow.getDeviceTriggerCard('soc_changed');
         this.flowCards['battery_voltage_changed'] = this.homey.flow.getDeviceTriggerCard('battery_voltage_changed');
+        this.flowCards['grid_surplus_changed'] = this.homey.flow.getDeviceTriggerCard('grid_surplus_changed');
 
         //Conditions
         this.flowCards['switch_position_condition'] =
@@ -213,8 +214,8 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('inverter_power_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'inverter_power_condition' triggered`);
-                    let power = args.device.gx.readings.maxDischargePower;
-                    this.log(`[${args.device.getName()}] - max inverter power: ${power}`);
+                    let power = args.device.gx.readings.activeMaxDischargePower;
+                    this.log(`[${args.device.getName()}] - active max inverter power: ${power}`);
                     this.log(`[${args.device.getName()}] - condition type: ${args.conditionType.id}, condition power: ${args.power}`);
 
                     return conditionHandler.evaluateNumericCondition(args.conditionType.id, args.power, power);
@@ -263,8 +264,47 @@ class GXDriver extends Driver {
                 }
             );
 
+        this.flowCards['car_charging_condition'] =
+            this.homey.flow.getConditionCard('car_charging_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'car_charging_condition' triggered`);
+                    this.log(`[${args.device.getName()}] - current state: ${args.device.getSetting('carCharging')}`);
+
+                    return args.device.getSetting('carCharging') == 'true'
+                });
+
         //Actions
-        let actionName = 'set_switch_position';
+        let actionName = 'set_carcharging_state';
+        this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
+            .registerRunListener(async (args) => {
+                this.log(`[${args.device.getName()}] Action 'set_carcharging_state' triggered`);
+                this.log(`[${args.device.getName()}] - state: '${args.state.id}' (${args.state.name})`);
+
+                if (args.state.id == 'true') {
+                    return args.device.aCarIsCharging()
+                        .then(function (result) {
+                            return Promise.resolve(true);
+                        }).catch(reason => {
+                            return Promise.reject('Failed to set car charging state');
+                        });
+                } else {
+                    return args.device.noCarIsCharging()
+                        .then(function (result) {
+                            return Promise.resolve(true);
+                        }).catch(reason => {
+                            return Promise.reject('Failed to set car charging state');
+                        });
+                }
+            });
+
+        this.flowCards[actionName]
+            .registerArgumentAutocompleteListener('state',
+                async (query, args) => {
+                    return enums.getCarChargingState();
+                }
+            );
+
+        actionName = 'set_switch_position';
         this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
             .registerRunListener(async (args) => {
                 this.log(`[${args.device.getName()}] Action 'set_switch_position' triggered`);

@@ -414,6 +414,32 @@
     {
       "type": "group",
       "label": {
+        "en": "Car charging settings",
+        "sv": "Inställningar för laddning av bil"
+      },
+      "children": [
+        {
+          "id": "maxDischargePowerWhenCarCharging",
+          "type": "number",
+          "label": {
+            "en": "Max discharge power when a car is charging",
+            "sv": "Max urladdningseffekt vid laddning av bil"
+          },
+          "value": 1500,
+          "step": 1,
+          "attr": {
+            "min": 1,
+            "max": 50000
+          },
+          "units": {
+            "en": "W"
+          }
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "label": {
         "en": "Information",
         "sv": "Information"
       },
@@ -451,6 +477,15 @@
           "label": {
             "en": "Max charge current",
             "sv": "Max laddström"
+          },
+          "value": ""
+        },
+        {
+          "id": "activeMaxDischargePower",
+          "type": "label",
+          "label": {
+            "en": "Active max discharge power",
+            "sv": "Aktiv max urladdningseffekt"
           },
           "value": ""
         },
@@ -498,6 +533,15 @@
             "sv": "VE Bus varningar"
           },
           "value": ""
+        },
+        {
+          "id": "carCharging",
+          "type": "label",
+          "label": {
+            "en": "A car is charging",
+            "sv": "En bil laddar"
+          },
+          "value": ""
         }
       ]
     },
@@ -514,6 +558,15 @@
           "label": {
             "en": "Most recent API error",
             "sv": "Senaste API felmeddelandet"
+          },
+          "value": ""
+        },
+        {
+          "id": "log",
+          "type": "textarea",
+          "label": {
+            "en": "Log",
+            "sv": "Logg"
           },
           "value": ""
         }

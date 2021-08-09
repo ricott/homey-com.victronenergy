@@ -165,6 +165,52 @@
                     }
                 }
             ]
+        },
+        {
+            "id": "grid_surplus_changed",
+            "title": {
+                "en": "Grid surplus changed",
+                "sv": "Exporten till elnätet ändrades"
+            },
+            "titleFormatted": {
+                "en": "Grid surplus changed to [[power]] / [[single_phase]] / [[three_phase]]",
+                "sv": "Exporten till elnätet ändrades till [[power]] / [[single_phase]] / [[three_phase]]"
+            },
+            "tokens": [
+                {
+                    "name": "power",
+                    "type": "number",
+                    "title": {
+                        "en": "Power (W)",
+                        "sv": "Effekt (W)"
+                    },
+                    "example": {
+                        "en": "2847"
+                    }
+                },
+                {
+                    "name": "single_phase",
+                    "type": "number",
+                    "title": {
+                        "en": "Single phase current (A)",
+                        "sv": "Enfas ström (A)"
+                    },
+                    "example": {
+                        "en": "12"
+                    }
+                },
+                {
+                    "name": "three_phase",
+                    "type": "number",
+                    "title": {
+                        "en": "Three phase current (A)",
+                        "sv": "Trefas ström (A)"
+                    },
+                    "example": {
+                        "en": "4"
+                    }
+                }
+            ]
         }
     ],
     "conditions": [
@@ -351,9 +397,7 @@
                     "step": 1
                 }
             ]
-        }
-        
-        ,
+        },
         {
             "id": "solar_power_condition",
             "title": {
@@ -506,7 +550,6 @@
                 }
             ]
         },
-
         {
             "id": "minimum_soc_condition",
             "title": {
@@ -538,9 +581,41 @@
                     "step": 1
                 }
             ]
+        },
+        {
+            "id": "car_charging_condition",
+            "title": {
+                "en": "!{{A|No}} car is charging",
+                "sv": "En bil laddar !{{|inte}}"
+            },
+            "titleFormatted": {
+                "en": "!{{A|No}} car is charging",
+                "sv": "En bil laddar !{{|inte}}"
+            }
         }
     ],
     "actions": [
+        {
+            "id": "set_carcharging_state",
+            "title": {
+                "en": "Set car charging state",
+                "sv": "Uppdatera status för laddning av bil"
+            },
+            "titleFormatted": {
+                "en": "Set car charging state to [[state]]",
+                "sv": "Uppdatera status för laddning av bil till [[state]]"
+            },
+            "args": [
+                {
+                    "name": "state",
+                    "type": "autocomplete",
+                    "title": {
+                        "en": "State",
+                        "sv": "Status"
+                    }
+                }
+            ]
+        },
         {
             "id": "set_switch_position",
             "title": {

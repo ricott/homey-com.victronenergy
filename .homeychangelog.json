@@ -1,7 +1,7 @@
 {
   "0.9.6": {
-    "en": "XXX",
-    "sv": "XXX"
+    "en": "Improved native support for vehicle charging",
+    "sv": "Utökat stöd för laddning av fordon"
   },
   "0.9.5": {
     "en": "More triggers and conditions",
