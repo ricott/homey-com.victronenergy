@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.victronenergy",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#4790d0",
@@ -786,6 +786,64 @@
             "filter": "driver_id=gx"
           }
         ]
+      },
+      {
+        "id": "ac_loads_condition",
+        "title": {
+          "en": "AC loads are !{{below|above}}",
+          "sv": "AC belastning är !{{under|över}}"
+        },
+        "titleFormatted": {
+          "en": "AC loads are !{{below|above}} [[power]]",
+          "sv": "AC belastning är !{{under|över}} [[power]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Power (W)",
+              "sv": "Effekt (W)"
+            },
+            "min": -3276800,
+            "max": 3276800,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "timeSinceLastFullCharge_condition",
+        "title": {
+          "en": "Time since last full charge is !{{less|more}} than",
+          "sv": "Tid sedan senaste fulladdning är !{{mindre|mer}} än"
+        },
+        "titleFormatted": {
+          "en": "Time since last full charge is !{{less|more}} than [[time]]",
+          "sv": "Tid sedan senaste fulladdning är !{{mindre|mer}} än [[time]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "time",
+            "type": "number",
+            "title": {
+              "en": "Time (seconds)",
+              "sv": "Tid (sekunder)"
+            },
+            "min": -3276800,
+            "max": 3276800,
+            "step": 1
+          }
+        ]
       }
     ],
     "actions": [
@@ -1153,6 +1211,29 @@
                   }
                 }
               ]
+            },
+            {
+              "id": "modbus_battery_unitId",
+              "type": "dropdown",
+              "value": "",
+              "label": {
+                "en": "com.victronenergy.battery",
+                "sv": "com.victronenergy.battery"
+              },
+              "values": [
+                {
+                  "id": "225",
+                  "label": {
+                    "en": "225"
+                  }
+                },
+                {
+                  "id": "226",
+                  "label": {
+                    "en": "226"
+                  }
+                }
+              ]
             }
           ]
         },
@@ -1450,6 +1531,15 @@
               "label": {
                 "en": "ESS Mode",
                 "sv": "ESS Mode"
+              },
+              "value": ""
+            },
+            {
+              "id": "timeSinceLastFullCharge",
+              "type": "label",
+              "label": {
+                "en": "Time since last full charge",
+                "sv": "Tid sedan full laddning"
               },
               "value": ""
             },

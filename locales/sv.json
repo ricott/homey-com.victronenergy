@@ -6,6 +6,7 @@
       "address": "IP Address",
       "port": "Port",
       "modbus_vebus": "com.victronenergy.vebus",
+      "modbus_battery": "com.victronenergy.battery",
       "connect": "Connect"
     }
   }

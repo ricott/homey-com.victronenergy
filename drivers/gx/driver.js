@@ -273,6 +273,36 @@ class GXDriver extends Driver {
                     return args.device.getSetting('carCharging') == 'true'
                 });
 
+        this.flowCards['ac_loads_condition'] =
+            this.homey.flow.getConditionCard('ac_loads_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'ac_loads_condition' triggered`);
+
+                    let ac_loads = args.device.gx.readings.consumptionL1 +
+                        args.device.gx.readings.consumptionL2 +
+                        args.device.gx.readings.consumptionL3;
+                    this.log(`[${args.device.getName()}] - AC loads: ${ac_loads}, condition power: ${args.power}`);
+
+                    if (ac_loads < args.power) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+
+        this.flowCards['timeSinceLastFullCharge_condition'] =
+            this.homey.flow.getConditionCard('timeSinceLastFullCharge_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'timeSinceLastFullCharge_condition' triggered`);
+                    this.log(`[${args.device.getName()}] - Time since last full charge: ${args.device.gx.readings.timeSinceLastFullCharge}, condition time: ${args.time}`);
+
+                    if (args.device.gx.readings.timeSinceLastFullCharge < args.time) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+
         //Actions
         let actionName = 'set_carcharging_state';
         this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
@@ -417,7 +447,8 @@ class GXDriver extends Driver {
 
             discovery.validateConnection(settings.address,
                 Number(settings.port),
-                Number(settings.modbus_vebus));
+                Number(settings.modbus_vebus),
+                Number(settings.modbus_battery));
         });
 
         session.setHandler('list_devices', async (data) => {
@@ -432,7 +463,8 @@ class GXDriver extends Driver {
                     settings: {
                         address: settings.address,
                         port: Number(settings.port),
-                        modbus_vebus_unitId: settings.modbus_vebus
+                        modbus_vebus_unitId: settings.modbus_vebus,
+                        modbus_battery_unitId: settings.modbus_battery
                     }
                 });
             } else if (discoveryResponse.outcome == 'connect_failure') {
@@ -442,6 +474,10 @@ class GXDriver extends Driver {
             } else if (discoveryResponse.outcome == 'vebus_failure') {
                 this.log(discoveryResponse);
                 throw new Error(`Connected successfully to GX device '${discoveryResponse.vrmId}', but com.victronenergy.vebus Unit ID '${settings.modbus_vebus}' is invalid`);
+
+            } else if (discoveryResponse.outcome == 'battery_failure') {
+                this.log(discoveryResponse);
+                throw new Error(`Connected successfully to GX device '${discoveryResponse.vrmId}', but com.victronenergy.battery Unit ID '${settings.modbus_battery}' is invalid`);
             }
 
             return devices;

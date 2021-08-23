@@ -8,4 +8,6 @@ discovery.on('result', message => {
     console.log(message);
 });
 
-discovery.validateConnection('192.168.200.90', 502, 227);
+discovery.validateConnection('192.168.200.90', 502, 227, 225);
+
+  

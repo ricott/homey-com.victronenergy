@@ -6,12 +6,14 @@
             var inputaddress = $('#address').val();
             var inputport = $('#port').val();
             var inputModbus = $('#modbus_vebus').val();
+            var inputModbusBattery = $('#modbus_battery').val();
             
             if (inputaddress != '' || inputport != '' || inputModbus != '') {
                 var settings = {
                     address: inputaddress,
                     port: inputport,
-                    modbus_vebus: inputModbus
+                    modbus_vebus: inputModbus,
+                    modbus_battery: inputModbusBattery
                 };
 
                 Homey.emit('settings', settings).then(function (result) {
@@ -81,6 +83,11 @@
           <option value="227">227</option>
           <option value="242">242</option>
           <option value="246">246</option>
+        </select>
+        <label for="modbus_battery" data-i18n="pair.modbus_battery">com.victronenergy.battery</label>
+        <select id="modbus_battery">
+          <option value="225">225</option>
+          <option value="226">226</option>
         </select>
     </div>
     <div class="form-group buttons">

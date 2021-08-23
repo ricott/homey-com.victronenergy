@@ -1,4 +1,8 @@
 {
+  "0.9.7": {
+    "en": "Added support for com.victronenergy.battery",
+    "sv": "Stöd tillagt för com.victronenergy.battery"
+  },
   "0.9.6": {
     "en": "Improved native support for vehicle charging",
     "sv": "Utökat stöd för laddning av fordon"

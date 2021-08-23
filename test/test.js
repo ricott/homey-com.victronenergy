@@ -22,8 +22,13 @@ socket.on('connect', function () {
         //client227.readHoldingRegisters(33, 1),
         //client227.readHoldingRegisters(39, 1),
 
-        client225.readHoldingRegisters(1290, 1),
-        client225.readHoldingRegisters(1291, 1),
+        //client225.readHoldingRegisters(1290, 1),
+        //client225.readHoldingRegisters(1291, 1),
+        client225.readHoldingRegisters(286, 1),
+        client225.readHoldingRegisters(287, 1),
+        client225.readHoldingRegisters(288, 1),
+        client225.readHoldingRegisters(301, 1),
+        client225.readHoldingRegisters(302, 1),
 
 
     ]).then((results) => {

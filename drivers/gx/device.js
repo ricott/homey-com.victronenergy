@@ -19,7 +19,7 @@ class GXDevice extends Device {
             port: this.getSettings().port,
             refreshInterval: this.getSettings().refreshInterval,
             modbus_vebus_unitId: this.getSettings().modbus_vebus_unitId,
-            //modbus_battery_unitId: 225,
+            modbus_battery_unitId: this.getSettings().modbus_battery_unitId,
             controlChargeCurrent: this.getSettings().controlChargeCurrent,
             grid_surplus: 0,
             vebusAlarms: '',
@@ -40,7 +40,7 @@ class GXDevice extends Device {
             host: this.gx.address,
             port: this.gx.port,
             vebusUnitId: this.gx.modbus_vebus_unitId,
-            //batteryUnitId: this.gx.modbus_battery_unitId,
+            batteryUnitId: this.gx.modbus_battery_unitId,
             refreshInterval: this.gx.refreshInterval
         });
 
@@ -252,6 +252,11 @@ class GXDevice extends Device {
             self.updateNumericSettingIfChanged('gridSetpointPower', message.gridSetpointPower, self.gx.readings.gridSetpointPower, 'W');
             self.updateNumericSettingIfChanged('minimumSOC', message.minimumSOC, self.gx.readings.minimumSOC, '%');
 
+            //Battery unitId may be empty, thus this value null
+            if (message.timeSinceLastFullCharge) {
+                self.updateNumericSettingIfChanged('timeSinceLastFullCharge', message.timeSinceLastFullCharge, self.gx.readings.timeSinceLastFullCharge, 's');
+            }
+
             self.adjustChargeCurrent(message.batterySOC, message.maxChargeCurrent);
 
             //Store a copy of the json
@@ -396,6 +401,12 @@ class GXDevice extends Device {
         if (changedKeys.indexOf("modbus_vebus_unitId") > -1) {
             this.logMessage('Modbus UnitId for VEBus value was change to:', newSettings.modbus_vebus_unitId);
             this.gx.modbus_vebus_unitId = newSettings.modbus_vebus_unitId;
+            changeConn = true;
+        }
+
+        if (changedKeys.indexOf("modbus_battery_unitId") > -1) {
+            this.logMessage('Modbus UnitId for battery value was change to:', newSettings.modbus_battery_unitId);
+            this.gx.modbus_battery_unitId = newSettings.modbus_battery_unitId;
             changeConn = true;
         }
 
