@@ -618,6 +618,54 @@
             ]
         },
         {
+            "id": "ac_input_condition",
+            "title": {
+                "en": "AC inputs are !{{below|above}}",
+                "sv": "AC input är !{{under|över}}"
+            },
+            "titleFormatted": {
+                "en": "AC inputs are !{{below|above}} [[power]]",
+                "sv": "AC input är !{{under|över}} [[power]]"
+            },
+            "args": [
+                {
+                    "name": "power",
+                    "type": "number",
+                    "title": {
+                        "en": "Power (W)",
+                        "sv": "Effekt (W)"
+                    },
+                    "min": -3276800,
+                    "max": 3276800,
+                    "step": 1
+                }
+            ]
+        },
+        {
+            "id": "ac_output_condition",
+            "title": {
+                "en": "AC outputs are !{{below|above}}",
+                "sv": "AC output är !{{under|över}}"
+            },
+            "titleFormatted": {
+                "en": "AC outputs are !{{below|above}} [[power]]",
+                "sv": "AC output är !{{under|över}} [[power]]"
+            },
+            "args": [
+                {
+                    "name": "power",
+                    "type": "number",
+                    "title": {
+                        "en": "Power (W)",
+                        "sv": "Effekt (W)"
+                    },
+                    "min": -3276800,
+                    "max": 3276800,
+                    "step": 1
+                }
+            ]
+        },
+        {
             "id": "timeSinceLastFullCharge_condition",
             "title": {
                 "en": "Time since last full charge is !{{less|more}} than",

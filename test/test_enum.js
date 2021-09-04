@@ -1,6 +1,9 @@
 'use strict';
 
-const Enum = require('../lib/enums');
+const enums = require('../lib/enums');
 
-console.log(Enum.decodeCarChargingState(true));
-console.log(Enum.getCarChargingState());
+//console.log(enums.decodeCarChargingState(true));
+//console.log(enums.getCarChargingState());
+
+console.log(enums.decodeBatteryStatus(1) === enums.decodeBatteryStatus('Charging'));
+

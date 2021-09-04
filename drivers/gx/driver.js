@@ -290,6 +290,40 @@ class GXDriver extends Driver {
                     }
                 });
 
+        this.flowCards['ac_input_condition'] =
+            this.homey.flow.getConditionCard('ac_input_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'ac_input_condition' triggered`);
+
+                    let ac_inputs = args.device.gx.readings.inputL1 +
+                        args.device.gx.readings.inputL2 +
+                        args.device.gx.readings.inputL3;
+                    this.log(`[${args.device.getName()}] - AC inputs: ${ac_inputs}, condition power: ${args.power}`);
+
+                    if (ac_inputs < args.power) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+
+        this.flowCards['ac_output_condition'] =
+            this.homey.flow.getConditionCard('ac_output_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'ac_output_condition' triggered`);
+
+                    let ac_outputs = args.device.gx.readings.outputL1 +
+                        args.device.gx.readings.outputL2 +
+                        args.device.gx.readings.outputL3;
+                    this.log(`[${args.device.getName()}] - AC outputs: ${ac_outputs}, condition power: ${args.power}`);
+
+                    if (ac_outputs < args.power) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+
         this.flowCards['timeSinceLastFullCharge_condition'] =
             this.homey.flow.getConditionCard('timeSinceLastFullCharge_condition')
                 .registerRunListener(async (args, state) => {

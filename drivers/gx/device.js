@@ -211,6 +211,32 @@ class GXDevice extends Device {
             }
         }
     }
+/*
+    calculateEfficiency(status, message) {
+
+        let input = message.inputL1 + message.inputL2 + message.inputL3;
+        let output = message.outputL1 + message.outputL2 + message.outputL3;
+        let total = 0;
+
+        let efficiency = 0;
+        if (enums.decodeBatteryStatus(status) === enums.decodeBatteryStatus('Charging')) {
+            total = input + output;
+            efficiency = message.batteryPower / total;
+        } else if (enums.decodeBatteryStatus(status) === enums.decodeBatteryStatus('Discharging')) {
+            total = input;
+            efficiency = total / message.batteryPower;
+        }
+        //Efficiency cant be higher than 100% and less than 0%
+        efficiency = Math.min(efficiency, 100.00);
+        //efficiency = Math.max(efficiency, 0);
+        efficiency = (efficiency*100).toFixed(2);
+
+        this.log(`Input ${input}W (${message.inputL1}/${message.inputL2}/${message.inputL3}) Output ${output}W (${message.outputL1}/${message.outputL2}/${message.outputL3})`);
+        this.log(`Currently ${enums.decodeBatteryStatus(message.batteryStatus)}, Used ${total}W Battery ${message.batteryPower}W Efficiency ${efficiency}%`);
+
+        return parseFloat(efficiency);
+    }
+    */
 
     _initializeEventListeners() {
         let self = this;
@@ -258,6 +284,8 @@ class GXDevice extends Device {
             }
 
             self.adjustChargeCurrent(message.batterySOC, message.maxChargeCurrent);
+
+            //let efficiency = self.calculateEfficiency(message.batteryStatus, message);
 
             //Store a copy of the json
             self.gx.readings = message;
