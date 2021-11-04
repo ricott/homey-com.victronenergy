@@ -1,4 +1,8 @@
 {
+  "0.9.9": {
+    "en": "Added support for vebus id 228",
+    "sv": "Stöd för vebus id 228"
+  },
   "0.9.8": {
     "en": "New conditions for AC inputs and outputs",
     "sv": "Nya villkor för AC input och output"

@@ -1,6 +1,6 @@
 {
   "name": "com.victronenergy",
-  "version": "0.9.0",
+  "version": "0.9.9",
   "main": "app.js",
   "devDependencies": {
     "@types/homey": "npm:homey-apps-sdk-v3-types@^0.2.2"

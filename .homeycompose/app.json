@@ -1,8 +1,9 @@
 {
   "id": "com.victronenergy",
-  "version": "0.9.8",
+  "version": "0.9.9",
   "compatibility": ">=5.0.0",
   "sdk": 3,
+  "platforms": ["local"],
   "brandColor": "#4790d0",
   "name": {
     "en": "Victron Energy",

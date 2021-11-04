@@ -8,6 +8,8 @@
     "small": "drivers/gx/assets/images/small.jpg"
   },
   "class": "sensor",
+  "platforms": ["local"],
+  "connectivity": ["lan"],
   "capabilities": [
     "measure_power.consumption",
     "measure_power.grid",
@@ -149,6 +151,12 @@
                 "en": "227"
               }
             },
+            {
+              "id": "228",
+              "label": {
+                "en": "228"
+              }
+            },           
             {
               "id": "242",
               "label": {
