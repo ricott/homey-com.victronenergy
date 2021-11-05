@@ -1,7 +1,11 @@
 {
+  "1.0.0": {
+    "en": "Added support for more vebus ids",
+    "sv": "Stöd för fler vebus id"
+  },
   "0.9.9": {
-    "en": "Added support for vebus id 228",
-    "sv": "Stöd för vebus id 228"
+    "en": "Added support for more vebus ids",
+    "sv": "Stöd för fler vebus id"
   },
   "0.9.8": {
     "en": "New conditions for AC inputs and outputs",
