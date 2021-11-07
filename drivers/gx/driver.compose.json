@@ -10,8 +10,11 @@
   "class": "sensor",
   "platforms": ["local"],
   "connectivity": ["lan"],
+  "energy": {
+    "cumulative": true
+  },
   "capabilities": [
-    "measure_power.consumption",
+    "measure_power",
     "measure_power.grid",
     "measure_power.battery",
     "measure_power.PV",
@@ -24,7 +27,7 @@
     "switch_position"
   ],
   "capabilitiesOptions": {
-    "measure_power.consumption": {
+    "measure_power": {
       "title": {
         "en": "Consumption",
         "sv": "Konsumtion"

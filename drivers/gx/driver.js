@@ -108,7 +108,7 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('consumption_power_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'consumption_power_condition' triggered`);
-                    let power = args.device.getCapabilityValue('measure_power.consumption');
+                    let power = args.device.getCapabilityValue('measure_power');
                     this.log(`[${args.device.getName()}] - consumption power: ${power}, condition power: ${args.power}`);
 
                     if (power < args.power) {

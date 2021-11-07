@@ -7,6 +7,20 @@ const enums = require('../../lib/enums');
 const dateFormat = require("dateformat");
 const minGridSuplusPower = 200;
 
+const deviceCapabilitesList = [
+    'measure_power',
+    'measure_power.grid',
+    'measure_power.battery',
+    'measure_power.PV',
+    'vebus_status',
+    'alarm_status',
+    'battery_status',
+    'battery_capacity',
+    'measure_voltage.battery',
+    'measure_current.battery',
+    'switch_position'
+];
+
 class GXDevice extends Device {
 
     async onInit() {
@@ -30,9 +44,37 @@ class GXDevice extends Device {
 
         this.logMessage(`Victron GX device initiated`);
         this.logMessage(`Control charge current: ${this.gx.controlChargeCurrent}`);
+        await this.upgradeDevice();
 
         this.setupGXSession();
         this._initilializeTimers();
+    }
+
+    async upgradeDevice() {
+        this.log('About to upgrade existing device');
+        //v1.0.1 renamed measure_power.consumption to measure_power
+        //Messy, we need to delete all capabilities and add them again to get them in correct order
+        if (!this.hasCapability('measure_power')) {
+            await this.reorgCapabilities();
+        } else {
+            this.log('- No upgrade needed');
+        }
+    }
+
+    async reorgCapabilities() {
+        //Delete all capabilities and then add them in right order
+        this.logMessage(`Reorganizing all capabilities to correct order`);
+        //Delete all capabilities
+        this.getCapabilities().forEach(capability => {
+            this.removeCapabilityHelper(capability);
+        });
+
+        sleep(2000).then(() => {
+            //Add capabilities again in correct order
+            deviceCapabilitesList.forEach(capability => {
+                this.addCapabilityHelper(capability);
+            });
+        });
     }
 
     setupGXSession() {
@@ -160,7 +202,7 @@ class GXDevice extends Device {
 
     calculateExcessSolar() {
         let pvPower = this.getCapabilityValue('measure_power.PV');
-        let consumptionPower = this.getCapabilityValue('measure_power.consumption');
+        let consumptionPower = this.getCapabilityValue('measure_power');
 
         return pvPower - consumptionPower;
     }
@@ -211,32 +253,32 @@ class GXDevice extends Device {
             }
         }
     }
-/*
-    calculateEfficiency(status, message) {
-
-        let input = message.inputL1 + message.inputL2 + message.inputL3;
-        let output = message.outputL1 + message.outputL2 + message.outputL3;
-        let total = 0;
-
-        let efficiency = 0;
-        if (enums.decodeBatteryStatus(status) === enums.decodeBatteryStatus('Charging')) {
-            total = input + output;
-            efficiency = message.batteryPower / total;
-        } else if (enums.decodeBatteryStatus(status) === enums.decodeBatteryStatus('Discharging')) {
-            total = input;
-            efficiency = total / message.batteryPower;
+    /*
+        calculateEfficiency(status, message) {
+    
+            let input = message.inputL1 + message.inputL2 + message.inputL3;
+            let output = message.outputL1 + message.outputL2 + message.outputL3;
+            let total = 0;
+    
+            let efficiency = 0;
+            if (enums.decodeBatteryStatus(status) === enums.decodeBatteryStatus('Charging')) {
+                total = input + output;
+                efficiency = message.batteryPower / total;
+            } else if (enums.decodeBatteryStatus(status) === enums.decodeBatteryStatus('Discharging')) {
+                total = input;
+                efficiency = total / message.batteryPower;
+            }
+            //Efficiency cant be higher than 100% and less than 0%
+            efficiency = Math.min(efficiency, 100.00);
+            //efficiency = Math.max(efficiency, 0);
+            efficiency = (efficiency*100).toFixed(2);
+    
+            this.log(`Input ${input}W (${message.inputL1}/${message.inputL2}/${message.inputL3}) Output ${output}W (${message.outputL1}/${message.outputL2}/${message.outputL3})`);
+            this.log(`Currently ${enums.decodeBatteryStatus(message.batteryStatus)}, Used ${total}W Battery ${message.batteryPower}W Efficiency ${efficiency}%`);
+    
+            return parseFloat(efficiency);
         }
-        //Efficiency cant be higher than 100% and less than 0%
-        efficiency = Math.min(efficiency, 100.00);
-        //efficiency = Math.max(efficiency, 0);
-        efficiency = (efficiency*100).toFixed(2);
-
-        this.log(`Input ${input}W (${message.inputL1}/${message.inputL2}/${message.inputL3}) Output ${output}W (${message.outputL1}/${message.outputL2}/${message.outputL3})`);
-        this.log(`Currently ${enums.decodeBatteryStatus(message.batteryStatus)}, Used ${total}W Battery ${message.batteryPower}W Efficiency ${efficiency}%`);
-
-        return parseFloat(efficiency);
-    }
-    */
+        */
 
     _initializeEventListeners() {
         let self = this;
@@ -255,7 +297,7 @@ class GXDevice extends Device {
 
             //Calculate self consumption
             let consumption = pvPower - message.batteryPower + grid;
-            self._updateProperty('measure_power.consumption', consumption);
+            self._updateProperty('measure_power', consumption);
             self._updateProperty('measure_power.grid', grid);
             self._updateProperty('measure_power.PV', pvPower);
             self._updateProperty('measure_power.battery', message.batteryPower);
@@ -477,5 +519,34 @@ class GXDevice extends Device {
                 this.error('Failed to update debug messages', err);
             });
     }
+
+    removeCapabilityHelper(capability) {
+        if (this.hasCapability(capability)) {
+            try {
+                this.logMessage(`Remove existing capability '${capability}'`);
+                this.removeCapability(capability);
+            } catch (reason) {
+                this.error(`Failed to removed capability '${capability}'`);
+                this.error(reason);
+            }
+        }
+    }
+    addCapabilityHelper(capability) {
+        if (!this.hasCapability(capability)) {
+            try {
+                this.logMessage(`Adding missing capability '${capability}'`);
+                this.addCapability(capability);
+            } catch (reason) {
+                this.error(`Failed to add capability '${capability}'`);
+                this.error(reason);
+            }
+        }
+    }
 }
+
+// sleep time expects milliseconds
+function sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 module.exports = GXDevice;

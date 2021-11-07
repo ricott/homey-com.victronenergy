@@ -1,4 +1,8 @@
 {
+  "1.0.1": {
+    "en": "Your favourite device is now recognized as an energy meter in Homey Energy",
+    "sv": "Din GX enhet syns nu i Homey Energi som en elmätare"
+  },
   "1.0.0": {
     "en": "Added support for more vebus ids",
     "sv": "Stöd för fler vebus id"
