@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.victronenergy",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -1255,67 +1255,29 @@
             },
             {
               "id": "modbus_vebus_unitId",
-              "type": "dropdown",
-              "value": "227",
+              "type": "number",
+              "step": 1,
               "label": {
                 "en": "com.victronenergy.vebus",
                 "sv": "com.victronenergy.vebus"
               },
-              "values": [
-                {
-                  "id": "227",
-                  "label": {
-                    "en": "227"
-                  }
-                },
-                {
-                  "id": "228",
-                  "label": {
-                    "en": "228"
-                  }
-                },
-                {
-                  "id": "242",
-                  "label": {
-                    "en": "242"
-                  }
-                },
-                {
-                  "id": "246",
-                  "label": {
-                    "en": "246"
-                  }
-                }
-              ]
+              "hint": {
+                "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
+                "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
+              }
             },
             {
               "id": "modbus_battery_unitId",
-              "type": "dropdown",
-              "value": "",
+              "type": "number",
+              "step": 1,
               "label": {
                 "en": "com.victronenergy.battery",
                 "sv": "com.victronenergy.battery"
               },
-              "values": [
-                {
-                  "id": "224",
-                  "label": {
-                    "en": "224"
-                  }
-                },
-                {
-                  "id": "225",
-                  "label": {
-                    "en": "225"
-                  }
-                },
-                {
-                  "id": "226",
-                  "label": {
-                    "en": "226"
-                  }
-                }
-              ]
+              "hint": {
+                "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
+                "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
+              }
             }
           ]
         },

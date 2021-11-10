@@ -8,7 +8,7 @@
             var inputModbus = $('#modbus_vebus').val();
             var inputModbusBattery = $('#modbus_battery').val();
             
-            if (inputaddress != '' || inputport != '' || inputModbus != '') {
+            if (inputaddress != '' && inputport != '' && inputModbus != '' && inputModbusBattery != '') {
                 var settings = {
                     address: inputaddress,
                     port: inputport,
@@ -79,18 +79,20 @@
         <label for="port" data-i18n="pair.port">Port</label>
         <input type="text" class="form-control" id="port" value="502" required>
         <label for="modbus_vebus" data-i18n="pair.modbus_vebus">com.victronenergy.vebus</label>
-        <select id="modbus_vebus">
+        <input type="text" class="form-control" id="modbus_vebus" required>
+        <!--<select id="modbus_vebus">
           <option value="227">227</option>
           <option value="228">228</option>
           <option value="242">242</option>
           <option value="246">246</option>
-        </select>
+        </select>-->
         <label for="modbus_battery" data-i18n="pair.modbus_battery">com.victronenergy.battery</label>
-        <select id="modbus_battery">
+        <input type="text" class="form-control" id="modbus_battery" required>
+        <!--<select id="modbus_battery">
           <option value="224">224</option>
           <option value="225">225</option>
           <option value="226">226</option>
-        </select>
+        </select>-->
     </div>
     <div class="form-group buttons">
         <button id="connect" class="button" data-i18n="pair.connect">Connect</button>

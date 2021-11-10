@@ -4,7 +4,6 @@ const { Device } = require('homey');
 const VictronGX = require('../../lib/victron');
 const { GX_v1 } = require('../../lib/devices/gx_v1');
 const enums = require('../../lib/enums');
-const dateFormat = require("dateformat");
 const minGridSuplusPower = 200;
 
 const deviceCapabilitesList = [
@@ -101,11 +100,11 @@ class GXDevice extends Device {
     }
 
     _initilializeTimers() {
-        this.logMessage('Adding timers');
+        //this.logMessage('Adding timers');
         //Update debug info every minute with last 10 messages
-        this.pollIntervals.push(setInterval(() => {
-            this.updateDebugMessages();
-        }, 60 * 1000));
+        //this.pollIntervals.push(setInterval(() => {
+        //    this.updateDebugMessages();
+        //}, 60 * 1000));
     }
 
     _deleteTimers() {
@@ -120,7 +119,7 @@ class GXDevice extends Device {
         let obj = {};
         obj[key] = String(value);
         this.setSettings(obj).catch(err => {
-            this.error('Failed to update settings', err);
+            this.error(`Failed to update setting '${key}' with value '${value}'`, err);
         });
     }
 
@@ -348,7 +347,8 @@ class GXDevice extends Device {
                 }
             }
 
-            self.setSettings({ last_error: dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss') + '\n' + message })
+            const timeString = new Date().toLocaleString('sv-SE', { hour12: false, timeZone: self.homey.clock.getTimezone() });
+            self.setSettings({ last_error: timeString + '\n' + message })
                 .catch(err => {
                     self.error('Failed to update settings', err);
                 });
@@ -504,7 +504,8 @@ class GXDevice extends Device {
             this.gx.log.shift();
         }
         //Add new entry
-        this.gx.log.push(dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss') + ' ' + message + '\n');
+        const timeString = new Date().toLocaleString('sv-SE', { hour12: false, timeZone: this.homey.clock.getTimezone() });
+        this.gx.log.push(timeString + ' ' + message + '\n');
     }
 
     getLogMessages() {
@@ -512,12 +513,14 @@ class GXDevice extends Device {
     }
 
     updateDebugMessages() {
-        this.setSettings({
-            log: this.getLogMessages()
-        })
-            .catch(err => {
-                this.error('Failed to update debug messages', err);
-            });
+        let msg = this.getLogMessages();
+        if (msg != null) {
+            this.setSettings({ log: msg })
+                .catch(err => {
+                    this.error('Failed to update log messages', err);
+                    this.error(`Messages: '${msg}'`);
+                });
+        }
     }
 
     removeCapabilityHelper(capability) {
