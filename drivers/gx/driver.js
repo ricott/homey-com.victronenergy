@@ -497,8 +497,8 @@ class GXDriver extends Driver {
                     settings: {
                         address: settings.address,
                         port: Number(settings.port),
-                        modbus_vebus_unitId: settings.modbus_vebus,
-                        modbus_battery_unitId: settings.modbus_battery
+                        modbus_vebus_unitId: Number(settings.modbus_vebus),
+                        modbus_battery_unitId: Number(settings.modbus_battery)
                     }
                 });
             } else if (discoveryResponse.outcome == 'connect_failure') {
