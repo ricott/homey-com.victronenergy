@@ -6,105 +6,57 @@ const { GX_v1 } = require('../../lib/devices/gx_v1');
 const enums = require('../../lib/enums');
 const minGridSuplusPower = 200;
 
-const deviceCapabilitesList = [
-    'measure_power',
-    'measure_power.grid',
-    'measure_power.battery',
-    'measure_power.PV',
-    'vebus_status',
-    'alarm_status',
-    'battery_status',
-    'battery_capacity',
-    'measure_voltage.battery',
-    'measure_current.battery',
-    'switch_position'
-];
-
 class GXDevice extends Device {
 
     async onInit() {
-
         this.pollIntervals = [];
-        this.gx = {
-            id: this.getData().id,
-            name: this.getName(),
-            address: this.getSettings().address,
-            port: this.getSettings().port,
-            refreshInterval: this.getSettings().refreshInterval,
-            modbus_vebus_unitId: this.getSettings().modbus_vebus_unitId,
-            modbus_battery_unitId: this.getSettings().modbus_battery_unitId,
-            controlChargeCurrent: this.getSettings().controlChargeCurrent,
-            grid_surplus: 0,
-            vebusAlarms: '',
-            vebusWarnings: '',
-            readings: {},
-            log: []
-        };
+        this.api = null;
+        this.vebusAlarms = '';
+        this.vebusWarnings = '';
+        this.localLog = [];
+        await this.setStoreValue('grid_surplus', 0);
 
         this.logMessage(`Victron GX device initiated`);
-        this.logMessage(`Control charge current: ${this.gx.controlChargeCurrent}`);
-        await this.upgradeDevice();
+        this.logMessage(`Control charge current: ${this.getSettings().controlChargeCurrent}`);
 
-        this.setupGXSession();
+        await this.setupGXSession(
+            this.getSettings().address,
+            this.getSettings().port,
+            this.getSettings().modbus_vebus_unitId,
+            this.getSettings().modbus_battery_unitId,
+            this.getSettings().refreshInterval);
         this._initilializeTimers();
     }
 
-    async upgradeDevice() {
-        this.log('About to upgrade existing device');
-        //v1.0.1 renamed measure_power.consumption to measure_power
-        //Messy, we need to delete all capabilities and add them again to get them in correct order
-        if (!this.hasCapability('measure_power')) {
-            await this.reorgCapabilities();
-        } else {
-            this.log('- No upgrade needed');
+    async setupGXSession(host, port, vebusUnitId, batteryUnitId, refreshInterval) {
+        this.api = await new VictronGX({
+            host: host,
+            port: port,
+            vebusUnitId: vebusUnitId,
+            batteryUnitId: batteryUnitId,
+            refreshInterval: refreshInterval
+        });
+
+        await this._initializeEventListeners();
+    }
+
+    async destroyGXSession() {
+        if (this.api) {
+            await this.api.disconnect();
         }
     }
 
-    async reorgCapabilities() {
-        //Delete all capabilities and then add them in right order
-        this.logMessage(`Reorganizing all capabilities to correct order`);
-        //Delete all capabilities
-        this.getCapabilities().forEach(capability => {
-            this.removeCapabilityHelper(capability);
-        });
-
-        sleep(2000).then(() => {
-            //Add capabilities again in correct order
-            deviceCapabilitesList.forEach(capability => {
-                this.addCapabilityHelper(capability);
-            });
-        });
-    }
-
-    setupGXSession() {
-        this.gx.api = new VictronGX({
-            host: this.gx.address,
-            port: this.gx.port,
-            vebusUnitId: this.gx.modbus_vebus_unitId,
-            batteryUnitId: this.gx.modbus_battery_unitId,
-            refreshInterval: this.gx.refreshInterval
-        });
-
-        this._initializeEventListeners();
-    }
-
-    destroyGXSession() {
-        if (this.gx.api) {
-            this.gx.api.disconnect();
-        }
-    }
-
-    reinitializeGXSession() {
-        this.destroyGXSession();
-        this.setupGXSession();
+    async reinitializeGXSession(host, port, vebusUnitId, batteryUnitId, refreshInterval) {
+        await this.destroyGXSession();
+        await this.setupGXSession(host, port, vebusUnitId, batteryUnitId, refreshInterval);
     }
 
     _initilializeTimers() {
-        //this.logMessage('Adding timers');
+        this.logMessage('Adding timers');
         //Update debug info every minute with last 10 messages
-        //this.pollIntervals.push(setInterval(() => {
-        //    this.updateDebugMessages();
-        //}, 60 * 1000));
+        this.pollIntervals.push(setInterval(() => {
+            this.updateDebugMessages();
+        }, 60 * 1000));
     }
 
     _deleteTimers() {
@@ -154,15 +106,15 @@ class GXDevice extends Device {
         if (alarmArr.length > 0) {
             alarmMsg = alarmArr.join(', ');
         }
-        this.updateSettingIfChanged('vebusAlarms', alarmMsg, this.gx.vebusAlarms);
-        this.gx.vebusAlarms = alarmMsg;
+        this.updateSettingIfChanged('vebusAlarms', alarmMsg, this.vebusAlarms);
+        this.vebusAlarms = alarmMsg;
 
         let warningMsg = 'Ok'
         if (warningArr.length > 0) {
             warningMsg = warningArr.join(', ');
         }
-        this.updateSettingIfChanged('vebusWarnings', warningMsg, this.gx.vebusWarnings);
-        this.gx.vebusWarnings = warningMsg;
+        this.updateSettingIfChanged('vebusWarnings', warningMsg, this.vebusWarnings);
+        this.vebusWarnings = warningMsg;
 
         let status = 'Ok';
         if (alarmArr.length > 0) {
@@ -178,7 +130,7 @@ class GXDevice extends Device {
         this.logMessage(`No car is charging, resetting discharge power to ${this.getSetting('maxDischargePower')}W`);
         this.updateSetting('carCharging', 'false');
 
-        return this.gx.api.limitInverterPower(this.getSetting('maxDischargePower'))
+        return this.api.limitInverterPower(this.getSetting('maxDischargePower'))
             .then((result) => {
                 return true;
             }).catch(reason => {
@@ -191,7 +143,7 @@ class GXDevice extends Device {
         //Always limit discharge power, doesnt matter if pv power is there or not
         this.updateNumericSettingIfChanged('maxDischargePower', this.getSetting('activeMaxDischargePower'), 0, 'W');
         this.logMessage(`A car is charging, limiting discharge power to ${this.getSetting('maxDischargePowerWhenCarCharging')}W`);
-        return this.gx.api.limitInverterPower(this.getSetting('maxDischargePowerWhenCarCharging'))
+        return this.api.limitInverterPower(this.getSetting('maxDischargePowerWhenCarCharging'))
             .then((result) => {
                 return true;
             }).catch(reason => {
@@ -241,11 +193,11 @@ class GXDevice extends Device {
     }
 
     async adjustChargeCurrent(soc, activeMaxChargeCurrent) {
-        if (this.gx.controlChargeCurrent == 'yes') {
+        if (this.getSettings().controlChargeCurrent == 'yes') {
             let chargeCurrent = this.calculateChargeCurrent(soc);
             if (activeMaxChargeCurrent != chargeCurrent) {
                 this.logMessage(`SoC: ${soc}%, activeCurrent: ${activeMaxChargeCurrent}A, changing charge current to: ${chargeCurrent}A`);
-                this.gx.api.limitChargerCurrent(chargeCurrent)
+                this.api.limitChargerCurrent(chargeCurrent)
                     .catch(reason => {
                         this.error(`Failed to set charge current to ${chargeCurrent}A`, reason);
                     });
@@ -279,15 +231,21 @@ class GXDevice extends Device {
         }
         */
 
-    _initializeEventListeners() {
+    async _initializeEventListeners() {
         let self = this;
 
-        self.gx.api.on('properties', message => {
+        self.api.on('properties', message => {
             this.updateSetting('vrmId', message.vrmId);
             this.updateSetting('essMode', enums.decodeESSState(message.essMode));
         });
 
-        self.gx.api.on('readings', message => {
+        self.api.on('readings', message => {
+
+            let previousReadings = self.getStoreValue('previousReadings');
+            if (previousReadings == null) {
+                self.log('Previous readings is null');
+                previousReadings = {};
+            }
 
             let grid = message.gridL1 + message.gridL2 + message.gridL3;
             let pvPower = message.acPVInputL1 + message.acPVInputL2 + message.acPVInputL3;
@@ -309,19 +267,19 @@ class GXDevice extends Device {
             self._updateProperty('measure_current.battery', message.batteryCurrent);
             self._updateProperty('switch_position', enums.decodeSwitchPosition(message.switchPosition));
 
-            self.updateNumericSettingIfChanged('activeMaxChargeCurrent', message.maxChargeCurrent, self.gx.readings.maxChargeCurrent, 'A');
-            self.updateNumericSettingIfChanged('activeMaxDischargePower', message.activeMaxDischargePower, self.gx.readings.activeMaxDischargePower, 'W');
+            self.updateNumericSettingIfChanged('activeMaxChargeCurrent', message.maxChargeCurrent, previousReadings.maxChargeCurrent, 'A');
+            self.updateNumericSettingIfChanged('activeMaxDischargePower', message.activeMaxDischargePower, previousReadings.activeMaxDischargePower, 'W');
             //maxDischargePower should only be 0 first time
             if (self.getSetting('maxDischargePower').length === 0) {
                 self.updateNumericSettingIfChanged('maxDischargePower', message.activeMaxDischargePower, 0, 'W');
             }
-            self.updateNumericSettingIfChanged('maxGridFeedinPower', message.maxGridFeedinPower, self.gx.readings.maxGridFeedinPower, 'W');
-            self.updateNumericSettingIfChanged('gridSetpointPower', message.gridSetpointPower, self.gx.readings.gridSetpointPower, 'W');
-            self.updateNumericSettingIfChanged('minimumSOC', message.minimumSOC, self.gx.readings.minimumSOC, '%');
+            self.updateNumericSettingIfChanged('maxGridFeedinPower', message.maxGridFeedinPower, previousReadings.maxGridFeedinPower, 'W');
+            self.updateNumericSettingIfChanged('gridSetpointPower', message.gridSetpointPower, previousReadings.gridSetpointPower, 'W');
+            self.updateNumericSettingIfChanged('minimumSOC', message.minimumSOC, previousReadings.minimumSOC, '%');
 
             //Battery unitId may be empty, thus this value null
             if (message.timeSinceLastFullCharge) {
-                self.updateNumericSettingIfChanged('timeSinceLastFullCharge', message.timeSinceLastFullCharge, self.gx.readings.timeSinceLastFullCharge, 's');
+                self.updateNumericSettingIfChanged('timeSinceLastFullCharge', message.timeSinceLastFullCharge, previousReadings.timeSinceLastFullCharge, 's');
             }
 
             self.adjustChargeCurrent(message.batterySOC, message.maxChargeCurrent);
@@ -329,10 +287,10 @@ class GXDevice extends Device {
             //let efficiency = self.calculateEfficiency(message.batteryStatus, message);
 
             //Store a copy of the json
-            self.gx.readings = message;
+            self.setStoreValue('previousReadings', message);
         });
 
-        self.gx.api.on('error', error => {
+        self.api.on('error', error => {
             self.error('Houston we have a problem', error);
 
             let message = '';
@@ -387,8 +345,8 @@ class GXDevice extends Device {
                 } else if (key == 'alarm_status') {
                     let tokens = {
                         status: value,
-                        alarms: this.gx.vebusAlarms,
-                        warnings: this.gx.vebusWarnings
+                        alarms: this.vebusAlarms,
+                        warnings: this.vebusWarnings
                     }
                     this.driver.triggerDeviceFlow('alarm_status_changed', tokens, this);
 
@@ -410,11 +368,11 @@ class GXDevice extends Device {
                         power = value * -1;
                     }
 
-                    if (this.gx.grid_surplus != power) {
+                    if (this.getStoreValue('grid_surplus') != power) {
                         //Filter out most of the "false positives" when surplus is bouncing
                         //eg grid setpoint is set to 0
                         if (power === 0 || power > minGridSuplusPower) {
-                            this.gx.grid_surplus = power;
+                            this.setStoreValue('grid_surplus', power);
                             let tokens = {
                                 power: power,
                                 single_phase: Math.round(power / 230),
@@ -445,71 +403,72 @@ class GXDevice extends Device {
     onDeleted() {
         this.logMessage(`Deleting Victron GX device '${this.getName()}' from Homey.`);
         this._deleteTimers();
-        this.gx.api.disconnect();
-        this.gx = null;
-    }
-
-    onRenamed(name) {
-        this.logMessage(`Renaming Victron GX device from '${this.gx.name}' to '${name}'`);
-        this.gx.name = name;
+        this.api.disconnect();
+        this.api = null;
     }
 
     async onSettings({ oldSettings, newSettings, changedKeys }) {
         let changeConn = false;
+        let host, port, vebusUnitId, batteryUnitId, refreshInterval;
         if (changedKeys.indexOf("address") > -1) {
-            this.logMessage('Address value was change to:', newSettings.address);
-            this.gx.address = newSettings.address;
+            this.logMessage(`Address value was change to: '${newSettings.address}'`);
+            host = newSettings.address;
             changeConn = true;
         }
 
         if (changedKeys.indexOf("port") > -1) {
-            this.logMessage('Port value was change to:', newSettings.port);
-            this.gx.port = newSettings.port;
+            this.logMessage(`Port value was change to: '${newSettings.port}'`);
+            port = newSettings.port;
             changeConn = true;
         }
 
         if (changedKeys.indexOf("modbus_vebus_unitId") > -1) {
-            this.logMessage('Modbus UnitId for VEBus value was change to:', newSettings.modbus_vebus_unitId);
-            this.gx.modbus_vebus_unitId = newSettings.modbus_vebus_unitId;
+            this.logMessage(`Modbus UnitId for VEBus value was change to: '${newSettings.modbus_vebus_unitId}'`);
+            vebusUnitId = newSettings.modbus_vebus_unitId;
             changeConn = true;
         }
 
         if (changedKeys.indexOf("modbus_battery_unitId") > -1) {
-            this.logMessage('Modbus UnitId for battery value was change to:', newSettings.modbus_battery_unitId);
-            this.gx.modbus_battery_unitId = newSettings.modbus_battery_unitId;
+            this.logMessage(`Modbus UnitId for battery value was change to: '${newSettings.modbus_battery_unitId}'`);
+            batteryUnitId = newSettings.modbus_battery_unitId;
             changeConn = true;
         }
 
         if (changedKeys.indexOf("refreshInterval") > -1) {
-            this.logMessage('Refresh interval value was change to:', newSettings.refreshInterval);
-            this.gx.refreshInterval = newSettings.refreshInterval;
+            this.logMessage(`Refresh interval value was change to: '${newSettings.refreshInterval}'`);
+            refreshInterval = newSettings.refreshInterval;
             changeConn = true;
         }
 
         if (changedKeys.indexOf("controlChargeCurrent") > -1) {
-            this.logMessage('Control charge current value was change to:', newSettings.controlChargeCurrent);
-            this.gx.controlChargeCurrent = newSettings.controlChargeCurrent;
+            this.logMessage(`Control charge current value was change to: '${newSettings.controlChargeCurrent}'`);
         }
 
         if (changeConn) {
             //We need to re-initialize the GX session since setting(s) are changed
-            this.reinitializeGXSession();
+            this.reinitializeGXSession(
+                host || this.getSettings().address, 
+                port || this.getSettings().port, 
+                vebusUnitId || this.getSettings().modbus_vebus_unitId, 
+                batteryUnitId || this.getSettings().modbus_battery_unitId, 
+                refreshInterval || this.getSettings().refreshInterval
+            );
         }
     }
-
+    
     logMessage(message) {
         this.log(`[${this.getName()}] ${message}`);
-        if (this.gx.log.length > 49) {
+        if (this.localLog.length > 49) {
             //Remove oldest entry
-            this.gx.log.shift();
+            this.localLog.shift();
         }
         //Add new entry
         const timeString = new Date().toLocaleString('sv-SE', { hour12: false, timeZone: this.homey.clock.getTimezone() });
-        this.gx.log.push(timeString + ' ' + message + '\n');
+        this.localLog.push(timeString + ' ' + message + '\n');
     }
 
     getLogMessages() {
-        return this.gx.log.toString();
+        return this.localLog.toString();
     }
 
     updateDebugMessages() {

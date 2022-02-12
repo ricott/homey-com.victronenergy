@@ -1,4 +1,8 @@
 {
+  "1.0.4": {
+    "en": "Maintenance",
+    "sv": "Underhåll"
+  },
   "1.0.3": {
     "en": "Your favourite device is now recognized as an energy meter in Homey Energy",
     "sv": "Din GX enhet syns nu i Homey Energi som en elmätare"
