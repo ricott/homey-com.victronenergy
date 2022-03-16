@@ -30,7 +30,7 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('switch_position_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'switch_position_condition' triggered`);
-                    let mode = args.device.getCapabilityValue('switch_position');
+                    const mode = args.device.getCapabilityValue('switch_position');
                     this.log(`[${args.device.getName()}] - switch position: ${mode}, condition position: ${args.mode.name}`);
 
                     if (mode == args.mode.name) {
@@ -51,7 +51,7 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('battery_status_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'battery_status_condition' triggered`);
-                    let status = args.device.getCapabilityValue('battery_status');
+                    const status = args.device.getCapabilityValue('battery_status');
                     this.log(`[${args.device.getName()}] - battery status: ${status}, condition status: ${args.status.name}`);
 
                     if (status == args.status.name) {
@@ -72,7 +72,7 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('vebus_status_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'vebus_status_condition' triggered`);
-                    let status = args.device.getCapabilityValue('vebus_status');
+                    const status = args.device.getCapabilityValue('vebus_status');
                     this.log(`[${args.device.getName()}] - vebus status: ${status}, condition status: ${args.status.name}`);
 
                     if (status == args.status.name) {
@@ -94,7 +94,7 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('battery_soc_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'battery_soc_condition' triggered`);
-                    let soc = args.device.getCapabilityValue('battery_capacity');
+                    const soc = args.device.getCapabilityValue('battery_capacity');
                     this.log(`[${args.device.getName()}] - battery soc: ${soc}, condition soc: ${args.soc}`);
 
                     if (soc < args.soc) {
@@ -108,7 +108,7 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('consumption_power_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'consumption_power_condition' triggered`);
-                    let power = args.device.getCapabilityValue('measure_power');
+                    const power = args.device.getCapabilityValue('measure_power');
                     this.log(`[${args.device.getName()}] - consumption power: ${power}, condition power: ${args.power}`);
 
                     if (power < args.power) {
@@ -122,7 +122,7 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('grid_power_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'grid_power_condition' triggered`);
-                    let power = args.device.getCapabilityValue('measure_power.grid');
+                    const power = args.device.getCapabilityValue('measure_power.grid');
                     this.log(`[${args.device.getName()}] - grid power: ${power}, condition power: ${args.power}`);
 
                     if (power < args.power) {
@@ -136,7 +136,7 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('battery_power_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'battery_power_condition' triggered`);
-                    let power = args.device.getCapabilityValue('measure_power.battery');
+                    const power = args.device.getCapabilityValue('measure_power.battery');
                     this.log(`[${args.device.getName()}] - battery power: ${power}, condition power: ${args.power}`);
 
                     if (power < args.power) {
@@ -150,7 +150,7 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('solar_power_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'solar_power_condition' triggered`);
-                    let power = args.device.getCapabilityValue('measure_power.PV');
+                    const power = args.device.getCapabilityValue('measure_power.PV');
                     this.log(`[${args.device.getName()}] - solar power: ${power}, condition power: ${args.power}`);
 
                     if (power < args.power) {
@@ -164,7 +164,7 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('excess_solar_power_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'excess_solar_power_condition' triggered`);
-                    let excess = args.device.calculateExcessSolar();
+                    const excess = args.device.calculateExcessSolar();
                     this.log(`[${args.device.getName()}] - excess solar power: ${excess}, condition power: ${args.power}`);
 
                     if (excess < args.power) {
@@ -178,7 +178,8 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('charger_current_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'charger_current_condition' triggered`);
-                    let current = args.device.gx.readings.maxChargeCurrent;
+                    const previousReadings = args.device.getStoreValue('previousReadings');
+                    const current = previousReadings.maxChargeCurrent;
                     this.log(`[${args.device.getName()}] - max charge current: ${current}`);
                     this.log(`[${args.device.getName()}] - condition type: ${args.conditionType.id}, condition current: ${args.current}`);
 
@@ -196,7 +197,8 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('grid_setpoint_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'grid_setpoint_condition' triggered`);
-                    let power = args.device.gx.readings.gridSetpointPower;
+                    const previousReadings = args.device.getStoreValue('previousReadings');
+                    const power = previousReadings.gridSetpointPower;
                     this.log(`[${args.device.getName()}] - grid setpoint power: ${power}`);
                     this.log(`[${args.device.getName()}] - condition type: ${args.conditionType.id}, condition power: ${args.power}`);
 
@@ -214,7 +216,8 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('inverter_power_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'inverter_power_condition' triggered`);
-                    let power = args.device.gx.readings.activeMaxDischargePower;
+                    const previousReadings = args.device.getStoreValue('previousReadings');
+                    const power = previousReadings.activeMaxDischargePower;
                     this.log(`[${args.device.getName()}] - active max inverter power: ${power}`);
                     this.log(`[${args.device.getName()}] - condition type: ${args.conditionType.id}, condition power: ${args.power}`);
 
@@ -232,7 +235,8 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('grid_feedin_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'grid_feedin_condition' triggered`);
-                    let power = args.device.gx.readings.maxGridFeedinPower;
+                    const previousReadings = args.device.getStoreValue('previousReadings');
+                    const power = previousReadings.maxGridFeedinPower;
                     this.log(`[${args.device.getName()}] - max grid feed-in power: ${power}`);
                     this.log(`[${args.device.getName()}] - condition type: ${args.conditionType.id}, condition power: ${args.power}`);
 
@@ -250,7 +254,8 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('minimum_soc_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'minimum_soc_condition' triggered`);
-                    let soc = args.device.gx.readings.minimumSOC;
+                    const previousReadings = args.device.getStoreValue('previousReadings');
+                    const soc = previousReadings.minimumSOC;
                     this.log(`[${args.device.getName()}] - minimum soc: ${soc}`);
                     this.log(`[${args.device.getName()}] - condition type: ${args.conditionType.id}, condition soc: ${args.soc}`);
 
@@ -277,10 +282,10 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('ac_loads_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'ac_loads_condition' triggered`);
+                    const previousReadings = args.device.getStoreValue('previousReadings');
 
-                    let ac_loads = args.device.gx.readings.consumptionL1 +
-                        args.device.gx.readings.consumptionL2 +
-                        args.device.gx.readings.consumptionL3;
+                    const ac_loads = previousReadings.consumptionL1 +
+                        previousReadings.consumptionL2 + previousReadings.consumptionL3;
                     this.log(`[${args.device.getName()}] - AC loads: ${ac_loads}, condition power: ${args.power}`);
 
                     if (ac_loads < args.power) {
@@ -294,10 +299,10 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('ac_input_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'ac_input_condition' triggered`);
+                    const previousReadings = args.device.getStoreValue('previousReadings');
 
-                    let ac_inputs = args.device.gx.readings.inputL1 +
-                        args.device.gx.readings.inputL2 +
-                        args.device.gx.readings.inputL3;
+                    const ac_inputs = previousReadings.inputL1 +
+                        previousReadings.inputL2 + previousReadings.inputL3;
                     this.log(`[${args.device.getName()}] - AC inputs: ${ac_inputs}, condition power: ${args.power}`);
 
                     if (ac_inputs < args.power) {
@@ -311,10 +316,10 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('ac_output_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'ac_output_condition' triggered`);
+                    const previousReadings = args.device.getStoreValue('previousReadings');
 
-                    let ac_outputs = args.device.gx.readings.outputL1 +
-                        args.device.gx.readings.outputL2 +
-                        args.device.gx.readings.outputL3;
+                    const ac_outputs = previousReadings.outputL1 +
+                        previousReadings.outputL2 + previousReadings.outputL3;
                     this.log(`[${args.device.getName()}] - AC outputs: ${ac_outputs}, condition power: ${args.power}`);
 
                     if (ac_outputs < args.power) {
@@ -328,9 +333,10 @@ class GXDriver extends Driver {
             this.homey.flow.getConditionCard('timeSinceLastFullCharge_condition')
                 .registerRunListener(async (args, state) => {
                     this.log(`[${args.device.getName()}] Condition 'timeSinceLastFullCharge_condition' triggered`);
-                    this.log(`[${args.device.getName()}] - Time since last full charge: ${args.device.gx.readings.timeSinceLastFullCharge}, condition time: ${args.time}`);
+                    const previousReadings = args.device.getStoreValue('previousReadings');
+                    this.log(`[${args.device.getName()}] - Time since last full charge: ${previousReadings.timeSinceLastFullCharge}, condition time: ${args.time}`);
 
-                    if (args.device.gx.readings.timeSinceLastFullCharge < args.time) {
+                    if (previousReadings.timeSinceLastFullCharge < args.time) {
                         return true;
                     } else {
                         return false;
@@ -368,13 +374,73 @@ class GXDriver extends Driver {
                 }
             );
 
+        actionName = 'set_relay1_state';
+        this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
+            .registerRunListener(async (args) => {
+                this.log(`[${args.device.getName()}] Action 'set_relay1_state' triggered`);
+                this.log(`[${args.device.getName()}] - state: '${args.state.id}' (${args.state.name})`);
+
+                if (args.state.id == 'true') {
+                    return args.device.api.turnOnGXRelay1()
+                        .then(function (result) {
+                            return Promise.resolve(true);
+                        }).catch(reason => {
+                            return Promise.reject('Failed to turn on relay1');
+                        });
+                } else {
+                    return args.device.api.turnOffGXRelay1()
+                        .then(function (result) {
+                            return Promise.resolve(true);
+                        }).catch(reason => {
+                            return Promise.reject('Failed to turn off relay1');
+                        });
+                }
+            });
+
+        this.flowCards[actionName]
+            .registerArgumentAutocompleteListener('state',
+                async (query, args) => {
+                    return enums.getRelayState();
+                }
+            );
+
+        actionName = 'set_relay2_state';
+        this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
+            .registerRunListener(async (args) => {
+                this.log(`[${args.device.getName()}] Action 'set_relay2_state' triggered`);
+                this.log(`[${args.device.getName()}] - state: '${args.state.id}' (${args.state.name})`);
+
+                if (args.state.id == 'true') {
+                    return args.device.api.turnOnGXRelay2()
+                        .then(function (result) {
+                            return Promise.resolve(true);
+                        }).catch(reason => {
+                            return Promise.reject('Failed to turn on relay2');
+                        });
+                } else {
+                    return args.device.api.turnOffGXRelay2()
+                        .then(function (result) {
+                            return Promise.resolve(true);
+                        }).catch(reason => {
+                            return Promise.reject('Failed to turn off relay2');
+                        });
+                }
+            });
+
+        this.flowCards[actionName]
+            .registerArgumentAutocompleteListener('state',
+                async (query, args) => {
+                    return enums.getRelayState();
+                }
+            );
+
         actionName = 'set_switch_position';
         this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
             .registerRunListener(async (args) => {
                 this.log(`[${args.device.getName()}] Action 'set_switch_position' triggered`);
                 this.log(`[${args.device.getName()}] - switch position: '${args.mode.id}' (${args.mode.name})`);
 
-                return args.device.gx.api.setSwitchPosition(args.mode.id)
+                return args.device.api.setSwitchPosition(args.mode.id)
                     .then(function (result) {
                         return Promise.resolve(true);
                     }).catch(reason => {
@@ -395,7 +461,7 @@ class GXDriver extends Driver {
                 this.log(`[${args.device.getName()}] Action 'update_grid_setpoint' triggered`);
                 this.log(`[${args.device.getName()}] - power: '${args.power}'`);
 
-                return args.device.gx.api.writeGridSetpoint(args.power)
+                return args.device.api.writeGridSetpoint(args.power)
                     .then(function (result) {
                         return Promise.resolve(true);
                     }).catch(reason => {
@@ -409,7 +475,7 @@ class GXDriver extends Driver {
                 this.log(`[${args.device.getName()}] Action 'limit_inverter' triggered`);
                 this.log(`[${args.device.getName()}] - power: '${args.power}'`);
 
-                return args.device.gx.api.limitInverterPower(args.power)
+                return args.device.api.limitInverterPower(args.power)
                     .then(function (result) {
                         return Promise.resolve(true);
                     }).catch(reason => {
@@ -423,7 +489,7 @@ class GXDriver extends Driver {
                 this.log(`[${args.device.getName()}] Action 'limit_charger' triggered`);
                 this.log(`[${args.device.getName()}] - current: '${args.current}'`);
 
-                return args.device.gx.api.limitChargerCurrent(args.current)
+                return args.device.api.limitChargerCurrent(args.current)
                     .then(function (result) {
                         return Promise.resolve(true);
                     }).catch(reason => {
@@ -437,7 +503,7 @@ class GXDriver extends Driver {
                 this.log(`[${args.device.getName()}] Action 'limit_grid_feedin' triggered`);
                 this.log(`[${args.device.getName()}] - power: '${args.power}'`);
 
-                return args.device.gx.api.limitGridFeedInPower(args.power)
+                return args.device.api.limitGridFeedInPower(args.power)
                     .then(function (result) {
                         return Promise.resolve(true);
                     }).catch(reason => {
@@ -451,7 +517,7 @@ class GXDriver extends Driver {
                 this.log(`[${args.device.getName()}] Action 'update_minimum_soc' triggered`);
                 this.log(`[${args.device.getName()}] - soc: '${args.soc}'`);
 
-                return args.device.gx.api.writeESSMinimumSOC(args.soc)
+                return args.device.api.writeESSMinimumSOC(args.soc)
                     .then(function (result) {
                         return Promise.resolve(true);
                     }).catch(reason => {

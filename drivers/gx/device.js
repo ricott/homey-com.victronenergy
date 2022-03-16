@@ -127,7 +127,7 @@ class GXDevice extends Device {
     }
 
     noCarIsCharging() {
-        this.logMessage(`No car is charging, resetting discharge power to ${this.getSetting('maxDischargePower')}W`);
+        this.logMessage(`No car is charging, resetting discharge power to ${this.getSetting('maxDischargePower')}`);
         this.updateSetting('carCharging', 'false');
 
         return this.api.limitInverterPower(this.getSetting('maxDischargePower'))

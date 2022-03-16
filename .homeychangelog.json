@@ -1,4 +1,8 @@
 {
+  "1.0.5": {
+    "en": "Control your GX device relays",
+    "sv": "Styr din GX enhets relä"
+  },
   "1.0.4": {
     "en": "Maintenance",
     "sv": "Underhåll"

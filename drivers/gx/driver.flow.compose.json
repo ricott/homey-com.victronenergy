@@ -713,6 +713,48 @@
             ]
         },
         {
+            "id": "set_relay1_state",
+            "title": {
+                "en": "Control GX relay 1",
+                "sv": "Styr GX relä 1"
+            },
+            "titleFormatted": {
+                "en": "Switch [[state]] GX relay 1",
+                "sv": "Ändra GX relä 1 till [[state]]"
+            },
+            "args": [
+                {
+                    "name": "state",
+                    "type": "autocomplete",
+                    "title": {
+                        "en": "State",
+                        "sv": "Status"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "set_relay2_state",
+            "title": {
+                "en": "Control GX relay 2",
+                "sv": "Styr GX relä 2"
+            },
+            "titleFormatted": {
+                "en": "Switch [[state]] GX relay 2",
+                "sv": "Ändra GX relä 2 till [[state]]"
+            },
+            "args": [
+                {
+                    "name": "state",
+                    "type": "autocomplete",
+                    "title": {
+                        "en": "State",
+                        "sv": "Status"
+                    }
+                }
+            ]
+        },
+        {
             "id": "set_switch_position",
             "title": {
                 "en": "Set switch position",
