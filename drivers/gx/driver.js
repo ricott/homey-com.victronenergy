@@ -455,6 +455,27 @@ class GXDriver extends Driver {
                 }
             );
 
+        actionName = 'set_batterylife_state';
+        this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
+            .registerRunListener(async (args) => {
+                this.log(`[${args.device.getName()}] Action 'set_batterylife_state' triggered`);
+                this.log(`[${args.device.getName()}] - state: '${args.mode.id}' (${args.mode.name})`);
+
+                return args.device.api.setBatteryLifeState(args.mode.id)
+                    .then(function (result) {
+                        return Promise.resolve(true);
+                    }).catch(reason => {
+                        return Promise.reject('Failed to set batterylife state');
+                    });
+            });
+
+        this.flowCards[actionName]
+            .registerArgumentAutocompleteListener('mode',
+                async (query, args) => {
+                    return enums.getBatteryLifeState();
+                }
+            );
+
         actionName = 'update_grid_setpoint';
         this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
             .registerRunListener(async (args) => {

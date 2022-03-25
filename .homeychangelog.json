@@ -1,4 +1,7 @@
 {
+  "1.0.6": {
+    "en": "Control BatteryLife state"
+  },
   "1.0.5": {
     "en": "Control your GX device relays",
     "sv": "Styr din GX enhets relä"
