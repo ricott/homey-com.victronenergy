@@ -776,6 +776,24 @@
             ]
         },
         {
+            "id": "set_batterylife_state",
+            "title": {
+                "en": "Set BatteryLife state"
+            },
+            "titleFormatted": {
+                "en": "Set BatteryLife state to [[mode]]"
+            },
+            "args": [
+                {
+                    "name": "mode",
+                    "type": "autocomplete",
+                    "title": {
+                        "en": "Mode"
+                    }
+                }
+            ]
+        },
+        {
             "id": "update_grid_setpoint",
             "title": {
                 "en": "Update grid setpoint",
