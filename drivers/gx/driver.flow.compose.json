@@ -715,12 +715,12 @@
         {
             "id": "set_relay1_state",
             "title": {
-                "en": "Control GX relay 1",
-                "sv": "Styr GX relä 1"
+                "en": "Switch relay 1 on/off",
+                "sv": "Styr relä 1 on/off"
             },
             "titleFormatted": {
-                "en": "Switch [[state]] GX relay 1",
-                "sv": "Ändra GX relä 1 till [[state]]"
+                "en": "Switch relay 1 to [[state]]",
+                "sv": "Ändra relä 1 till [[state]]"
             },
             "args": [
                 {
@@ -736,12 +736,12 @@
         {
             "id": "set_relay2_state",
             "title": {
-                "en": "Control GX relay 2",
-                "sv": "Styr GX relä 2"
+                "en": "Switch relay 2 on/off",
+                "sv": "Styr relä 2 on/off"
             },
             "titleFormatted": {
-                "en": "Switch [[state]] GX relay 2",
-                "sv": "Ändra GX relä 2 till [[state]]"
+                "en": "Switch relay 2 to [[state]]",
+                "sv": "Ändra relä 2 till [[state]]"
             },
             "args": [
                 {
@@ -778,17 +778,20 @@
         {
             "id": "set_batterylife_state",
             "title": {
-                "en": "Set BatteryLife state"
+                "en": "Set batteryLife state",
+                "sv": "Uppdatera batteriliv status"
             },
             "titleFormatted": {
-                "en": "Set BatteryLife state to [[mode]]"
+                "en": "Set batteryLife state to [[mode]]",
+                "sv": "Uppdatera batteriliv status till [[mode]]"
             },
             "args": [
                 {
                     "name": "mode",
                     "type": "autocomplete",
                     "title": {
-                        "en": "Mode"
+                        "en": "Mode",
+                        "sv": "Mode"
                     }
                 }
             ]
