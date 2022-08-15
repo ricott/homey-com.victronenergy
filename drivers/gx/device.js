@@ -247,17 +247,21 @@ class GXDevice extends Device {
                 previousReadings = {};
             }
 
-            let grid = message.gridL1 + message.gridL2 + message.gridL3;
+            const grid = message.gridL1 + message.gridL2 + message.gridL3;
+            const genset = message.gensetL1 + message.gensetL2 + message.gensetL3;
             let pvPower = message.acPVInputL1 + message.acPVInputL2 + message.acPVInputL3;
             pvPower += message.acPVOutputL1 + message.acPVOutputL2 + message.acPVOutputL3;
             pvPower += message.dcPV;
 
             //Calculate self consumption
-            let consumption = pvPower - message.batteryPower + grid;
+            let consumption = pvPower - message.batteryPower + grid + genset;
             self._updateProperty('measure_power', consumption);
             self._updateProperty('measure_power.grid', grid);
             self._updateProperty('measure_power.PV', pvPower);
             self._updateProperty('measure_power.battery', message.batteryPower);
+            self._updateProperty('measure_power.genset', genset);
+
+            self._updateProperty('input_source', enums.decodeInputPowerSource(message.activeInputSource));
             self._updateProperty('vebus_status', enums.decodeVEBusStatus(message.veBusStatus));
             let alarmStatus = self.handleAlarmStatuses(message);
             self._updateProperty('alarm_status', alarmStatus);
@@ -324,26 +328,32 @@ class GXDevice extends Device {
             if (this.isCapabilityValueChanged(key, value)) {
                 this.setCapabilityValue(key, value);
 
-                if (key == 'battery_status') {
-                    let tokens = {
+                if (key == 'input_source') {
+                    const tokens = {
+                        source: value
+                    }
+                    this.driver.triggerDeviceFlow('input_source_changed', tokens, this);
+
+                } else if (key == 'battery_status') {
+                    const tokens = {
                         status: value
                     }
                     this.driver.triggerDeviceFlow('battery_status_changed', tokens, this);
 
                 } else if (key == 'vebus_status') {
-                    let tokens = {
+                    const tokens = {
                         status: value
                     }
                     this.driver.triggerDeviceFlow('vebus_status_changed', tokens, this);
 
                 } else if (key == 'battery_capacity') {
-                    let tokens = {
+                    const tokens = {
                         soc: value
                     }
                     this.driver.triggerDeviceFlow('soc_changed', tokens, this);
 
                 } else if (key == 'alarm_status') {
-                    let tokens = {
+                    const tokens = {
                         status: value,
                         alarms: this.vebusAlarms,
                         warnings: this.vebusWarnings
@@ -351,19 +361,19 @@ class GXDevice extends Device {
                     this.driver.triggerDeviceFlow('alarm_status_changed', tokens, this);
 
                 } else if (key == 'switch_position') {
-                    let tokens = {
+                    const tokens = {
                         mode: value
                     }
                     this.driver.triggerDeviceFlow('switch_position_changed', tokens, this);
 
                 } else if (key == 'measure_voltage.battery') {
-                    let tokens = {
+                    const tokens = {
                         voltage: value
                     }
                     this.driver.triggerDeviceFlow('battery_voltage_changed', tokens, this);
 
                 } else if (key == 'measure_power.grid') {
-                    let power = 0;
+                    const power = 0;
                     if (value < 0) {
                         power = value * -1;
                     }
@@ -447,15 +457,15 @@ class GXDevice extends Device {
         if (changeConn) {
             //We need to re-initialize the GX session since setting(s) are changed
             this.reinitializeGXSession(
-                host || this.getSettings().address, 
-                port || this.getSettings().port, 
-                vebusUnitId || this.getSettings().modbus_vebus_unitId, 
-                batteryUnitId || this.getSettings().modbus_battery_unitId, 
+                host || this.getSettings().address,
+                port || this.getSettings().port,
+                vebusUnitId || this.getSettings().modbus_vebus_unitId,
+                batteryUnitId || this.getSettings().modbus_battery_unitId,
                 refreshInterval || this.getSettings().refreshInterval
             );
         }
     }
-    
+
     logMessage(message) {
         this.log(`[${this.getName()}] ${message}`);
         if (this.localLog.length > 49) {

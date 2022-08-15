@@ -24,8 +24,30 @@ class GXDriver extends Driver {
         this.flowCards['soc_changed'] = this.homey.flow.getDeviceTriggerCard('soc_changed');
         this.flowCards['battery_voltage_changed'] = this.homey.flow.getDeviceTriggerCard('battery_voltage_changed');
         this.flowCards['grid_surplus_changed'] = this.homey.flow.getDeviceTriggerCard('grid_surplus_changed');
+        this.flowCards['input_source_changed'] = this.homey.flow.getDeviceTriggerCard('input_source_changed');
 
         //Conditions
+        this.flowCards['input_source_condition'] =
+            this.homey.flow.getConditionCard('input_source_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'input_source_condition' triggered`);
+                    const source = args.device.getCapabilityValue('input_source');
+                    this.log(`[${args.device.getName()}] - input source: ${source}, condition status: ${args.source.name}`);
+
+                    if (source == args.source.name) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+
+        this.flowCards['input_source_condition']
+            .registerArgumentAutocompleteListener('source',
+                async (query, args) => {
+                    return enums.getInputPowerSource();
+                }
+            );
+
         this.flowCards['switch_position_condition'] =
             this.homey.flow.getConditionCard('switch_position_condition')
                 .registerRunListener(async (args, state) => {

@@ -1,4 +1,8 @@
 {
+   "1.0.7": {
+    "en": "Support for showing generator power",
+    "sv": "Stöd för att visa generatoreffekt"
+  },
   "1.0.6": {
     "en": "Control BatteryLife state",
     "sv": "Styr batteriliv status"

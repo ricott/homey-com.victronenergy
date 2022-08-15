@@ -15,9 +15,11 @@
   },
   "capabilities": [
     "measure_power",
+    "input_source",
     "measure_power.grid",
     "measure_power.battery",
     "measure_power.PV",
+    "measure_power.genset",
     "vebus_status",
     "alarm_status",
     "battery_status",
@@ -49,6 +51,12 @@
       "title": {
         "en": "Solar",
         "sv": "Solceller"
+      }
+    },
+    "measure_power.genset": {
+      "title": {
+        "en": "Generator",
+        "sv": "Generator"
       }
     },
     "measure_voltage.battery": {

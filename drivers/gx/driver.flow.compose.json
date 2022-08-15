@@ -1,6 +1,30 @@
 {
     "triggers": [
         {
+            "id": "input_source_changed",
+            "title": {
+                "en": "Input source changed",
+                "sv": "Input källa ändrades"
+            },
+            "titleFormatted": {
+                "en": "Input source changed to [[source]]",
+                "sv": "Input källa ändrades till [[source]]"
+            },
+            "tokens": [
+                {
+                    "name": "source",
+                    "type": "string",
+                    "title": {
+                        "en": "Source",
+                        "sv": "Källa"
+                    },
+                    "example": {
+                        "en": "Grid"
+                    }
+                }
+            ]
+        },
+        {
             "id": "switch_position_changed",
             "title": {
                 "en": "Switch position changed",
@@ -214,6 +238,27 @@
         }
     ],
     "conditions": [
+        {
+            "id": "input_source_condition",
+            "title": {
+                "en": "Input source is !{{|not}}",
+                "sv": "Input källa är !{{|inte}}"
+            },
+            "titleFormatted": {
+                "en": "Input source is !{{|not}} [[source]]",
+                "sv": "Input källa är !{{|inte}} [[source]]"
+            },
+            "args": [
+                {
+                    "name": "source",
+                    "type": "autocomplete",
+                    "title": {
+                        "en": "Source",
+                        "sv": "Källa"
+                    }
+                }
+            ]
+        },
         {
             "id": "switch_position_condition",
             "title": {

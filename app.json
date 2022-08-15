@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.victronenergy",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -71,6 +71,37 @@
   },
   "flow": {
     "triggers": [
+      {
+        "id": "input_source_changed",
+        "title": {
+          "en": "Input source changed",
+          "sv": "Input källa ändrades"
+        },
+        "titleFormatted": {
+          "en": "Input source changed to [[source]]",
+          "sv": "Input källa ändrades till [[source]]"
+        },
+        "tokens": [
+          {
+            "name": "source",
+            "type": "string",
+            "title": {
+              "en": "Source",
+              "sv": "Källa"
+            },
+            "example": {
+              "en": "Grid"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          }
+        ]
+      },
       {
         "id": "switch_position_changed",
         "title": {
@@ -334,6 +365,32 @@
       }
     ],
     "conditions": [
+      {
+        "id": "input_source_condition",
+        "title": {
+          "en": "Input source is !{{|not}}",
+          "sv": "Input källa är !{{|inte}}"
+        },
+        "titleFormatted": {
+          "en": "Input source is !{{|not}} [[source]]",
+          "sv": "Input källa är !{{|inte}} [[source]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "source",
+            "type": "autocomplete",
+            "title": {
+              "en": "Source",
+              "sv": "Källa"
+            }
+          }
+        ]
+      },
       {
         "id": "switch_position_condition",
         "title": {
@@ -1207,9 +1264,11 @@
       },
       "capabilities": [
         "measure_power",
+        "input_source",
         "measure_power.grid",
         "measure_power.battery",
         "measure_power.PV",
+        "measure_power.genset",
         "vebus_status",
         "alarm_status",
         "battery_status",
@@ -1241,6 +1300,12 @@
           "title": {
             "en": "Solar",
             "sv": "Solceller"
+          }
+        },
+        "measure_power.genset": {
+          "title": {
+            "en": "Generator",
+            "sv": "Generator"
           }
         },
         "measure_voltage.battery": {
@@ -1818,6 +1883,17 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/assets/battery_status.svg"
+    },
+    "input_source": {
+      "type": "string",
+      "title": {
+        "en": "Input source",
+        "sv": "Källa"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/input.svg"
     },
     "switch_position": {
       "type": "string",
