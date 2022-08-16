@@ -373,7 +373,7 @@ class GXDevice extends Device {
                     this.driver.triggerDeviceFlow('battery_voltage_changed', tokens, this);
 
                 } else if (key == 'measure_power.grid') {
-                    const power = 0;
+                    let power = 0;
                     if (value < 0) {
                         power = value * -1;
                     }
@@ -383,7 +383,7 @@ class GXDevice extends Device {
                         //eg grid setpoint is set to 0
                         if (power === 0 || power > minGridSuplusPower) {
                             this.setStoreValue('grid_surplus', power);
-                            let tokens = {
+                            const tokens = {
                                 power: power,
                                 single_phase: Math.round(power / 230),
                                 three_phase: Math.round(power / 3 / 230)

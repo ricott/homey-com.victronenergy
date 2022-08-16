@@ -1,5 +1,9 @@
 {
-   "1.0.7": {
+  "1.0.8": {
+    "en": "Support for showing generator power",
+    "sv": "Stöd för att visa generatoreffekt"
+  },
+  "1.0.7": {
     "en": "Support for showing generator power",
     "sv": "Stöd för att visa generatoreffekt"
   },
