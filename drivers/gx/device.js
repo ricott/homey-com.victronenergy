@@ -2,7 +2,7 @@
 
 const { Device } = require('homey');
 const VictronGX = require('../../lib/victron');
-const { GX_v1 } = require('../../lib/devices/gx_v1');
+const { GX } = require('../../lib/devices/gx');
 const enums = require('../../lib/enums');
 const minGridSuplusPower = 200;
 
@@ -11,8 +11,6 @@ class GXDevice extends Device {
     async onInit() {
         this.pollIntervals = [];
         this.api = null;
-        this.vebusAlarms = '';
-        this.vebusWarnings = '';
         this.localLog = [];
         await this.setStoreValue('grid_surplus', 0);
 
@@ -24,7 +22,8 @@ class GXDevice extends Device {
             this.getSettings().port,
             this.getSettings().modbus_vebus_unitId,
             this.getSettings().modbus_battery_unitId,
-            this.getSettings().refreshInterval);
+            this.getSettings().refreshInterval
+        );
         this._initilializeTimers();
     }
 
@@ -94,10 +93,10 @@ class GXDevice extends Device {
             if (key.startsWith('alarm')) {
                 if (message[key] == 1) {
                     //We have a warning
-                    warningArr.push(GX_v1[key].comment);
+                    warningArr.push(GX[key].comment);
                 } else if (message[key] == 2) {
                     //We have an alarm
-                    alarmArr.push(GX_v1[key].comment);
+                    alarmArr.push(GX[key].comment);
                 }
             }
         });
@@ -106,15 +105,18 @@ class GXDevice extends Device {
         if (alarmArr.length > 0) {
             alarmMsg = alarmArr.join(', ');
         }
-        this.updateSettingIfChanged('vebusAlarms', alarmMsg, this.vebusAlarms);
-        this.vebusAlarms = alarmMsg;
 
         let warningMsg = 'Ok'
         if (warningArr.length > 0) {
             warningMsg = warningArr.join(', ');
         }
-        this.updateSettingIfChanged('vebusWarnings', warningMsg, this.vebusWarnings);
-        this.vebusWarnings = warningMsg;
+
+        this.setSettings({
+            vebusAlarms: alarmMsg,
+            vebusWarnings: warningMsg
+        }).catch(err => {
+            this.error(`Failed to update alarm status settings`, err);
+        });
 
         let status = 'Ok';
         if (alarmArr.length > 0) {
@@ -254,7 +256,7 @@ class GXDevice extends Device {
             pvPower += message.dcPV;
 
             //Calculate self consumption
-            let consumption = pvPower - message.batteryPower + grid + genset;
+            const consumption = pvPower - message.batteryPower + grid + genset;
             self._updateProperty('measure_power', consumption);
             self._updateProperty('measure_power.grid', grid);
             self._updateProperty('measure_power.PV', pvPower);
@@ -263,7 +265,7 @@ class GXDevice extends Device {
 
             self._updateProperty('input_source', enums.decodeInputPowerSource(message.activeInputSource));
             self._updateProperty('vebus_status', enums.decodeVEBusStatus(message.veBusStatus));
-            let alarmStatus = self.handleAlarmStatuses(message);
+            const alarmStatus = self.handleAlarmStatuses(message);
             self._updateProperty('alarm_status', alarmStatus);
             self._updateProperty('battery_status', enums.decodeBatteryStatus(message.batteryStatus));
             self._updateProperty('battery_capacity', message.batterySOC);
@@ -271,20 +273,21 @@ class GXDevice extends Device {
             self._updateProperty('measure_current.battery', message.batteryCurrent);
             self._updateProperty('switch_position', enums.decodeSwitchPosition(message.switchPosition));
 
-            self.updateNumericSettingIfChanged('activeMaxChargeCurrent', message.maxChargeCurrent, previousReadings.maxChargeCurrent, 'A');
-            self.updateNumericSettingIfChanged('activeMaxDischargePower', message.activeMaxDischargePower, previousReadings.activeMaxDischargePower, 'W');
-            //maxDischargePower should only be 0 first time
-            if (self.getSetting('maxDischargePower').length === 0) {
-                self.updateNumericSettingIfChanged('maxDischargePower', message.activeMaxDischargePower, 0, 'W');
-            }
-            self.updateNumericSettingIfChanged('maxGridFeedinPower', message.maxGridFeedinPower, previousReadings.maxGridFeedinPower, 'W');
-            self.updateNumericSettingIfChanged('gridSetpointPower', message.gridSetpointPower, previousReadings.gridSetpointPower, 'W');
-            self.updateNumericSettingIfChanged('minimumSOC', message.minimumSOC, previousReadings.minimumSOC, '%');
-
-            //Battery unitId may be empty, thus this value null
+            let tSinceLastFullCharge = '';
             if (message.timeSinceLastFullCharge) {
-                self.updateNumericSettingIfChanged('timeSinceLastFullCharge', message.timeSinceLastFullCharge, previousReadings.timeSinceLastFullCharge, 's');
+                tSinceLastFullCharge = `${message.timeSinceLastFullCharge}s`;
             }
+
+            self.setSettings({
+                activeMaxChargeCurrent: `${message.maxChargeCurrent}A`,
+                activeMaxDischargePower: `${message.activeMaxDischargePower}W`,
+                maxGridFeedinPower: `${message.maxGridFeedinPower}W`,
+                gridSetpointPower: `${message.gridSetpointPower}W`,
+                minimumSOC: `${message.gridSetpointPower}%`,
+                timeSinceLastFullCharge: tSinceLastFullCharge
+            }).catch(err => {
+                self.error(`Failed to update settings`, err);
+            });
 
             self.adjustChargeCurrent(message.batterySOC, message.maxChargeCurrent);
 
@@ -355,8 +358,8 @@ class GXDevice extends Device {
                 } else if (key == 'alarm_status') {
                     const tokens = {
                         status: value,
-                        alarms: this.vebusAlarms,
-                        warnings: this.vebusWarnings
+                        alarms: this.getSetting('vebusAlarms'),
+                        warnings: this.getSetting('vebusWarnings')
                     }
                     this.driver.triggerDeviceFlow('alarm_status_changed', tokens, this);
 

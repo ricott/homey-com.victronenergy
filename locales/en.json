@@ -1,13 +1,13 @@
 {
     "pair": {
-      "title": "Lägg till en Victron GX enhet",
-      "nosettings": "Fyll i alla obligatoriska fält",
-      "intro": "Ange IP adress och port till din GX enhet",
-      "address": "IP Adress",
-      "port": "Port",
-      "modbus_vebus": "com.victronenergy.vebus",
-      "modbus_battery": "com.victronenergy.battery",
-      "connect": "Koppla"
+        "title": "Add a Victron GX device",
+        "nosettings": "Please fill in all the required fields.",
+        "intro": "Enter the details of your Victron GX device",
+        "address": "IP Address",
+        "port": "Port",
+        "modbus_vebus": "com.victronenergy.vebus",
+        "modbus_battery": "com.victronenergy.battery",
+        "connect": "Connect",
+        "battery_info": "* If you don't have a battery unitId please enter the value -1"
     }
-  }
-  
+}  
