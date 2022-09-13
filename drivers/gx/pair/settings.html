@@ -13,7 +13,9 @@
                     address: inputaddress,
                     port: inputport,
                     modbus_vebus: inputModbus,
-                    modbus_battery: inputModbusBattery
+                    modbus_battery: inputModbusBattery,
+                    ssh_user: document.getElementById('ssh_user').value,
+                    ssh_password: document.getElementById('ssh_password').value
                 };
 
                 Homey.emit('settings', settings).then(function (result) {
@@ -73,17 +75,24 @@
 
 <p data-i18n="pair.intro">Enter the details of your Victron GX device</p>
 <p data-i18n="pair.battery_info">* If you don't have a battery unitId please enter the value -1</p>
+<p data-i18n="pair.ssh_info">* SSH user and password are only required for controlling scheduled charging</p>
 
 <div class="gx-pairing">
     <div class="form-group">
         <label for="address" data-i18n="pair.address">IP address</label>
-        <input type="text" class="form-control" id="address" placeholder="192.168.0.0" required>
+        <input type="text" class="form-control" id="address" placeholder="192.168.0.0" required />
         <label for="port" data-i18n="pair.port">Port</label>
-        <input type="text" class="form-control" id="port" value="502" required>
+        <input type="text" class="form-control" id="port" value="502" required />
         <label for="modbus_vebus" data-i18n="pair.modbus_vebus">com.victronenergy.vebus</label>
-        <input type="text" class="form-control" id="modbus_vebus" placeholder="227" required>
+        <input type="text" class="form-control" id="modbus_vebus" placeholder="227" required />
         <label for="modbus_battery" data-i18n="pair.modbus_battery">com.victronenergy.battery</label>
-        <input type="text" class="form-control" id="modbus_battery" required>
+        <input type="text" class="form-control" id="modbus_battery" required />
+    </div>
+    <div class="form-group">
+        <label for="ssh_user" data-i18n="pair.ssh_user">SSH User</label>
+        <input type="text" class="form-control" id="ssh_user" value="root" />
+        <label for="ssh_password" data-i18n="pair.ssh_password">SSH Password</label>
+        <input type="text" class="form-control" id="ssh_password" />
     </div>
     <div class="form-group buttons">
         <button id="connect" class="button" data-i18n="pair.connect">Connect</button>

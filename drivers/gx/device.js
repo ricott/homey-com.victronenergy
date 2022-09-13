@@ -11,7 +11,6 @@ class GXDevice extends Device {
     async onInit() {
         this.pollIntervals = [];
         this.api = null;
-        this.localLog = [];
         await this.setStoreValue('grid_surplus', 0);
 
         this.logMessage(`Victron GX device initiated`);
@@ -52,10 +51,6 @@ class GXDevice extends Device {
 
     _initilializeTimers() {
         this.logMessage('Adding timers');
-        //Update debug info every minute with last 10 messages
-        this.pollIntervals.push(setInterval(() => {
-            this.updateDebugMessages();
-        }, 60 * 1000));
     }
 
     _deleteTimers() {
@@ -126,31 +121,6 @@ class GXDevice extends Device {
         }
 
         return status;
-    }
-
-    noCarIsCharging() {
-        this.logMessage(`No car is charging, resetting discharge power to ${this.getSetting('maxDischargePower')}`);
-        this.updateSetting('carCharging', 'false');
-
-        return this.api.limitInverterPower(this.getSetting('maxDischargePower'))
-            .then((result) => {
-                return true;
-            }).catch(reason => {
-                return Promise.reject(reason);
-            });
-    }
-
-    aCarIsCharging() {
-        this.updateSetting('carCharging', 'true');
-        //Always limit discharge power, doesnt matter if pv power is there or not
-        this.updateNumericSettingIfChanged('maxDischargePower', this.getSetting('activeMaxDischargePower'), 0, 'W');
-        this.logMessage(`A car is charging, limiting discharge power to ${this.getSetting('maxDischargePowerWhenCarCharging')}W`);
-        return this.api.limitInverterPower(this.getSetting('maxDischargePowerWhenCarCharging'))
-            .then((result) => {
-                return true;
-            }).catch(reason => {
-                return Promise.reject(reason);
-            });
     }
 
     calculateExcessSolar() {
@@ -280,7 +250,7 @@ class GXDevice extends Device {
 
             self.setSettings({
                 activeMaxChargeCurrent: `${message.maxChargeCurrent}A`,
-                activeMaxDischargePower: `${message.activeMaxDischargePower}W`,
+                maxDischargePower: `${message.activeMaxDischargePower}W`,
                 maxGridFeedinPower: `${message.maxGridFeedinPower}W`,
                 gridSetpointPower: `${message.gridSetpointPower}W`,
                 minimumSOC: `${message.gridSetpointPower}%`,
@@ -471,28 +441,6 @@ class GXDevice extends Device {
 
     logMessage(message) {
         this.log(`[${this.getName()}] ${message}`);
-        if (this.localLog.length > 49) {
-            //Remove oldest entry
-            this.localLog.shift();
-        }
-        //Add new entry
-        const timeString = new Date().toLocaleString('sv-SE', { hour12: false, timeZone: this.homey.clock.getTimezone() });
-        this.localLog.push(timeString + ' ' + message + '\n');
-    }
-
-    getLogMessages() {
-        return this.localLog.toString();
-    }
-
-    updateDebugMessages() {
-        let msg = this.getLogMessages();
-        if (msg != null) {
-            this.setSettings({ log: msg })
-                .catch(err => {
-                    this.error('Failed to update log messages', err);
-                    this.error(`Messages: '${msg}'`);
-                });
-        }
     }
 
     removeCapabilityHelper(capability) {

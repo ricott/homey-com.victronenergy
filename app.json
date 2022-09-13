@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.victronenergy",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -365,6 +365,32 @@
       }
     ],
     "conditions": [
+      {
+        "id": "scheduled_charging_condition",
+        "title": {
+          "en": "Scheduled charging is !{{|not}} enabled",
+          "sv": "Schemalagd laddning är !{{|inte}} aktiv"
+        },
+        "titleFormatted": {
+          "en": "Scheduled charging is !{{|not}} enabled for schedule [[schedule]]",
+          "sv": "Schemalagd laddning är !{{|inte}} aktiv för schema [[schedule]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "schedule",
+            "type": "autocomplete",
+            "title": {
+              "en": "Schedule",
+              "sv": "Schema"
+            }
+          }
+        ]
+      },
       {
         "id": "input_source_condition",
         "title": {
@@ -830,24 +856,6 @@
         ]
       },
       {
-        "id": "car_charging_condition",
-        "title": {
-          "en": "!{{A|No}} car is charging",
-          "sv": "En bil laddar !{{|inte}}"
-        },
-        "titleFormatted": {
-          "en": "!{{A|No}} car is charging",
-          "sv": "En bil laddar !{{|inte}}"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=gx"
-          }
-        ]
-      },
-      {
         "id": "ac_loads_condition",
         "title": {
           "en": "AC loads are !{{below|above}}",
@@ -966,14 +974,14 @@
     ],
     "actions": [
       {
-        "id": "set_carcharging_state",
+        "id": "create_charging_schedule",
         "title": {
-          "en": "Set car charging state",
-          "sv": "Uppdatera status för laddning av bil"
+          "en": "Create charging schedule",
+          "sv": "Skapa laddschema"
         },
         "titleFormatted": {
-          "en": "Set car charging state to [[state]]",
-          "sv": "Uppdatera status för laddning av bil till [[state]]"
+          "en": "Create charging schedule [[schedule]] for [[day]] at [[start]] with duration [[duration]] or [[soc]] SoC",
+          "sv": "Skapa laddschema [[schedule]] för [[day]] klockan [[start]] med varaktighet [[duration]] eller [[soc]] SoC"
         },
         "args": [
           {
@@ -982,11 +990,106 @@
             "filter": "driver_id=gx"
           },
           {
-            "name": "state",
+            "name": "schedule",
             "type": "autocomplete",
             "title": {
-              "en": "State",
-              "sv": "Status"
+              "en": "Schedule",
+              "sv": "Schema"
+            }
+          },
+          {
+            "name": "day",
+            "type": "autocomplete",
+            "title": {
+              "en": "Day",
+              "sv": "Dag"
+            }
+          },
+          {
+            "name": "start",
+            "type": "time",
+            "title": {
+              "en": "Start time",
+              "sv": "Starttid"
+            },
+            "placeholder": {
+              "en": "01:00"
+            }
+          },
+          {
+            "name": "duration",
+            "type": "time",
+            "title": {
+              "en": "Duration",
+              "sv": "Varaktighet"
+            },
+            "placeholder": {
+              "en": "01:00"
+            }
+          },
+          {
+            "name": "soc",
+            "type": "range",
+            "title": {
+              "en": "SoC",
+              "sv": "SoC"
+            },
+            "min": 5,
+            "max": 100,
+            "step": 5,
+            "label": "%",
+            "labelDecimals": 0
+          }
+        ]
+      },
+      {
+        "id": "enable_charging_schedule",
+        "title": {
+          "en": "Enable charging schedule",
+          "sv": "Aktivera laddschema"
+        },
+        "titleFormatted": {
+          "en": "Enable charging schedule [[schedule]]",
+          "sv": "Aktivera laddschema [[schedule]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "schedule",
+            "type": "autocomplete",
+            "title": {
+              "en": "Schedule",
+              "sv": "Schema"
+            }
+          }
+        ]
+      },
+      {
+        "id": "disable_charging_schedule",
+        "title": {
+          "en": "Disable charging schedule",
+          "sv": "Deaktivera laddschema"
+        },
+        "titleFormatted": {
+          "en": "Disable charging schedule [[schedule]]",
+          "sv": "Deaktivera laddschema [[schedule]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+          },
+          {
+            "name": "schedule",
+            "type": "autocomplete",
+            "title": {
+              "en": "Schedule",
+              "sv": "Schema"
             }
           }
         ]
@@ -1427,6 +1530,40 @@
         {
           "type": "group",
           "label": {
+            "en": "SSH",
+            "sv": "SSH"
+          },
+          "children": [
+            {
+              "id": "ssh_user",
+              "type": "text",
+              "value": "root",
+              "label": {
+                "en": "User",
+                "sv": "User"
+              },
+              "hint": {
+                "en": "Normally the user is root unless you have made a custom setup.",
+                "sv": "Vanligen heter användaren root, om ingen speciell uppsättning gjorts."
+              }
+            },
+            {
+              "id": "ssh_password",
+              "type": "password",
+              "label": {
+                "en": "Password",
+                "sv": "Password"
+              },
+              "hint": {
+                "en": "To set the password for user root go to Settings -> General -> Set root password",
+                "sv": "För att sätta ett lösenord för användaren root, gå till Inställningar -> Allmänt -> Sätt root lösenord"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
             "en": "Charge current control",
             "sv": "Styrning av laddström"
           },
@@ -1673,32 +1810,6 @@
         {
           "type": "group",
           "label": {
-            "en": "Car charging settings",
-            "sv": "Inställningar för laddning av bil"
-          },
-          "children": [
-            {
-              "id": "maxDischargePowerWhenCarCharging",
-              "type": "number",
-              "label": {
-                "en": "Max discharge power when a car is charging",
-                "sv": "Max urladdningseffekt vid laddning av bil"
-              },
-              "value": 1500,
-              "step": 1,
-              "attr": {
-                "min": 1,
-                "max": 50000
-              },
-              "units": {
-                "en": "W"
-              }
-            }
-          ]
-        },
-        {
-          "type": "group",
-          "label": {
             "en": "Information",
             "sv": "Information"
           },
@@ -1745,15 +1856,6 @@
               "label": {
                 "en": "Max charge current",
                 "sv": "Max laddström"
-              },
-              "value": ""
-            },
-            {
-              "id": "activeMaxDischargePower",
-              "type": "label",
-              "label": {
-                "en": "Active max discharge power",
-                "sv": "Aktiv max urladdningseffekt"
               },
               "value": ""
             },
@@ -1826,15 +1928,6 @@
               "label": {
                 "en": "Most recent API error",
                 "sv": "Senaste API felmeddelandet"
-              },
-              "value": ""
-            },
-            {
-              "id": "log",
-              "type": "textarea",
-              "label": {
-                "en": "Log",
-                "sv": "Logg"
               },
               "value": ""
             }

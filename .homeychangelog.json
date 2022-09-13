@@ -1,4 +1,8 @@
 {
+    "1.1.0": {
+        "en": "Support for charging schedules",
+        "sv": "Stöd för laddschema"
+    },
     "1.0.9": {
         "en": "Battery unitId is no longer mandatory",
         "sv": "Batteri unitId är inte längre obligatoriskt"

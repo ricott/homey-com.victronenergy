@@ -9,7 +9,8 @@
     "enum": "^3.0.4",
     "events": "^3.3.0",
     "homey-log": "^2.1.0",
-    "jsmodbus": "^4.0.6"
+    "jsmodbus": "^4.0.6",
+    "node-ssh": "^13.0.0"
   },
   "scripts": {
     "postinstall": "modclean -r"

@@ -291,15 +291,6 @@ class GXDriver extends Driver {
                 }
             );
 
-        this.flowCards['car_charging_condition'] =
-            this.homey.flow.getConditionCard('car_charging_condition')
-                .registerRunListener(async (args, state) => {
-                    this.log(`[${args.device.getName()}] Condition 'car_charging_condition' triggered`);
-                    this.log(`[${args.device.getName()}] - current state: ${args.device.getSetting('carCharging')}`);
-
-                    return args.device.getSetting('carCharging') == 'true'
-                });
-
         this.flowCards['ac_loads_condition'] =
             this.homey.flow.getConditionCard('ac_loads_condition')
                 .registerRunListener(async (args, state) => {
@@ -365,34 +356,118 @@ class GXDriver extends Driver {
                     }
                 });
 
+        this.flowCards['scheduled_charging_condition'] =
+            this.homey.flow.getConditionCard('scheduled_charging_condition')
+                .registerRunListener(async (args, state) => {
+                    this.log(`[${args.device.getName()}] Condition 'scheduled_charging_condition' triggered`);
+                    this.log(`[${args.device.getName()}] - schedule: '${args.schedule.id}' (${args.schedule.name})`);
+
+                    return args.device.api.isChargingScheduleEnabled(
+                        args.device.getSetting('ssh_user'),
+                        args.device.getSetting('ssh_password'),
+                        args.schedule.id
+                    )
+                        .then(function (result) {
+                            return Promise.resolve(result);
+                        }).catch(reason => {
+                            return Promise.reject(reason);
+                        });
+                });
+
+        this.flowCards['scheduled_charging_condition']
+            .registerArgumentAutocompleteListener('schedule',
+                async (query, args) => {
+                    return enums.getChargingSchedule();
+                }
+            );
+
         //Actions
-        let actionName = 'set_carcharging_state';
+        let actionName = 'enable_charging_schedule';
         this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
             .registerRunListener(async (args) => {
-                this.log(`[${args.device.getName()}] Action 'set_carcharging_state' triggered`);
-                this.log(`[${args.device.getName()}] - state: '${args.state.id}' (${args.state.name})`);
+                this.log(`[${args.device.getName()}] Action 'enable_charging_schedule' triggered`);
+                this.log(`[${args.device.getName()}] - schedule: '${args.schedule.id}' (${args.schedule.name})`);
 
-                if (args.state.id == 'true') {
-                    return args.device.aCarIsCharging()
-                        .then(function (result) {
-                            return Promise.resolve(true);
-                        }).catch(reason => {
-                            return Promise.reject('Failed to set car charging state');
-                        });
-                } else {
-                    return args.device.noCarIsCharging()
-                        .then(function (result) {
-                            return Promise.resolve(true);
-                        }).catch(reason => {
-                            return Promise.reject('Failed to set car charging state');
-                        });
-                }
+                return args.device.api.enableChargingSchedule(
+                    args.device.getSetting('ssh_user'),
+                    args.device.getSetting('ssh_password'),
+                    args.schedule.id
+                )
+                    .then(function (result) {
+                        return Promise.resolve(result);
+                    }).catch(reason => {
+                        return Promise.reject(reason);
+                    });
             });
 
         this.flowCards[actionName]
-            .registerArgumentAutocompleteListener('state',
+            .registerArgumentAutocompleteListener('schedule',
                 async (query, args) => {
-                    return enums.getCarChargingState();
+                    return enums.getChargingSchedule();
+                }
+            );
+
+        actionName = 'disable_charging_schedule';
+        this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
+            .registerRunListener(async (args) => {
+                this.log(`[${args.device.getName()}] Action 'disable_charging_schedule' triggered`);
+                this.log(`[${args.device.getName()}] - schedule: '${args.schedule.id}' (${args.schedule.name})`);
+
+                return args.device.api.disableChargingSchedule(
+                    args.device.getSetting('ssh_user'),
+                    args.device.getSetting('ssh_password'),
+                    args.schedule.id
+                )
+                    .then(function (result) {
+                        return Promise.resolve(result);
+                    }).catch(reason => {
+                        return Promise.reject(reason);
+                    });
+            });
+
+        this.flowCards[actionName]
+            .registerArgumentAutocompleteListener('schedule',
+                async (query, args) => {
+                    return enums.getChargingSchedule();
+                }
+            );
+
+        actionName = 'create_charging_schedule';
+        this.flowCards[actionName] = this.homey.flow.getActionCard(actionName)
+            .registerRunListener(async (args) => {
+                this.log(`[${args.device.getName()}] Action 'create_charging_schedule' triggered`);
+                this.log(`[${args.device.getName()}] - schedule: '${args.schedule.id}' (${args.schedule.name})`);
+                this.log(`[${args.device.getName()}] - day: '${args.day.id}' (${args.day.name})`);
+                this.log(`[${args.device.getName()}] - start: '${args.start}'`);
+                this.log(`[${args.device.getName()}] - duration: '${args.duration}'`);
+                this.log(`[${args.device.getName()}] - soc: '${args.soc}'`);
+
+                return args.device.api.createChargingSchedule(
+                    args.device.getSetting('ssh_user'),
+                    args.device.getSetting('ssh_password'),
+                    args.schedule.id,
+                    args.day.id,
+                    args.start,
+                    args.duration,
+                    args.soc
+                )
+                    .then(function (result) {
+                        return Promise.resolve(result);
+                    }).catch(reason => {
+                        return Promise.reject(reason);
+                    });
+            });
+
+        this.flowCards[actionName]
+            .registerArgumentAutocompleteListener('schedule',
+                async (query, args) => {
+                    return enums.getChargingSchedule();
+                }
+            );
+        this.flowCards[actionName]
+            .registerArgumentAutocompleteListener('day',
+                async (query, args) => {
+                    return enums.getChargingScheduleDay();
                 }
             );
 
@@ -607,7 +682,9 @@ class GXDriver extends Driver {
                         address: settings.address,
                         port: Number(settings.port),
                         modbus_vebus_unitId: Number(settings.modbus_vebus),
-                        modbus_battery_unitId: Number(settings.modbus_battery)
+                        modbus_battery_unitId: Number(settings.modbus_battery),
+                        ssh_user: settings.ssh_user,
+                        ssh_password: settings.ssh_password
                     }
                 });
             } else if (discoveryResponse.outcome == 'connect_failure') {
