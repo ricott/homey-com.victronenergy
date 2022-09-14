@@ -1,0 +1,30 @@
+{
+    "id": "set_relay1_state",
+    "title": {
+        "en": "Switch relay 1 on/off",
+        "sv": "Styr relä 1 on/off"
+    },
+    "titleFormatted": {
+        "en": "Switch relay 1 to [[state]]",
+        "sv": "Ändra relä 1 till [[state]]"
+    },
+    "args": [
+        {
+            "name": "state",
+            "type": "autocomplete",
+            "title": {
+                "en": "State",
+                "sv": "Status"
+            }
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

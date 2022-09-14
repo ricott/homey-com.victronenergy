@@ -1,0 +1,41 @@
+{
+    "id": "grid_feedin_condition",
+    "title": {
+        "en": "Max grid feed-in power is !{{|not}}",
+        "sv": "Max inmatningseffekt till elnätet är !{{|inte}}"
+    },
+    "titleFormatted": {
+        "en": "Max grid feed-in power is !{{|not}} [[conditionType]] [[power]]",
+        "sv": "Max inmatningseffekt till elnätet är !{{|inte}} [[conditionType]] [[power]]"
+    },
+    "args": [
+        {
+            "name": "conditionType",
+            "type": "autocomplete",
+            "title": {
+                "en": "Condition",
+                "sv": "Villkor"
+            }
+        },
+        {
+            "name": "power",
+            "type": "number",
+            "title": {
+                "en": "Power (W)",
+                "sv": "Effekt (W)"
+            },
+            "min": -3276800,
+            "max": 3276700,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "id": "enable_charging_schedule",
+    "title": {
+        "en": "Enable charging schedule",
+        "sv": "Aktivera laddschema"
+    },
+    "titleFormatted": {
+        "en": "Enable charging schedule [[schedule]]",
+        "sv": "Aktivera laddschema [[schedule]]"
+    },
+    "args": [
+        {
+            "name": "schedule",
+            "type": "autocomplete",
+            "title": {
+                "en": "Schedule",
+                "sv": "Schema"
+            }
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

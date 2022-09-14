@@ -1,0 +1,33 @@
+{
+    "id": "limit_grid_feedin",
+    "title": {
+        "en": "Limit grid feed-in power",
+        "sv": "Begränsa inmatningseffekt för elnätet"
+    },
+    "titleFormatted": {
+        "en": "Limit grid feed-in power to [[power]]",
+        "sv": "Begränsa inmatningseffekt för elnätet till [[power]]"
+    },
+    "args": [
+        {
+            "name": "power",
+            "type": "number",
+            "title": {
+                "en": "Power (W)",
+                "sv": "Effekt (W)"
+            },
+            "min": -3276800,
+            "max": 3276700,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "id": "update_minimum_soc",
+    "title": {
+        "en": "Update minimum SoC",
+        "sv": "Uppdatera lägsta SoC"
+    },
+    "titleFormatted": {
+        "en": "Update minimum SoC to [[soc]]",
+        "sv": "Uppdatera lägsta SoC till [[soc]]"
+    },
+    "args": [
+        {
+            "name": "soc",
+            "type": "number",
+            "title": {
+                "en": "SoC (%)",
+                "sv": "SoC (%)"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

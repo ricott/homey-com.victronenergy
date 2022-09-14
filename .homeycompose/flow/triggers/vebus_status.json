@@ -1,0 +1,35 @@
+{
+    "id": "vebus_status_changed",
+    "title": {
+        "en": "VE Bus status changed",
+        "sv": "VE Bus status ändrades"
+    },
+    "titleFormatted": {
+        "en": "VE Bus status changed to [[status]]",
+        "sv": "VE Bus status ändrades till [[status]]"
+    },
+    "tokens": [
+        {
+            "name": "status",
+            "type": "string",
+            "title": {
+                "en": "Status",
+                "sv": "Status"
+            },
+            "example": {
+                "en": "Bulk"
+            }
+        }
+    ],
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

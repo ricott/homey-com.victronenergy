@@ -1,0 +1,30 @@
+{
+    "id": "battery_status_condition",
+    "title": {
+        "en": "Battery status is !{{|not}}",
+        "sv": "Batteristatus är !{{|inte}}"
+    },
+    "titleFormatted": {
+        "en": "Battery status is !{{|not}} [[status]]",
+        "sv": "Batteristatus är !{{|inte}} [[status]]"
+    },
+    "args": [
+        {
+            "name": "status",
+            "type": "autocomplete",
+            "title": {
+                "en": "Status",
+                "sv": "Status"
+            }
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+{
+    "id": "limit_charger",
+    "title": {
+        "en": "Limit charge current",
+        "sv": "Begränsa laddarens ström"
+    },
+    "highlight": true,
+    "titleFormatted": {
+        "en": "Limit charge current to [[current]]",
+        "sv": "Begränsa laddarens ström till [[current]]"
+    },
+    "args": [
+        {
+            "name": "current",
+            "type": "number",
+            "title": {
+                "en": "Current (A)",
+                "sv": "Ström (A)"
+            },
+            "min": -32767,
+            "max": 32767,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

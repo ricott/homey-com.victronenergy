@@ -1,0 +1,30 @@
+{
+    "id": "switch_position_condition",
+    "title": {
+        "en": "Switch position is !{{|not}}",
+        "sv": "Läge för brytare är !{{|inte}}"
+    },
+    "titleFormatted": {
+        "en": "Switch position is !{{|not}} [[mode]]",
+        "sv": "Läge för brytare är !{{|inte}} [[mode]]"
+    },
+    "args": [
+        {
+            "name": "mode",
+            "type": "autocomplete",
+            "title": {
+                "en": "Mode",
+                "sv": "Läge"
+            }
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

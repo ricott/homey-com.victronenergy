@@ -1,0 +1,33 @@
+{
+    "id": "excess_solar_power_condition",
+    "title": {
+        "en": "Excess solar power is !{{below|above}}",
+        "sv": "Solceller överskott effekt är !{{under|över}}"
+    },
+    "titleFormatted": {
+        "en": "Excess solar power is !{{below|above}} [[power]]",
+        "sv": "Solceller överskott effekt är !{{under|över}} [[power]]"
+    },
+    "args": [
+        {
+            "name": "power",
+            "type": "number",
+            "title": {
+                "en": "Power (W)",
+                "sv": "Effekt (W)"
+            },
+            "min": -3276800,
+            "max": 3276800,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

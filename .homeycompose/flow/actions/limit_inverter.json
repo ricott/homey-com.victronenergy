@@ -1,0 +1,34 @@
+{
+    "id": "limit_inverter",
+    "title": {
+        "en": "Limit discharge power",
+        "sv": "Begränsa urladdningseffekt"
+    },
+    "highlight": true,
+    "titleFormatted": {
+        "en": "Limit discharge power to [[power]]",
+        "sv": "Begränsa urladdningseffekt till [[power]]"
+    },
+    "args": [
+        {
+            "name": "power",
+            "type": "number",
+            "title": {
+                "en": "Power (W)",
+                "sv": "Effekt (W)"
+            },
+            "min": -1,
+            "max": 655360,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

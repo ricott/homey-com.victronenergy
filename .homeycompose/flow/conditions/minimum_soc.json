@@ -1,0 +1,41 @@
+{
+    "id": "minimum_soc_condition",
+    "title": {
+        "en": "Min SoC is !{{|not}}",
+        "sv": "Lägsta SoC är !{{|inte}}"
+    },
+    "titleFormatted": {
+        "en": "Min SoC is !{{|not}} [[conditionType]] [[soc]]",
+        "sv": "Lägsta SoC är !{{|inte}} [[conditionType]] [[soc]]"
+    },
+    "args": [
+        {
+            "name": "conditionType",
+            "type": "autocomplete",
+            "title": {
+                "en": "Condition",
+                "sv": "Villkor"
+            }
+        },
+        {
+            "name": "soc",
+            "type": "number",
+            "title": {
+                "en": "SoC (%)",
+                "sv": "SoC (%)"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

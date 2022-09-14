@@ -1,0 +1,73 @@
+{
+    "id": "create_charging_schedule",
+    "title": {
+        "en": "Create charging schedule",
+        "sv": "Skapa laddschema"
+    },
+    "titleFormatted": {
+        "en": "Create charging schedule [[schedule]] for [[day]] at [[start]] with duration [[duration]] or [[soc]] SoC",
+        "sv": "Skapa laddschema [[schedule]] för [[day]] klockan [[start]] med varaktighet [[duration]] eller [[soc]] SoC"
+    },
+    "args": [
+        {
+            "name": "schedule",
+            "type": "autocomplete",
+            "title": {
+                "en": "Schedule",
+                "sv": "Schema"
+            }
+        },
+        {
+            "name": "day",
+            "type": "autocomplete",
+            "title": {
+                "en": "Day",
+                "sv": "Dag"
+            }
+        },
+        {
+            "name": "start",
+            "type": "time",
+            "title": {
+                "en": "Start time",
+                "sv": "Starttid"
+            },
+            "placeholder": {
+                "en": "01:00"
+            }
+        },
+        {
+            "name": "duration",
+            "type": "time",
+            "title": {
+                "en": "Duration",
+                "sv": "Varaktighet"
+            },
+            "placeholder": {
+                "en": "01:00"
+            }
+        },
+        {
+            "name": "soc",
+            "type": "range",
+            "title": {
+                "en": "SoC",
+                "sv": "SoC"
+            },
+            "min": 5,
+            "max": 100,
+            "step": 5,
+            "label": "%",
+            "labelDecimals": 0
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

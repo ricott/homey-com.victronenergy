@@ -1,0 +1,30 @@
+{
+    "id": "set_batterylife_state",
+    "title": {
+        "en": "Set batteryLife state",
+        "sv": "Uppdatera batteriliv status"
+    },
+    "titleFormatted": {
+        "en": "Set batteryLife state to [[mode]]",
+        "sv": "Uppdatera batteriliv status till [[mode]]"
+    },
+    "args": [
+        {
+            "name": "mode",
+            "type": "autocomplete",
+            "title": {
+                "en": "Mode",
+                "sv": "Mode"
+            }
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

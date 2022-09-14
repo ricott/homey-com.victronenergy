@@ -1,0 +1,33 @@
+{
+    "id": "timeSinceLastFullCharge_condition",
+    "title": {
+        "en": "Time since last full charge is !{{less|more}} than",
+        "sv": "Tid sedan senaste fulladdning är !{{mindre|mer}} än"
+    },
+    "titleFormatted": {
+        "en": "Time since last full charge is !{{less|more}} than [[time]]",
+        "sv": "Tid sedan senaste fulladdning är !{{mindre|mer}} än [[time]]"
+    },
+    "args": [
+        {
+            "name": "time",
+            "type": "number",
+            "title": {
+                "en": "Time (seconds)",
+                "sv": "Tid (sekunder)"
+            },
+            "min": -3276800,
+            "max": 3276800,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

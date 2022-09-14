@@ -1,0 +1,30 @@
+{
+    "id": "disable_charging_schedule",
+    "title": {
+        "en": "Disable charging schedule",
+        "sv": "Deaktivera laddschema"
+    },
+    "titleFormatted": {
+        "en": "Disable charging schedule [[schedule]]",
+        "sv": "Deaktivera laddschema [[schedule]]"
+    },
+    "args": [
+        {
+            "name": "schedule",
+            "type": "autocomplete",
+            "title": {
+                "en": "Schedule",
+                "sv": "Schema"
+            }
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

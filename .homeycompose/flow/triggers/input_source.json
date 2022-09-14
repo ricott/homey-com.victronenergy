@@ -1,0 +1,35 @@
+{
+    "id": "input_source_changed",
+    "title": {
+        "en": "Input source changed",
+        "sv": "Input källa ändrades"
+    },
+    "titleFormatted": {
+        "en": "Input source changed to [[source]]",
+        "sv": "Input källa ändrades till [[source]]"
+    },
+    "tokens": [
+        {
+            "name": "source",
+            "type": "string",
+            "title": {
+                "en": "Source",
+                "sv": "Källa"
+            },
+            "example": {
+                "en": "Grid"
+            }
+        }
+    ],
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

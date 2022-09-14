@@ -1,0 +1,57 @@
+{
+    "id": "grid_surplus_changed",
+    "title": {
+        "en": "Grid surplus changed",
+        "sv": "Exporten till elnätet ändrades"
+    },
+    "titleFormatted": {
+        "en": "Grid surplus changed to [[power]] / [[single_phase]] / [[three_phase]]",
+        "sv": "Exporten till elnätet ändrades till [[power]] / [[single_phase]] / [[three_phase]]"
+    },
+    "tokens": [
+        {
+            "name": "power",
+            "type": "number",
+            "title": {
+                "en": "Power (W)",
+                "sv": "Effekt (W)"
+            },
+            "example": {
+                "en": "2847"
+            }
+        },
+        {
+            "name": "single_phase",
+            "type": "number",
+            "title": {
+                "en": "Single phase current (A)",
+                "sv": "Enfas ström (A)"
+            },
+            "example": {
+                "en": "12"
+            }
+        },
+        {
+            "name": "three_phase",
+            "type": "number",
+            "title": {
+                "en": "Three phase current (A)",
+                "sv": "Trefas ström (A)"
+            },
+            "example": {
+                "en": "4"
+            }
+        }
+    ],
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

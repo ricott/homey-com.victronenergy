@@ -1,0 +1,33 @@
+{
+    "id": "ac_loads_condition",
+    "title": {
+        "en": "AC loads are !{{below|above}}",
+        "sv": "AC belastning är !{{under|över}}"
+    },
+    "titleFormatted": {
+        "en": "AC loads are !{{below|above}} [[power]]",
+        "sv": "AC belastning är !{{under|över}} [[power]]"
+    },
+    "args": [
+        {
+            "name": "power",
+            "type": "number",
+            "title": {
+                "en": "Power (W)",
+                "sv": "Effekt (W)"
+            },
+            "min": -3276800,
+            "max": 3276800,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

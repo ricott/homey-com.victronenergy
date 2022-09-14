@@ -1,0 +1,41 @@
+{
+    "id": "inverter_power_condition",
+    "title": {
+        "en": "Max discharge power is !{{|not}}",
+        "sv": "Max urladdningseffekt är !{{|inte}}"
+    },
+    "titleFormatted": {
+        "en": "Max discharge power is !{{|not}} [[conditionType]] [[power]]",
+        "sv": "Max urladdningseffekt är !{{|inte}} [[conditionType]] [[power]]"
+    },
+    "args": [
+        {
+            "name": "conditionType",
+            "type": "autocomplete",
+            "title": {
+                "en": "Condition",
+                "sv": "Villkor"
+            }
+        },
+        {
+            "name": "power",
+            "type": "number",
+            "title": {
+                "en": "Power (W)",
+                "sv": "Effekt (W)"
+            },
+            "min": -1,
+            "max": 655360,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "id": "vebus_status_condition",
+    "title": {
+        "en": "VE Bus status is !{{|not}}",
+        "sv": "VE Bus status är !{{|inte}}"
+    },
+    "titleFormatted": {
+        "en": "VE Bus status is !{{|not}} [[status]]",
+        "sv": "VE Bus status är !{{|inte}} [[status]]"
+    },
+    "args": [
+        {
+            "name": "status",
+            "type": "autocomplete",
+            "title": {
+                "en": "Status",
+                "sv": "Status"
+            }
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

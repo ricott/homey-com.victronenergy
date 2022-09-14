@@ -1,0 +1,35 @@
+{
+    "id": "switch_position_changed",
+    "title": {
+        "en": "Switch position changed",
+        "sv": "Läge för brytare ändrades"
+    },
+    "titleFormatted": {
+        "en": "Switch position changed",
+        "sv": "Läge för brytare ändrades"
+    },
+    "tokens": [
+        {
+            "name": "mode",
+            "type": "string",
+            "title": {
+                "en": "Mode",
+                "sv": "Läge"
+            },
+            "example": {
+                "en": "Off"
+            }
+        }
+    ],
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

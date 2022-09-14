@@ -11,6 +11,15 @@ class GXDevice extends Device {
     async onInit() {
         this.pollIntervals = [];
         this.api = null;
+        this._switch_position_changed = this.homey.flow.getDeviceTriggerCard('switch_position_changed');
+        this._battery_status_changed = this.homey.flow.getDeviceTriggerCard('battery_status_changed');
+        this._vebus_status_changed = this.homey.flow.getDeviceTriggerCard('vebus_status_changed');
+        this._alarm_status_changed = this.homey.flow.getDeviceTriggerCard('alarm_status_changed');
+        this._soc_changed = this.homey.flow.getDeviceTriggerCard('soc_changed');
+        this._battery_voltage_changed = this.homey.flow.getDeviceTriggerCard('battery_voltage_changed');
+        this._grid_surplus_changed = this.homey.flow.getDeviceTriggerCard('grid_surplus_changed');
+        this._input_source_changed = this.homey.flow.getDeviceTriggerCard('input_source_changed');
+
         await this.setStoreValue('grid_surplus', 0);
 
         this.logMessage(`Victron GX device initiated`);
@@ -305,25 +314,25 @@ class GXDevice extends Device {
                     const tokens = {
                         source: value
                     }
-                    this.driver.triggerDeviceFlow('input_source_changed', tokens, this);
+                    this._input_source_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
 
                 } else if (key == 'battery_status') {
                     const tokens = {
                         status: value
                     }
-                    this.driver.triggerDeviceFlow('battery_status_changed', tokens, this);
+                    this._battery_status_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
 
                 } else if (key == 'vebus_status') {
                     const tokens = {
                         status: value
                     }
-                    this.driver.triggerDeviceFlow('vebus_status_changed', tokens, this);
+                    this._vebus_status_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
 
                 } else if (key == 'battery_capacity') {
                     const tokens = {
                         soc: value
                     }
-                    this.driver.triggerDeviceFlow('soc_changed', tokens, this);
+                    this._soc_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
 
                 } else if (key == 'alarm_status') {
                     const tokens = {
@@ -331,19 +340,19 @@ class GXDevice extends Device {
                         alarms: this.getSetting('vebusAlarms'),
                         warnings: this.getSetting('vebusWarnings')
                     }
-                    this.driver.triggerDeviceFlow('alarm_status_changed', tokens, this);
+                    this._alarm_status_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
 
                 } else if (key == 'switch_position') {
                     const tokens = {
                         mode: value
                     }
-                    this.driver.triggerDeviceFlow('switch_position_changed', tokens, this);
+                    this._switch_position_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
 
                 } else if (key == 'measure_voltage.battery') {
                     const tokens = {
                         voltage: value
                     }
-                    this.driver.triggerDeviceFlow('battery_voltage_changed', tokens, this);
+                    this._battery_voltage_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
 
                 } else if (key == 'measure_power.grid') {
                     let power = 0;
@@ -361,7 +370,8 @@ class GXDevice extends Device {
                                 single_phase: Math.round(power / 230),
                                 three_phase: Math.round(power / 3 / 230)
                             }
-                            this.driver.triggerDeviceFlow('grid_surplus_changed', tokens, this);
+                            this._grid_surplus_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
+
                         }
                     }
                 }

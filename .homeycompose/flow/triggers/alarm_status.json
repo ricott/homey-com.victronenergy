@@ -1,0 +1,57 @@
+{
+    "id": "alarm_status_changed",
+    "title": {
+        "en": "Alarm status changed",
+        "sv": "Alarm status ändrades"
+    },
+    "titleFormatted": {
+        "en": "Alarm status changed to [[status]] with [[alarms]] and [[warnings]]",
+        "sv": "Alarm status ändrades till [[status]] med [[alarms]] and [[warnings]]"
+    },
+    "tokens": [
+        {
+            "name": "status",
+            "type": "string",
+            "title": {
+                "en": "Status",
+                "sv": "Status"
+            },
+            "example": {
+                "en": "Alarm"
+            }
+        },
+        {
+            "name": "alarms",
+            "type": "string",
+            "title": {
+                "en": "Alarms",
+                "sv": "Alarm"
+            },
+            "example": {
+                "en": "Temperature"
+            }
+        },
+        {
+            "name": "warnings",
+            "type": "string",
+            "title": {
+                "en": "Warnings",
+                "sv": "Varningar"
+            },
+            "example": {
+                "en": "Grid lost"
+            }
+        }
+    ],
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

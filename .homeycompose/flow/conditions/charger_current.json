@@ -1,0 +1,41 @@
+{
+    "id": "charger_current_condition",
+    "title": {
+        "en": "Max charge current is !{{|not}}",
+        "sv": "Max laddström är !{{|inte}}"
+    },
+    "titleFormatted": {
+        "en": "Max charge current is !{{|not}} [[conditionType]] [[current]]",
+        "sv": "Max laddström är !{{|inte}} [[conditionType]] [[current]]"
+    },
+    "args": [
+        {
+            "name": "conditionType",
+            "type": "autocomplete",
+            "title": {
+                "en": "Condition",
+                "sv": "Villkor"
+            }
+        },
+        {
+            "name": "current",
+            "type": "number",
+            "title": {
+                "en": "Current (A)",
+                "sv": "Ström (A)"
+            },
+            "min": -32767,
+            "max": 32767,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

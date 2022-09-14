@@ -1,0 +1,34 @@
+{
+    "id": "update_grid_setpoint",
+    "title": {
+        "en": "Update grid setpoint",
+        "sv": "Uppdatera börvärde för elnät"
+    },
+    "highlight": true,
+    "titleFormatted": {
+        "en": "Update grid setpoint to [[power]]",
+        "sv": "Uppdatera börvärde för elnät till [[power]]"
+    },
+    "args": [
+        {
+            "name": "power",
+            "type": "number",
+            "title": {
+                "en": "Power (W)",
+                "sv": "Effekt (W)"
+            },
+            "min": -32768,
+            "max": 32767,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

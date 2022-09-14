@@ -1,0 +1,30 @@
+{
+    "id": "scheduled_charging_condition",
+    "title": {
+        "en": "Scheduled charging is !{{|not}} enabled",
+        "sv": "Schemalagd laddning är !{{|inte}} aktiv"
+    },
+    "titleFormatted": {
+        "en": "Scheduled charging is !{{|not}} enabled for schedule [[schedule]]",
+        "sv": "Schemalagd laddning är !{{|inte}} aktiv för schema [[schedule]]"
+    },
+    "args": [
+        {
+            "name": "schedule",
+            "type": "autocomplete",
+            "title": {
+                "en": "Schedule",
+                "sv": "Schema"
+            }
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

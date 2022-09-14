@@ -1,0 +1,30 @@
+{
+    "id": "input_source_condition",
+    "title": {
+        "en": "Input source is !{{|not}}",
+        "sv": "Input källa är !{{|inte}}"
+    },
+    "titleFormatted": {
+        "en": "Input source is !{{|not}} [[source]]",
+        "sv": "Input källa är !{{|inte}} [[source]]"
+    },
+    "args": [
+        {
+            "name": "source",
+            "type": "autocomplete",
+            "title": {
+                "en": "Source",
+                "sv": "Källa"
+            }
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}
