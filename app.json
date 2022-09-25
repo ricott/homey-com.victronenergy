@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.victronenergy",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -1540,7 +1540,11 @@
         "battery_capacity",
         "measure_voltage.battery",
         "measure_current.battery",
-        "switch_position"
+        "switch_position",
+        "measure_power.gridSetpoint",
+        "measure_power.maxGridFeedin",
+        "measure_power.maxDischarge",
+        "measure_current.maxCharge"
       ],
       "capabilitiesOptions": {
         "measure_power": {
@@ -1583,6 +1587,30 @@
           "title": {
             "en": "Battery current",
             "sv": "Batterisström"
+          }
+        },
+        "measure_power.gridSetpoint": {
+          "title": {
+            "en": "Grid setpoint",
+            "sv": "Börvärde för elnät"
+          }
+        },
+        "measure_power.maxDischarge": {
+          "title": {
+            "en": "Max discharge power",
+            "sv": "Max urladdningseffekt"
+          }
+        },
+        "measure_power.maxGridFeedin": {
+          "title": {
+            "en": "Max grid feed-in",
+            "sv": "Max inmatningseffekt"
+          }
+        },
+        "measure_current.maxCharge": {
+          "title": {
+            "en": "Max charge current",
+            "sv": "Max laddström"
           }
         }
       },
@@ -2014,42 +2042,6 @@
               "value": ""
             },
             {
-              "id": "activeMaxChargeCurrent",
-              "type": "label",
-              "label": {
-                "en": "Max charge current",
-                "sv": "Max laddström"
-              },
-              "value": ""
-            },
-            {
-              "id": "maxDischargePower",
-              "type": "label",
-              "label": {
-                "en": "Max discharge power",
-                "sv": "Max urladdningseffekt"
-              },
-              "value": ""
-            },
-            {
-              "id": "maxGridFeedinPower",
-              "type": "label",
-              "label": {
-                "en": "Max grid feed-in",
-                "sv": "Max inmatningseffekt till elnätet"
-              },
-              "value": ""
-            },
-            {
-              "id": "gridSetpointPower",
-              "type": "label",
-              "label": {
-                "en": "Grid setpoint",
-                "sv": "Börvärde för elnät"
-              },
-              "value": ""
-            },
-            {
               "id": "vebusAlarms",
               "type": "label",
               "label": {
@@ -2064,15 +2056,6 @@
               "label": {
                 "en": "VE Bus warnings",
                 "sv": "VE Bus varningar"
-              },
-              "value": ""
-            },
-            {
-              "id": "carCharging",
-              "type": "label",
-              "label": {
-                "en": "A car is charging",
-                "sv": "En bil laddar"
               },
               "value": ""
             }

@@ -25,6 +25,8 @@ class GXDevice extends Device {
         this.logMessage(`Victron GX device initiated`);
         this.logMessage(`Control charge current: ${this.getSettings().controlChargeCurrent}`);
 
+        this.upgradeDevice();
+
         await this.setupGXSession(
             this.getSettings().address,
             this.getSettings().port,
@@ -56,6 +58,26 @@ class GXDevice extends Device {
     async reinitializeGXSession(host, port, vebusUnitId, batteryUnitId, refreshInterval) {
         await this.destroyGXSession();
         await this.setupGXSession(host, port, vebusUnitId, batteryUnitId, refreshInterval);
+    }
+
+    upgradeDevice() {
+        this.logMessage('Upgrading device');
+        this.addCapabilityHelper('measure_power.gridSetpoint');
+        this.addCapabilityHelper('measure_power.maxGridFeedin');
+        this.addCapabilityHelper('measure_power.maxDischarge');
+        this.addCapabilityHelper('measure_current.maxCharge');
+    }
+
+    addCapabilityHelper(capability) {
+        if (!this.hasCapability(capability)) {
+            try {
+                this.logMessage(`Adding missing capability '${capability}'`);
+                this.addCapability(capability);
+            } catch (reason) {
+                this.error(`Failed to add capability '${capability}'`);
+                this.error(reason);
+            }
+        }
     }
 
     _initilializeTimers() {
@@ -252,17 +274,18 @@ class GXDevice extends Device {
             self._updateProperty('measure_current.battery', message.batteryCurrent);
             self._updateProperty('switch_position', enums.decodeSwitchPosition(message.switchPosition));
 
+            self._updateProperty('measure_power.gridSetpoint', message.gridSetpointPower);
+            self._updateProperty('measure_power.maxGridFeedin', message.maxGridFeedinPower);
+            self._updateProperty('measure_power.maxDischarge', message.maxDischargePower);
+            self._updateProperty('measure_current.maxCharge', message.maxChargeCurrent);
+
             let tSinceLastFullCharge = '';
             if (message.timeSinceLastFullCharge) {
                 tSinceLastFullCharge = `${message.timeSinceLastFullCharge}s`;
             }
 
             self.setSettings({
-                activeMaxChargeCurrent: `${message.maxChargeCurrent}A`,
-                maxDischargePower: `${message.activeMaxDischargePower}W`,
-                maxGridFeedinPower: `${message.maxGridFeedinPower}W`,
-                gridSetpointPower: `${message.gridSetpointPower}W`,
-                minimumSOC: `${message.gridSetpointPower}%`,
+                minimumSOC: `${message.minimumSOC}%`,
                 timeSinceLastFullCharge: tSinceLastFullCharge
             }).catch(err => {
                 self.error(`Failed to update settings`, err);

@@ -409,42 +409,6 @@
                 "value": ""
             },
             {
-                "id": "activeMaxChargeCurrent",
-                "type": "label",
-                "label": {
-                    "en": "Max charge current",
-                    "sv": "Max laddström"
-                },
-                "value": ""
-            },
-            {
-                "id": "maxDischargePower",
-                "type": "label",
-                "label": {
-                    "en": "Max discharge power",
-                    "sv": "Max urladdningseffekt"
-                },
-                "value": ""
-            },
-            {
-                "id": "maxGridFeedinPower",
-                "type": "label",
-                "label": {
-                    "en": "Max grid feed-in",
-                    "sv": "Max inmatningseffekt till elnätet"
-                },
-                "value": ""
-            },
-            {
-                "id": "gridSetpointPower",
-                "type": "label",
-                "label": {
-                    "en": "Grid setpoint",
-                    "sv": "Börvärde för elnät"
-                },
-                "value": ""
-            },
-            {
                 "id": "vebusAlarms",
                 "type": "label",
                 "label": {
@@ -459,15 +423,6 @@
                 "label": {
                     "en": "VE Bus warnings",
                     "sv": "VE Bus varningar"
-                },
-                "value": ""
-            },
-            {
-                "id": "carCharging",
-                "type": "label",
-                "label": {
-                    "en": "A car is charging",
-                    "sv": "En bil laddar"
                 },
                 "value": ""
             }

@@ -168,8 +168,7 @@ class VictronEnergyApp extends App {
         const charger_current_condition = this.homey.flow.getConditionCard('charger_current_condition');
         charger_current_condition.registerRunListener(async (args, state) => {
             //this.log(`[${args.device.getName()}] Condition 'charger_current_condition' triggered`);
-            const previousReadings = args.device.getStoreValue('previousReadings');
-            const current = previousReadings.maxChargeCurrent;
+            const current = args.device.getCapabilityValue('measure_current.maxCharge');
             //this.log(`[${args.device.getName()}] - max charge current: ${current}`);
             //this.log(`[${args.device.getName()}] - condition type: ${args.conditionType.id}, condition current: ${args.current}`);
 
@@ -184,8 +183,7 @@ class VictronEnergyApp extends App {
         const grid_setpoint_condition = this.homey.flow.getConditionCard('grid_setpoint_condition');
         grid_setpoint_condition.registerRunListener(async (args, state) => {
             //this.log(`[${args.device.getName()}] Condition 'grid_setpoint_condition' triggered`);
-            const previousReadings = args.device.getStoreValue('previousReadings');
-            const power = previousReadings.gridSetpointPower;
+            const power = args.device.getCapabilityValue('measure_power.gridSetpoint');
             //this.log(`[${args.device.getName()}] - grid setpoint power: ${power}`);
             //this.log(`[${args.device.getName()}] - condition type: ${args.conditionType.id}, condition power: ${args.power}`);
 
@@ -200,8 +198,7 @@ class VictronEnergyApp extends App {
         const inverter_power_condition = this.homey.flow.getConditionCard('inverter_power_condition');
         inverter_power_condition.registerRunListener(async (args, state) => {
             //this.log(`[${args.device.getName()}] Condition 'inverter_power_condition' triggered`);
-            const previousReadings = args.device.getStoreValue('previousReadings');
-            const power = previousReadings.activeMaxDischargePower;
+            const power = args.device.getCapabilityValue('measure_power.maxDischarge');
             //this.log(`[${args.device.getName()}] - active max inverter power: ${power}`);
             //this.log(`[${args.device.getName()}] - condition type: ${args.conditionType.id}, condition power: ${args.power}`);
 
@@ -216,8 +213,7 @@ class VictronEnergyApp extends App {
         const grid_feedin_condition = this.homey.flow.getConditionCard('grid_feedin_condition');
         grid_feedin_condition.registerRunListener(async (args, state) => {
             //this.log(`[${args.device.getName()}] Condition 'grid_feedin_condition' triggered`);
-            const previousReadings = args.device.getStoreValue('previousReadings');
-            const power = previousReadings.maxGridFeedinPower;
+            const power = args.device.getCapabilityValue('measure_power.maxGridFeedin');
             //this.log(`[${args.device.getName()}] - max grid feed-in power: ${power}`);
             //this.log(`[${args.device.getName()}] - condition type: ${args.conditionType.id}, condition power: ${args.power}`);
 

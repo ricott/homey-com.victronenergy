@@ -1,4 +1,8 @@
 {
+    "1.1.1": {
+        "en": "New capabilities, for instance grid setpoint and max dishcarge power",
+        "sv": "Nya egenskaper, till exempel max urladdningseffekt"
+    },
     "1.1.0": {
         "en": "Support for charging schedules",
         "sv": "Stöd för laddschema"

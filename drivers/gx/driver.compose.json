@@ -29,7 +29,11 @@
         "battery_capacity",
         "measure_voltage.battery",
         "measure_current.battery",
-        "switch_position"
+        "switch_position",
+        "measure_power.gridSetpoint",
+        "measure_power.maxGridFeedin",
+        "measure_power.maxDischarge",
+        "measure_current.maxCharge"
     ],
     "capabilitiesOptions": {
         "measure_power": {
@@ -72,6 +76,30 @@
             "title": {
                 "en": "Battery current",
                 "sv": "Batterisström"
+            }
+        },
+        "measure_power.gridSetpoint": {
+            "title": {
+                "en": "Grid setpoint",
+                "sv": "Börvärde för elnät"
+            }
+        },
+        "measure_power.maxDischarge": {
+            "title": {
+                "en": "Max discharge power",
+                "sv": "Max urladdningseffekt"
+            }
+        },
+        "measure_power.maxGridFeedin": {
+            "title": {
+                "en": "Max grid feed-in",
+                "sv": "Max inmatningseffekt"
+        }
+        },
+        "measure_current.maxCharge": {
+            "title": {
+                "en": "Max charge current",
+                "sv": "Max laddström"
             }
         }
     },
