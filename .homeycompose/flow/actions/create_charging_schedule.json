@@ -8,6 +8,9 @@
         "en": "Create charging schedule [[schedule]] for [[day]] at [[start]] with duration [[duration]] or [[soc]] SoC",
         "sv": "Skapa laddschema [[schedule]] för [[day]] klockan [[start]] med varaktighet [[duration]] eller [[soc]] SoC"
     },
+    "hint": {
+        "en": "Creates a charging schedule. Please note you need to enter your GX device's root password in the device settings."
+    },
     "args": [
         {
             "name": "schedule",

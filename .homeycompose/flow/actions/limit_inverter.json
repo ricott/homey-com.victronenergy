@@ -9,6 +9,9 @@
         "en": "Limit discharge power to [[power]]",
         "sv": "Begränsa urladdningseffekt till [[power]]"
     },
+    "hint": {
+        "en": "Sets the maximum inverter power (defined under ESS)."
+    },
     "args": [
         {
             "name": "power",

@@ -9,6 +9,9 @@
         "en": "Update grid setpoint to [[power]]",
         "sv": "Uppdatera börvärde för elnät till [[power]]"
     },
+    "hint": {
+        "en": "Sets the grid setpoint (defined under ESS)."
+    },
     "args": [
         {
             "name": "power",

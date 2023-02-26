@@ -8,6 +8,9 @@
         "en": "Update minimum SoC to [[soc]]",
         "sv": "Uppdatera lägsta SoC till [[soc]]"
     },
+    "hint": {
+        "en": "Sets the minimum SoC, unless grid fails (defined under ESS)."
+    },
     "args": [
         {
             "name": "soc",

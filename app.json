@@ -1095,6 +1095,9 @@
           "en": "Create charging schedule [[schedule]] for [[day]] at [[start]] with duration [[duration]] or [[soc]] SoC",
           "sv": "Skapa laddschema [[schedule]] för [[day]] klockan [[start]] med varaktighet [[duration]] eller [[soc]] SoC"
         },
+        "hint": {
+          "en": "Creates a charging schedule. Please note you need to enter your GX device's root password in the device settings."
+        },
         "args": [
           {
             "name": "schedule",
@@ -1168,6 +1171,9 @@
           "en": "Disable charging schedule [[schedule]]",
           "sv": "Deaktivera laddschema [[schedule]]"
         },
+        "hint": {
+          "en": "Disables a charging schedule. Please note you need to enter your GX device's root password in the device settings."
+        },
         "args": [
           {
             "name": "schedule",
@@ -1197,6 +1203,9 @@
         "titleFormatted": {
           "en": "Enable charging schedule [[schedule]]",
           "sv": "Aktivera laddschema [[schedule]]"
+        },
+        "hint": {
+          "en": "Enables a charging schedule. Please note you need to enter your GX device's root password in the device settings."
         },
         "args": [
           {
@@ -1228,6 +1237,9 @@
         "titleFormatted": {
           "en": "Limit charge current to [[current]]",
           "sv": "Begränsa laddarens ström till [[current]]"
+        },
+        "hint": {
+          "en": "Sets the maximum charge current (defined under the DVCC section)."
         },
         "args": [
           {
@@ -1295,6 +1307,9 @@
         "titleFormatted": {
           "en": "Limit discharge power to [[power]]",
           "sv": "Begränsa urladdningseffekt till [[power]]"
+        },
+        "hint": {
+          "en": "Sets the maximum inverter power (defined under ESS)."
         },
         "args": [
           {
@@ -1450,6 +1465,9 @@
           "en": "Update grid setpoint to [[power]]",
           "sv": "Uppdatera börvärde för elnät till [[power]]"
         },
+        "hint": {
+          "en": "Sets the grid setpoint (defined under ESS)."
+        },
         "args": [
           {
             "name": "power",
@@ -1482,6 +1500,9 @@
         "titleFormatted": {
           "en": "Update minimum SoC to [[soc]]",
           "sv": "Uppdatera lägsta SoC till [[soc]]"
+        },
+        "hint": {
+          "en": "Sets the minimum SoC, unless grid fails (defined under ESS)."
         },
         "args": [
           {

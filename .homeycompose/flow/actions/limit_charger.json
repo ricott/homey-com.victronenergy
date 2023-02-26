@@ -9,6 +9,9 @@
         "en": "Limit charge current to [[current]]",
         "sv": "Begränsa laddarens ström till [[current]]"
     },
+    "hint": {
+        "en": "Sets the maximum charge current (defined under the DVCC section)."
+    },
     "args": [
         {
             "name": "current",

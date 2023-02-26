@@ -8,6 +8,9 @@
         "en": "Disable charging schedule [[schedule]]",
         "sv": "Deaktivera laddschema [[schedule]]"
     },
+    "hint": {
+        "en": "Disables a charging schedule. Please note you need to enter your GX device's root password in the device settings."
+    },
     "args": [
         {
             "name": "schedule",
