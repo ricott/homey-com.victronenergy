@@ -7,15 +7,17 @@
             var inputport = $('#port').val();
             var inputModbus = $('#modbus_vebus').val();
             var inputModbusBattery = $('#modbus_battery').val();
+            var inputModbusGrid = $('#modbus_grid').val();
             
-            if (inputaddress != '' && inputport != '' && inputModbus != '' && inputModbusBattery != '') {
+            if (inputaddress != '' && inputport != '' && inputModbus != '' && inputModbusBattery != '' && inputModbusGrid != '') {
                 var settings = {
                     address: inputaddress,
                     port: inputport,
                     modbus_vebus: inputModbus,
                     modbus_battery: inputModbusBattery,
+                    modbus_grid: inputModbusGrid,
                     ssh_user: document.getElementById('ssh_user').value,
-                    ssh_password: document.getElementById('ssh_password').value
+                    ssh_private_key: document.getElementById('ssh_private_key').value
                 };
 
                 Homey.emit('settings', settings).then(function (result) {
@@ -74,25 +76,33 @@
 </style>
 
 <p data-i18n="pair.intro">Enter the details of your Victron GX device</p>
-<p data-i18n="pair.battery_info">* If you don't have a battery unitId please enter the value -1</p>
-<p data-i18n="pair.ssh_info">* SSH user and password are only required for controlling scheduled charging</p>
+<p data-i18n="pair.battery_info">* If you don't have a battery or grid unitId please enter the value -1</p>
+<p data-i18n="pair.ssh_info">* SSH user and private key are only required for controlling scheduled charging</p>
 
 <div class="gx-pairing">
     <div class="form-group">
         <label for="address" data-i18n="pair.address">IP address</label>
         <input type="text" class="form-control" id="address" placeholder="192.168.0.0" required />
+
         <label for="port" data-i18n="pair.port">Port</label>
         <input type="text" class="form-control" id="port" value="502" required />
+
         <label for="modbus_vebus" data-i18n="pair.modbus_vebus">com.victronenergy.vebus</label>
-        <input type="text" class="form-control" id="modbus_vebus" placeholder="227" required />
+        <input type="text" class="form-control" id="modbus_vebus" required />
+
         <label for="modbus_battery" data-i18n="pair.modbus_battery">com.victronenergy.battery</label>
-        <input type="text" class="form-control" id="modbus_battery" required />
+        <input type="text" class="form-control" id="modbus_battery" value="-1" required />
+
+        <label for="modbus_grid" data-i18n="pair.modbus_grid">com.victronenergy.grid</label>
+        <input type="text" class="form-control" id="modbus_grid" value="-1" required />
     </div>
     <div class="form-group">
         <label for="ssh_user" data-i18n="pair.ssh_user">SSH User</label>
-        <input type="text" class="form-control" id="ssh_user" value="root" />
-        <label for="ssh_password" data-i18n="pair.ssh_password">SSH Password</label>
-        <input type="text" class="form-control" id="ssh_password" />
+        <input type="text" class="form-control" id="ssh_user" placeholder="The user is typically root." />
+
+        <label for="ssh_private_key" data-i18n="pair.ssh_private_key">SSH Private Key</label>
+        <textarea type="text" style="width: 100%; max-width: 100%;" id="ssh_private_key" rows="5"
+            placeholder="Leave empty, or paste entire contents of the private key file"></textarea>
     </div>
     <div class="form-group buttons">
         <button id="connect" class="button" data-i18n="pair.connect">Connect</button>

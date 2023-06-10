@@ -7,6 +7,7 @@ let socket = new net.Socket();
 let client100 = new modbus.client.TCP(socket, 100, 5000);
 let client225 = new modbus.client.TCP(socket, 225, 5000);
 let client227 = new modbus.client.TCP(socket, 227, 5000);
+let client30 = new modbus.client.TCP(socket, 30, 5000);
 let options = {
     host: "192.168.200.90",
     port: 502,
@@ -27,8 +28,16 @@ socket.on('connect', function () {
         //client225.readHoldingRegisters(286, 1),
         //client225.readHoldingRegisters(287, 1),
         //client225.readHoldingRegisters(288, 1),
-        client225.readHoldingRegisters(301, 1),
-        client225.readHoldingRegisters(302, 1),
+        // client225.readHoldingRegisters(301, 1),
+        // client225.readHoldingRegisters(302, 1),
+        /*
+        client30.readHoldingRegisters(2600, 1),
+        client30.readHoldingRegisters(2601, 1),
+        client30.readHoldingRegisters(2602, 1),
+        */
+        client30.readHoldingRegisters(2634, 2),
+        client30.readHoldingRegisters(2636, 2),
+
 
 
     ]).then((results) => {
@@ -38,7 +47,8 @@ socket.on('connect', function () {
             let result = results[index];
 
             //console.log(result.response);
-            console.log(result.response._body._valuesAsBuffer.readInt16BE(0));
+            //console.log(result.response._body._valuesAsBuffer.readInt16BE(0));
+            console.log(result.response._body._valuesAsBuffer.readUInt32BE(0));
 
         }
 

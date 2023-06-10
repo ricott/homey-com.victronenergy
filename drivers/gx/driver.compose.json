@@ -33,7 +33,9 @@
         "measure_power.gridSetpoint",
         "measure_power.maxGridFeedin",
         "measure_power.maxDischarge",
-        "measure_current.maxCharge"
+        "measure_current.maxCharge",
+        "meter_power",
+        "meter_power.export"
     ],
     "capabilitiesOptions": {
         "measure_power": {
@@ -100,6 +102,18 @@
             "title": {
                 "en": "Max charge current",
                 "sv": "Max laddström"
+            }
+        },
+        "meter_power": {
+            "title": {
+                "en": "Grid lifetime import",
+                "sv": "Nät livstid import"
+            }
+        },
+        "meter_power.export": {
+            "title": {
+                "en": "Grid lifetime export",
+                "sv": "När livstid export"
             }
         }
     },

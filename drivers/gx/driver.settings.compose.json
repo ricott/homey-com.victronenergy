@@ -82,6 +82,19 @@
                     "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
                     "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
                 }
+            },
+            {
+                "id": "modbus_grid_unitId",
+                "type": "number",
+                "step": 1,
+                "label": {
+                    "en": "com.victronenergy.grid",
+                    "sv": "com.victronenergy.grid"
+                },
+                "hint": {
+                    "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
+                    "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
+                }
             }
         ]
     },
@@ -106,15 +119,15 @@
                 }
             },
             {
-                "id": "ssh_password",
-                "type": "password",
+                "id": "ssh_private_key",
+                "type": "textarea",
                 "label": {
-                    "en": "Password",
-                    "sv": "Password"
+                    "en": "SSH private key",
+                    "sv": "SSH privat nyckel"
                 },
                 "hint": {
-                    "en": "To set the password for user root go to Settings -> General -> Set root password",
-                    "sv": "För att sätta ett lösenord för användaren root, gå till Inställningar -> Allmänt -> Sätt root lösenord"
+                    "en": "Paste the entire private key file content, including BEGIN and END lines",
+                    "sv": "Klistra in hela innehållet från den privata nyckelfilen, inklusive BEGIN och END raderna"
                 }
             }
         ]

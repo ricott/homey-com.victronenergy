@@ -1,4 +1,8 @@
 {
+    "1.1.1": {
+        "en": "Breaking change related to SSH password being replaced with key authentication",
+        "sv": "Icke bakåtkompatibel ändring för SSH lösenord som ersatts med nyckel authentificering"
+    },
     "1.1.0": {
         "en": "Support for charging schedules and new capabilities",
         "sv": "Stöd för laddschema samt nya egenskaper"

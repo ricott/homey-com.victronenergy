@@ -15,7 +15,7 @@ node_modules
 
 build
 
-
+/test/config.js
 
 # Added by Homey CLI
 /.homeybuild/

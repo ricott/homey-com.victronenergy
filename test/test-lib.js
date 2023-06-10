@@ -1,8 +1,10 @@
 'use strict';
 
 const Victron = require('../lib/victron.js');
+const config = require('./config.js');
 
 let victron = new Victron({
+    debug: true,
     host: '192.168.200.90',
     port: 502,
     vebusUnitId: 224,
@@ -18,11 +20,9 @@ victron.on('properties', props => {
 });
 */
 
-/*
-victron.enableChargingSchedule('root', 'etaQte4WbgeT', 1).then(res => {
+victron.enableChargingSchedule('root', config.private_key, 1).then(res => {
     console.log(res);
 });
-*/
 
 /*
 victron.disableChargingSchedule('root', 'etaQte4WbgeT', 1).then(res => {

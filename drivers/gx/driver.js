@@ -20,13 +20,15 @@ class GXDriver extends Driver {
 
             discovery.on('result', message => {
                 discoveryResponse = message;
+                discovery.disconnect();
                 session.nextView();
             });
 
             discovery.validateConnection(settings.address,
                 Number(settings.port),
                 Number(settings.modbus_vebus),
-                Number(settings.modbus_battery));
+                Number(settings.modbus_battery),
+                Number(settings.modbus_grid));
         });
 
         session.setHandler('list_devices', async (data) => {
@@ -43,8 +45,9 @@ class GXDriver extends Driver {
                         port: Number(settings.port),
                         modbus_vebus_unitId: Number(settings.modbus_vebus),
                         modbus_battery_unitId: Number(settings.modbus_battery),
+                        modbus_grid_unitId: Number(settings.modbus_grid),
                         ssh_user: settings.ssh_user,
-                        ssh_password: settings.ssh_password
+                        ssh_private_key: settings.ssh_private_key
                     }
                 });
             } else if (discoveryResponse.outcome == 'connect_failure') {
@@ -58,6 +61,10 @@ class GXDriver extends Driver {
             } else if (discoveryResponse.outcome == 'battery_failure') {
                 this.log(discoveryResponse);
                 throw new Error(`Connected successfully to GX device '${discoveryResponse.vrmId}', but com.victronenergy.battery Unit ID '${settings.modbus_battery}' is invalid`);
+
+            } else if (discoveryResponse.outcome == 'grid_failure') {
+                this.log(discoveryResponse);
+                throw new Error(`Connected successfully to GX device '${discoveryResponse.vrmId}', but com.victronenergy.grid Unit ID '${settings.modbus_grid}' is invalid`);
             }
 
             return devices;

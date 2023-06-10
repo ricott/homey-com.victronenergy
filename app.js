@@ -306,7 +306,7 @@ class VictronEnergyApp extends App {
 
             return args.device.api.isChargingScheduleEnabled(
                 args.device.getSetting('ssh_user'),
-                args.device.getSetting('ssh_password'),
+                args.device.getSetting('ssh_private_key'),
                 args.schedule.id
             )
                 .then(function (result) {
@@ -332,7 +332,7 @@ class VictronEnergyApp extends App {
 
             return args.device.api.enableChargingSchedule(
                 args.device.getSetting('ssh_user'),
-                args.device.getSetting('ssh_password'),
+                args.device.getSetting('ssh_private_key'),
                 args.schedule.id
             )
                 .then(function (result) {
@@ -354,7 +354,7 @@ class VictronEnergyApp extends App {
 
             return args.device.api.disableChargingSchedule(
                 args.device.getSetting('ssh_user'),
-                args.device.getSetting('ssh_password'),
+                args.device.getSetting('ssh_private_key'),
                 args.schedule.id
             )
                 .then(function (result) {
@@ -380,7 +380,7 @@ class VictronEnergyApp extends App {
 
             return args.device.api.createChargingSchedule(
                 args.device.getSetting('ssh_user'),
-                args.device.getSetting('ssh_password'),
+                args.device.getSetting('ssh_private_key'),
                 args.schedule.id,
                 args.day.id,
                 args.start,

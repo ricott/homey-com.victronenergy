@@ -25,25 +25,29 @@ class GXDevice extends Device {
         this.logMessage(`Victron GX device initiated`);
         this.logMessage(`Control charge current: ${this.getSettings().controlChargeCurrent}`);
 
-        this.upgradeDevice();
+        await this.upgradeDevice();
+        await this.registerFlowTokens();
 
         await this.setupGXSession(
             this.getSettings().address,
             this.getSettings().port,
             this.getSettings().modbus_vebus_unitId,
             this.getSettings().modbus_battery_unitId,
+            this.getSettings().modbus_grid_unitId,
             this.getSettings().refreshInterval
         );
         this._initilializeTimers();
     }
 
-    async setupGXSession(host, port, vebusUnitId, batteryUnitId, refreshInterval) {
+    async setupGXSession(host, port, vebusUnitId, batteryUnitId, gridUnitId, refreshInterval) {
         this.api = await new VictronGX({
             host: host,
             port: port,
             vebusUnitId: vebusUnitId,
             batteryUnitId: batteryUnitId,
-            refreshInterval: refreshInterval
+            gridUnitId: gridUnitId,
+            refreshInterval: refreshInterval,
+            device: this
         });
 
         await this._initializeEventListeners();
@@ -55,24 +59,56 @@ class GXDevice extends Device {
         }
     }
 
-    async reinitializeGXSession(host, port, vebusUnitId, batteryUnitId, refreshInterval) {
+    async reinitializeGXSession(host, port, vebusUnitId, batteryUnitId, gridUnitId, refreshInterval) {
         await this.destroyGXSession();
-        await this.setupGXSession(host, port, vebusUnitId, batteryUnitId, refreshInterval);
+        await this.setupGXSession(host, port, vebusUnitId, batteryUnitId, gridUnitId, refreshInterval);
     }
 
-    upgradeDevice() {
-        this.logMessage('Upgrading device');
-        this.addCapabilityHelper('measure_power.gridSetpoint');
-        this.addCapabilityHelper('measure_power.maxGridFeedin');
-        this.addCapabilityHelper('measure_power.maxDischarge');
-        this.addCapabilityHelper('measure_current.maxCharge');
+    async registerFlowTokens() {
+        this.log('Registering flow tokens');
+        this.gridPowerL1 = await this.homey.flow.createToken(`${this.getData().id}.gridPowerL1`,
+            {
+                type: 'number',
+                title: `${this.getName()} Grid Power L1`
+            });
+        this.gridPowerL2 = await this.homey.flow.createToken(`${this.getData().id}.gridPowerL2`,
+            {
+                type: 'number',
+                title: `${this.getName()} Grid Power L2`
+            });
+        this.gridPowerL3 = await this.homey.flow.createToken(`${this.getData().id}.gridPowerL3`,
+            {
+                type: 'number',
+                title: `${this.getName()} Grid Power L3`
+            });
     }
 
-    addCapabilityHelper(capability) {
+    async upgradeDevice() {
+        this.log('Upgrading existing device');
+        await this.addCapabilityHelper('measure_power.gridSetpoint');
+        await this.addCapabilityHelper('measure_power.maxGridFeedin');
+        await this.addCapabilityHelper('measure_power.maxDischarge');
+        await this.addCapabilityHelper('measure_current.maxCharge');
+        await this.addCapabilityHelper('meter_power');
+        await this.addCapabilityHelper('meter_power.export');
+    }
+
+    async removeCapabilityHelper(capability) {
+        if (this.hasCapability(capability)) {
+            try {
+                this.log(`Remove existing capability '${capability}'`);
+                await this.removeCapability(capability);
+            } catch (reason) {
+                this.error(`Failed to removed capability '${capability}'`);
+                this.error(reason);
+            }
+        }
+    }
+    async addCapabilityHelper(capability) {
         if (!this.hasCapability(capability)) {
             try {
-                this.logMessage(`Adding missing capability '${capability}'`);
-                this.addCapability(capability);
+                this.log(`Adding missing capability '${capability}'`);
+                await this.addCapability(capability);
             } catch (reason) {
                 this.error(`Failed to add capability '${capability}'`);
                 this.error(reason);
@@ -250,6 +286,11 @@ class GXDevice extends Device {
                 previousReadings = {};
             }
 
+            //Update flow tokens with power by phase
+            this.gridPowerL1.setValue(message.gridL1 || 0);
+            this.gridPowerL2.setValue(message.gridL2 || 0);
+            this.gridPowerL3.setValue(message.gridL3 || 0);
+
             const grid = message.gridL1 + message.gridL2 + message.gridL3;
             const genset = message.gensetL1 + message.gensetL2 + message.gensetL3;
             let pvPower = message.acPVInputL1 + message.acPVInputL2 + message.acPVInputL3;
@@ -278,6 +319,9 @@ class GXDevice extends Device {
             self._updateProperty('measure_power.maxGridFeedin', message.maxGridFeedinPower);
             self._updateProperty('measure_power.maxDischarge', message.maxDischargePower);
             self._updateProperty('measure_current.maxCharge', message.maxChargeCurrent);
+
+            self._updateProperty('meter_power', message.totalEnergyForward || 0);
+            self._updateProperty('meter_power.export', message.totalEnergyReverse || 0);
 
             let tSinceLastFullCharge = '';
             if (message.timeSinceLastFullCharge) {
@@ -425,7 +469,7 @@ class GXDevice extends Device {
 
     async onSettings({ oldSettings, newSettings, changedKeys }) {
         let changeConn = false;
-        let host, port, vebusUnitId, batteryUnitId, refreshInterval;
+        let host, port, vebusUnitId, batteryUnitId, gridUnitId, refreshInterval;
         if (changedKeys.indexOf("address") > -1) {
             this.logMessage(`Address value was change to: '${newSettings.address}'`);
             host = newSettings.address;
@@ -450,6 +494,12 @@ class GXDevice extends Device {
             changeConn = true;
         }
 
+        if (changedKeys.indexOf("modbus_grid_unitId") > -1) {
+            this.logMessage(`Modbus UnitId for grid value was change to: '${newSettings.modbus_grid_unitId}'`);
+            gridUnitId = newSettings.modbus_grid_unitId;
+            changeConn = true;
+        }
+
         if (changedKeys.indexOf("refreshInterval") > -1) {
             this.logMessage(`Refresh interval value was change to: '${newSettings.refreshInterval}'`);
             refreshInterval = newSettings.refreshInterval;
@@ -467,6 +517,7 @@ class GXDevice extends Device {
                 port || this.getSettings().port,
                 vebusUnitId || this.getSettings().modbus_vebus_unitId,
                 batteryUnitId || this.getSettings().modbus_battery_unitId,
+                gridUnitId || this.getSettings().modbus_grid_unitId,
                 refreshInterval || this.getSettings().refreshInterval
             );
         }
@@ -498,11 +549,6 @@ class GXDevice extends Device {
             }
         }
     }
-}
-
-// sleep time expects milliseconds
-function sleep(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 module.exports = GXDevice;

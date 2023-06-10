@@ -3,17 +3,16 @@
   "version": "0.9.9",
   "main": "app.js",
   "devDependencies": {
-    "@types/homey": "npm:homey-apps-sdk-v3-types@^0.3.3"
+    "@types/homey": "npm:homey-apps-sdk-v3-types@^0.3.4"
   },
   "dependencies": {
     "enum": "^3.0.4",
     "events": "^3.3.0",
     "homey-log": "^2.1.0",
     "jsmodbus": "^4.0.6",
-    "node-ssh": "^13.0.1"
+    "node-ssh": "^13.1.0"
   },
   "scripts": {
-    "postinstall": "modclean -r"
   },
   "author": "Richard Barkestam",
   "license": "GPL-3.0-only"
