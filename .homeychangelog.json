@@ -1,4 +1,8 @@
 {
+    "1.1.2": {
+        "en": "Maintenance",
+        "sv": "Underhåll"
+    },
     "1.1.1": {
         "en": "Breaking change related to SSH password being replaced with key authentication",
         "sv": "Icke bakåtkompatibel ändring för SSH lösenord som ersatts med nyckel authentificering"

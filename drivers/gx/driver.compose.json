@@ -113,7 +113,7 @@
         "meter_power.export": {
             "title": {
                 "en": "Grid lifetime export",
-                "sv": "När livstid export"
+                "sv": "Nät livstid export"
             }
         }
     },

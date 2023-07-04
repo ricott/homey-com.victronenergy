@@ -36,7 +36,6 @@ class GXDevice extends Device {
             this.getSettings().modbus_grid_unitId,
             this.getSettings().refreshInterval
         );
-        this._initilializeTimers();
     }
 
     async setupGXSession(host, port, vebusUnitId, batteryUnitId, gridUnitId, refreshInterval) {
@@ -66,21 +65,18 @@ class GXDevice extends Device {
 
     async registerFlowTokens() {
         this.log('Registering flow tokens');
-        this.gridPowerL1 = await this.homey.flow.createToken(`${this.getData().id}.gridPowerL1`,
-            {
-                type: 'number',
-                title: `${this.getName()} Grid Power L1`
-            });
-        this.gridPowerL2 = await this.homey.flow.createToken(`${this.getData().id}.gridPowerL2`,
-            {
-                type: 'number',
-                title: `${this.getName()} Grid Power L2`
-            });
-        this.gridPowerL3 = await this.homey.flow.createToken(`${this.getData().id}.gridPowerL3`,
-            {
-                type: 'number',
-                title: `${this.getName()} Grid Power L3`
-            });
+        this.loadsPowerL1 = await this.homey.flow.createToken(`${this.getData().id}.loadsPowerL1`, {
+            type: 'number',
+            title: `${this.getName()} Loads Power L1`
+        });
+        this.loadsPowerL2 = await this.homey.flow.createToken(`${this.getData().id}.loadsPowerL2`, {
+            type: 'number',
+            title: `${this.getName()} Loads Power L2`
+        });
+        this.loadsPowerL3 = await this.homey.flow.createToken(`${this.getData().id}.loadsPowerL3`, {
+            type: 'number',
+            title: `${this.getName()} Loads Power L3`
+        });
     }
 
     async upgradeDevice() {
@@ -114,18 +110,6 @@ class GXDevice extends Device {
                 this.error(reason);
             }
         }
-    }
-
-    _initilializeTimers() {
-        this.logMessage('Adding timers');
-    }
-
-    _deleteTimers() {
-        //Kill interval object(s)
-        this.logMessage('Removing timers');
-        this.pollIntervals.forEach(timer => {
-            clearInterval(timer);
-        });
     }
 
     updateSetting(key, value) {
@@ -286,10 +270,10 @@ class GXDevice extends Device {
                 previousReadings = {};
             }
 
-            //Update flow tokens with power by phase
-            this.gridPowerL1.setValue(message.gridL1 || 0);
-            this.gridPowerL2.setValue(message.gridL2 || 0);
-            this.gridPowerL3.setValue(message.gridL3 || 0);
+            //Update flow tokens with power by phase for consumption/loads
+            this.loadsPowerL1.setValue(message.consumptionL1 || 0);
+            this.loadsPowerL2.setValue(message.consumptionL2 || 0);
+            this.loadsPowerL3.setValue(message.consumptionL3 || 0);
 
             const grid = message.gridL1 + message.gridL2 + message.gridL3;
             const genset = message.gensetL1 + message.gensetL2 + message.gensetL3;
@@ -354,7 +338,7 @@ class GXDevice extends Device {
                     message = JSON.stringify(error, null, "  ");
                 } catch (e) {
                     self.log('Failed to stringify object', e);
-                    message = error.toString();
+                    message = 'Unknown error';
                 }
             }
 
@@ -462,7 +446,6 @@ class GXDevice extends Device {
 
     onDeleted() {
         this.logMessage(`Deleting Victron GX device '${this.getName()}' from Homey.`);
-        this._deleteTimers();
         this.api.disconnect();
         this.api = null;
     }
