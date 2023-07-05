@@ -61,6 +61,7 @@
                 "id": "modbus_vebus_unitId",
                 "type": "number",
                 "step": 1,
+                "value": -1,
                 "label": {
                     "en": "com.victronenergy.vebus",
                     "sv": "com.victronenergy.vebus"
@@ -74,6 +75,7 @@
                 "id": "modbus_battery_unitId",
                 "type": "number",
                 "step": 1,
+                "value": -1,
                 "label": {
                     "en": "com.victronenergy.battery",
                     "sv": "com.victronenergy.battery"
@@ -121,6 +123,7 @@
             {
                 "id": "ssh_private_key",
                 "type": "textarea",
+                "value": "",
                 "label": {
                     "en": "SSH private key",
                     "sv": "SSH privat nyckel"
