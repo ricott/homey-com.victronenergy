@@ -30,5 +30,6 @@
             },
             "filter": "driver_id=gx"
         }
-    ]
+    ],
+    "deprecated": true
 }

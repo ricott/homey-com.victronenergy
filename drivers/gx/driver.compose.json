@@ -14,9 +14,13 @@
         "lan"
     ],
     "energy": {
-        "cumulative": true
+        "cumulative": true,
+        "batteries": [
+            "INTERNAL"
+        ]
     },
     "capabilities": [
+        "measure_battery",
         "measure_power",
         "input_source",
         "measure_power.grid",
@@ -26,7 +30,6 @@
         "vebus_status",
         "alarm_status",
         "battery_status",
-        "battery_capacity",
         "measure_voltage.battery",
         "measure_current.battery",
         "switch_position",
@@ -96,7 +99,7 @@
             "title": {
                 "en": "Max grid feed-in",
                 "sv": "Max inmatningseffekt"
-        }
+            }
         },
         "measure_current.maxCharge": {
             "title": {

@@ -64,7 +64,7 @@ class GXDevice extends Device {
     }
 
     async registerFlowTokens() {
-        this.log('Registering flow tokens');
+        this.logMessage('Registering flow tokens');
         this.loadsPowerL1 = await this.homey.flow.createToken(`${this.getData().id}.loadsPowerL1`, {
             type: 'number',
             title: `${this.getName()} Loads Power L1`
@@ -80,19 +80,23 @@ class GXDevice extends Device {
     }
 
     async upgradeDevice() {
-        this.log('Upgrading existing device');
+        this.logMessage('Upgrading existing device');
         await this.addCapabilityHelper('measure_power.gridSetpoint');
         await this.addCapabilityHelper('measure_power.maxGridFeedin');
         await this.addCapabilityHelper('measure_power.maxDischarge');
         await this.addCapabilityHelper('measure_current.maxCharge');
         await this.addCapabilityHelper('meter_power');
         await this.addCapabilityHelper('meter_power.export');
+
+        // v1.1.4 switched to Homey built in battery capability
+        await this.addCapabilityHelper('measure_battery');
+        // await this.removeCapabilityHelper('battery_capacity');
     }
 
     async removeCapabilityHelper(capability) {
         if (this.hasCapability(capability)) {
             try {
-                this.log(`Remove existing capability '${capability}'`);
+                this.logMessage(`Remove existing capability '${capability}'`);
                 await this.removeCapability(capability);
             } catch (reason) {
                 this.error(`Failed to removed capability '${capability}'`);
@@ -103,7 +107,7 @@ class GXDevice extends Device {
     async addCapabilityHelper(capability) {
         if (!this.hasCapability(capability)) {
             try {
-                this.log(`Adding missing capability '${capability}'`);
+                this.logMessage(`Adding missing capability '${capability}'`);
                 await this.addCapability(capability);
             } catch (reason) {
                 this.error(`Failed to add capability '${capability}'`);
@@ -258,8 +262,8 @@ class GXDevice extends Device {
         let self = this;
 
         self.api.on('properties', message => {
-            this.updateSetting('vrmId', message.vrmId);
-            this.updateSetting('essMode', enums.decodeESSState(message.essMode));
+            self.updateSetting('vrmId', message.vrmId);
+            self.updateSetting('essMode', enums.decodeESSState(message.essMode));
         });
 
         self.api.on('readings', message => {
@@ -271,9 +275,9 @@ class GXDevice extends Device {
             }
 
             //Update flow tokens with power by phase for consumption/loads
-            this.loadsPowerL1.setValue(message.consumptionL1 || 0);
-            this.loadsPowerL2.setValue(message.consumptionL2 || 0);
-            this.loadsPowerL3.setValue(message.consumptionL3 || 0);
+            self.loadsPowerL1.setValue(message.consumptionL1 || 0);
+            self.loadsPowerL2.setValue(message.consumptionL2 || 0);
+            self.loadsPowerL3.setValue(message.consumptionL3 || 0);
 
             const grid = message.gridL1 + message.gridL2 + message.gridL3;
             const genset = message.gensetL1 + message.gensetL2 + message.gensetL3;
@@ -294,7 +298,7 @@ class GXDevice extends Device {
             const alarmStatus = self.handleAlarmStatuses(message);
             self._updateProperty('alarm_status', alarmStatus);
             self._updateProperty('battery_status', enums.decodeBatteryStatus(message.batteryStatus));
-            self._updateProperty('battery_capacity', message.batterySOC);
+            self._updateProperty('measure_battery', message.batterySOC);
             self._updateProperty('measure_voltage.battery', message.batteryVoltage);
             self._updateProperty('measure_current.battery', message.batteryCurrent);
             self._updateProperty('switch_position', enums.decodeSwitchPosition(message.switchPosition));
@@ -355,81 +359,90 @@ class GXDevice extends Device {
     }
 
     _updateProperty(key, value) {
+        let self = this;
         //Ignore unknown capabilities
-        if (this.hasCapability(key)) {
+        if (self.hasCapability(key)) {
             //All trigger logic only applies to changed values
-            if (this.isCapabilityValueChanged(key, value)) {
-                this.setCapabilityValue(key, value);
+            if (self.isCapabilityValueChanged(key, value)) {
+                self.setCapabilityValue(key, value)
+                    .then(function () {
 
-                if (key == 'input_source') {
-                    const tokens = {
-                        source: value
-                    }
-                    this._input_source_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
-
-                } else if (key == 'battery_status') {
-                    const tokens = {
-                        status: value
-                    }
-                    this._battery_status_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
-
-                } else if (key == 'vebus_status') {
-                    const tokens = {
-                        status: value
-                    }
-                    this._vebus_status_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
-
-                } else if (key == 'battery_capacity') {
-                    const tokens = {
-                        soc: value
-                    }
-                    this._soc_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
-
-                } else if (key == 'alarm_status') {
-                    const tokens = {
-                        status: value,
-                        alarms: this.getSetting('vebusAlarms'),
-                        warnings: this.getSetting('vebusWarnings')
-                    }
-                    this._alarm_status_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
-
-                } else if (key == 'switch_position') {
-                    const tokens = {
-                        mode: value
-                    }
-                    this._switch_position_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
-
-                } else if (key == 'measure_voltage.battery') {
-                    const tokens = {
-                        voltage: value
-                    }
-                    this._battery_voltage_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
-
-                } else if (key == 'measure_power.grid') {
-                    let power = 0;
-                    if (value < 0) {
-                        power = value * -1;
-                    }
-
-                    if (this.getStoreValue('grid_surplus') != power) {
-                        //Filter out most of the "false positives" when surplus is bouncing
-                        //eg grid setpoint is set to 0
-                        if (power === 0 || power > minGridSuplusPower) {
-                            this.setStoreValue('grid_surplus', power);
+                        if (key == 'input_source') {
                             const tokens = {
-                                power: power,
-                                single_phase: Math.round(power / 230),
-                                three_phase: Math.round(power / 3 / 230)
+                                source: value
                             }
-                            this._grid_surplus_changed.trigger(this, tokens, {}).catch(error => { this.error(error) });
+                            self._input_source_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
 
+                        } else if (key == 'battery_status') {
+                            const tokens = {
+                                status: value
+                            }
+                            self._battery_status_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
+
+                        } else if (key == 'vebus_status') {
+                            const tokens = {
+                                status: value
+                            }
+                            self._vebus_status_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
+
+                        } else if (key == 'measure_battery') {
+                            const tokens = {
+                                soc: value
+                            }
+                            self._soc_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
+
+                        } else if (key == 'alarm_status') {
+                            const tokens = {
+                                status: value,
+                                alarms: self.getSetting('vebusAlarms'),
+                                warnings: self.getSetting('vebusWarnings')
+                            }
+                            self._alarm_status_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
+
+                        } else if (key == 'switch_position') {
+                            const tokens = {
+                                mode: value
+                            }
+                            self._switch_position_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
+
+                        } else if (key == 'measure_voltage.battery') {
+                            const tokens = {
+                                voltage: value
+                            }
+                            self._battery_voltage_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
+
+                        } else if (key == 'measure_power.grid') {
+                            let power = 0;
+                            if (value < 0) {
+                                power = value * -1;
+                            }
+
+                            if (self.getStoreValue('grid_surplus') != power) {
+                                //Filter out most of the "false positives" when surplus is bouncing
+                                //eg grid setpoint is set to 0
+                                if (power === 0 || power > minGridSuplusPower) {
+                                    self.setStoreValue('grid_surplus', power);
+                                    const tokens = {
+                                        power: power,
+                                        single_phase: Math.round(power / 230),
+                                        three_phase: Math.round(power / 3 / 230)
+                                    }
+                                    self._grid_surplus_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
+
+                                }
+                            }
                         }
-                    }
-                }
+
+                    }).catch(reason => {
+                        self.logError(reason);
+                    });
 
             } else {
                 //Update value to refresh timestamp in app
-                this.setCapabilityValue(key, value);
+                self.setCapabilityValue(key, value)
+                    .catch(reason => {
+                        self.logError(reason);
+                    });
             }
         }
     }
