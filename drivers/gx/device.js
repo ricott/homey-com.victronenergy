@@ -434,14 +434,14 @@ class GXDevice extends Device {
                         }
 
                     }).catch(reason => {
-                        self.logError(reason);
+                        self.error(reason);
                     });
 
             } else {
                 //Update value to refresh timestamp in app
                 self.setCapabilityValue(key, value)
                     .catch(reason => {
-                        self.logError(reason);
+                        self.error(reason);
                     });
             }
         }
