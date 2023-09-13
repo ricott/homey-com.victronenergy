@@ -90,7 +90,7 @@ class GXDevice extends Device {
 
         // v1.1.4 switched to Homey built in battery capability
         await this.addCapabilityHelper('measure_battery');
-        // await this.removeCapabilityHelper('battery_capacity');
+        await this.removeCapabilityHelper('battery_capacity');
     }
 
     async removeCapabilityHelper(capability) {
