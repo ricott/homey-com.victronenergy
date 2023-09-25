@@ -1,4 +1,8 @@
 {
+    "1.1.7": {
+        "en": "New device type for VRM with solar forecast",
+        "sv": "Ny enhetstyp för VRM med beräknad solcellsproduktion"
+    },
     "1.1.6": {
         "en": "Battery status migrated to Homey built in capability",
         "sv": "Batteristatus migrerad till Homeys inbyggda egenskap för batteri"
