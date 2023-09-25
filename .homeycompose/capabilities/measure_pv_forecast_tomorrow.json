@@ -1,0 +1,15 @@
+{
+  "type": "number",
+  "decimals": 2,
+  "title": {
+    "en": "PV Forecast tomorrow"
+  },
+  "insights": true,
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/forecast.svg",
+  "units": {
+    "en": "kWh"
+  }
+}

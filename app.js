@@ -9,7 +9,11 @@ class VictronEnergyApp extends App {
         this.homeyLog = new Log({ homey: this.homey });
         await this.loadConditions();
         await this.loadActions();
-        this.log('Victron Energy app has been initialized');
+        this.log(`Victron Energy v${this.getAppVersion()} has been initialized`);
+    }
+
+    getAppVersion() {
+        return this.homey.manifest.version;
     }
 
     async loadConditions() {

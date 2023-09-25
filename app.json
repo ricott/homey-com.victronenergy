@@ -2136,6 +2136,72 @@
           ]
         }
       ]
+    },
+    {
+      "name": {
+        "en": "Victron VRM"
+      },
+      "images": {
+        "small": "drivers/vrm/assets/images/small.png",
+        "large": "drivers/vrm/assets/images/large.png",
+        "xlarge": "drivers/vrm/assets/images/xlarge.png"
+      },
+      "class": "sensor",
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "capabilities": [
+        "measure_pv_forecast_today",
+        "measure_pv_forecast_tomorrow"
+      ],
+      "pair": [
+        {
+          "id": "login_credentials",
+          "template": "login_credentials",
+          "options": {
+            "logo": "../../../assets/images/logo.png",
+            "usernameLabel": {
+              "en": "Email"
+            },
+            "passwordLabel": {
+              "en": "Password"
+            }
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "vrm",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Debug"
+          },
+          "children": [
+            {
+              "id": "last_error",
+              "type": "textarea",
+              "label": {
+                "en": "Last error"
+              },
+              "value": ""
+            }
+          ]
+        }
+      ]
     }
   ],
   "capabilities": {
@@ -2171,6 +2237,36 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/assets/input.svg"
+    },
+    "measure_pv_forecast_today": {
+      "type": "number",
+      "decimals": 2,
+      "title": {
+        "en": "PV Forecast today"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/forecast.svg",
+      "units": {
+        "en": "kWh"
+      }
+    },
+    "measure_pv_forecast_tomorrow": {
+      "type": "number",
+      "decimals": 2,
+      "title": {
+        "en": "PV Forecast tomorrow"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/forecast.svg",
+      "units": {
+        "en": "kWh"
+      }
     },
     "switch_position": {
       "type": "string",

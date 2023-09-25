@@ -1,0 +1,47 @@
+{
+    "name": {
+        "en": "Victron VRM"
+    },
+    "images": {
+        "small": "drivers/vrm/assets/images/small.png",
+        "large": "drivers/vrm/assets/images/large.png",
+        "xlarge": "drivers/vrm/assets/images/xlarge.png"
+    },
+    "class": "sensor",
+    "platforms": [
+        "local"
+    ],
+    "connectivity": [
+        "lan"
+    ],
+    "capabilities": [
+        "measure_pv_forecast_today",
+        "measure_pv_forecast_tomorrow"
+    ],
+    "pair": [
+        {
+            "id": "login_credentials",
+            "template": "login_credentials",
+            "options": {
+                "logo": "../../../assets/images/logo.png",
+                "usernameLabel": {
+                    "en": "Email"
+                },
+                "passwordLabel": {
+                    "en": "Password"
+                }
+            }
+        },
+        {
+            "id": "list_devices",
+            "template": "list_devices",
+            "navigation": {
+                "next": "add_devices"
+            }
+        },
+        {
+            "id": "add_devices",
+            "template": "add_devices"
+        }
+    ]
+}

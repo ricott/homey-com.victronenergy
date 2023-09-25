@@ -1,0 +1,18 @@
+[
+    {
+        "type": "group",
+        "label": {
+            "en": "Debug"
+        },
+        "children": [
+            {
+                "id": "last_error",
+                "type": "textarea",
+                "label": {
+                    "en": "Last error"
+                },
+                "value": ""
+            }
+        ]
+    }
+]
