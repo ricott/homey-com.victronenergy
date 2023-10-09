@@ -16,7 +16,9 @@
     ],
     "capabilities": [
         "measure_pv_forecast_today",
-        "measure_pv_forecast_tomorrow"
+        "measure_pv_forecast_tomorrow",
+        "measure_consumption_forecast_today",
+        "measure_consumption_forecast_tomorrow"
     ],
     "pair": [
         {

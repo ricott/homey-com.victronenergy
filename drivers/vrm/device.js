@@ -28,30 +28,40 @@ class VRMDevice extends Homey.Device {
 
     async refreshForecast() {
         const vrm = new VRM();
-        let forecastTomorrow;
         try {
-            forecastTomorrow = await vrm.getPVInverterForecastNextDay(this.getToken(), this.getData().id);
+            const forecastToday = await vrm.getPVForecastRestOfToday(this.getToken(), this.getData().id);
+            if (forecastToday && forecastToday > 0) {
+                this._updateProperty('measure_pv_forecast_today', (forecastToday / 1000));
+            }
         } catch (reason) {
             this.logError(reason);
         }
 
-        if (forecastTomorrow && forecastTomorrow > 0) {
-            this._updateProperty('measure_pv_forecast_tomorrow', (forecastTomorrow / 1000));
-        } else {
-            this._updateProperty('measure_pv_forecast_tomorrow', 0);
-        }
-
-        let forecastToday;
         try {
-            forecastToday = await vrm.getPVInverterForecastRestOfToday(this.getToken(), this.getData().id);
+            const forecastTomorrow = await vrm.getPVForecastNextDay(this.getToken(), this.getData().id);
+            if (forecastTomorrow && forecastTomorrow > 0) {
+                this._updateProperty('measure_pv_forecast_tomorrow', (forecastTomorrow / 1000));
+            }
         } catch (reason) {
             this.logError(reason);
         }
 
-        if (forecastToday && forecastToday > 0) {
-            this._updateProperty('measure_pv_forecast_today', (forecastToday / 1000));
-        } else {
-            this._updateProperty('measure_pv_forecast_today', 0);
+        try {
+            const forecastToday = await vrm.getConsumptionForecastRestOfToday(this.getToken(), this.getData().id);
+            if (forecastToday && forecastToday > 0) {
+                this._updateProperty('measure_consumption_forecast_today', (forecastToday / 1000));
+            }
+        } catch (reason) {
+            this.logError(reason);
+        }
+
+        try {
+            const forecastTomorrow = await vrm.getConsumptionForecastNextDay(this.getToken(), this.getData().id);
+            if (forecastTomorrow && forecastTomorrow > 0) {
+                this._updateProperty('measure_consumption_forecast_tomorrow', (forecastTomorrow / 1000));
+            }
+        } catch (reason) {
+            this.logError(reason);
         }
     }
 
@@ -140,6 +150,8 @@ class VRMDevice extends Homey.Device {
     async setupCapabilities() {
         this.logMessage('Setting up capabilities');
 
+        await this.addCapabilityHelper('measure_consumption_forecast_today');
+        await this.addCapabilityHelper('measure_consumption_forecast_tomorrow');
     }
 
     updateSetting(key, value) {
