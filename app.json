@@ -1704,7 +1704,7 @@
               "value": 5,
               "step": 1,
               "attr": {
-                "min": 1,
+                "min": 5,
                 "max": 3600
               },
               "label": {

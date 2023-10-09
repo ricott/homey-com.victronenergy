@@ -91,6 +91,14 @@ class GXDevice extends Device {
         // v1.1.4 switched to Homey built in battery capability
         await this.addCapabilityHelper('measure_battery');
         await this.removeCapabilityHelper('battery_capacity');
+
+        // Seem like too excessive refresh will cause out of memory problems
+        if (this.getSettings().refreshInterval < 5) {
+            this.logMessage(`Changing refresh interval from '${this.getSettings().refreshInterval}' to 5.`);
+            this.setSettings({ refreshInterval: 5 }).catch(err => {
+                this.error(`Failed to update setting '${key}' with value '${value}'`, err);
+            });
+        }
     }
 
     async removeCapabilityHelper(capability) {
