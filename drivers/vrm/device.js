@@ -30,7 +30,7 @@ class VRMDevice extends Homey.Device {
         const vrm = new VRM();
         try {
             const forecastToday = await vrm.getPVForecastRestOfToday(this.getToken(), this.getData().id);
-            if (forecastToday && forecastToday > 0) {
+            if (!isNaN(forecastToday)) {
                 this._updateProperty('measure_pv_forecast_today', (forecastToday / 1000));
             }
         } catch (reason) {
@@ -39,7 +39,7 @@ class VRMDevice extends Homey.Device {
 
         try {
             const forecastTomorrow = await vrm.getPVForecastNextDay(this.getToken(), this.getData().id);
-            if (forecastTomorrow && forecastTomorrow > 0) {
+            if (!isNaN(forecastTomorrow)) {
                 this._updateProperty('measure_pv_forecast_tomorrow', (forecastTomorrow / 1000));
             }
         } catch (reason) {
@@ -48,7 +48,7 @@ class VRMDevice extends Homey.Device {
 
         try {
             const forecastToday = await vrm.getConsumptionForecastRestOfToday(this.getToken(), this.getData().id);
-            if (forecastToday && forecastToday > 0) {
+            if (!isNaN(forecastToday)) {
                 this._updateProperty('measure_consumption_forecast_today', (forecastToday / 1000));
             }
         } catch (reason) {
@@ -57,7 +57,7 @@ class VRMDevice extends Homey.Device {
 
         try {
             const forecastTomorrow = await vrm.getConsumptionForecastNextDay(this.getToken(), this.getData().id);
-            if (forecastTomorrow && forecastTomorrow > 0) {
+            if (!isNaN(forecastTomorrow)) {
                 this._updateProperty('measure_consumption_forecast_tomorrow', (forecastTomorrow / 1000));
             }
         } catch (reason) {
