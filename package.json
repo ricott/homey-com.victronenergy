@@ -3,7 +3,6 @@
   "version": "0.9.9",
   "main": "app.js",
   "dependencies": {
-    "async-mutex": "^0.4.0",
     "enum": "^3.0.4",
     "events": "^3.3.0",
     "homey-log": "^2.1.0",

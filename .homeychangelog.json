@@ -1,4 +1,7 @@
 {
+    "1.2.0": {
+        "en": "New action for controlling the ESS multiphase regulation setting"
+    },
     "1.1.9": {
         "en": "New device type for VRM with solar forecast",
         "sv": "Ny enhetstyp för VRM med beräknad solcellsproduktion"

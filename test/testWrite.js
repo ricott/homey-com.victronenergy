@@ -12,14 +12,15 @@ let options = {
 };
 
 let buffer = Buffer.alloc(2);
-buffer.writeInt16BE(3);
+buffer.writeInt16BE(1);
 
 socket.on('connect', function () {
     console.log(`Client connected on IP '${options.host}'`);
     Promise.all([
 
-        //client100.writeMultipleRegisters(2902, buffer) //Disable inverter
-        client227.writeMultipleRegisters(33, buffer) //1=Charger Only;2=Inverter Only;3=On;4=Off
+        //client100.writeMultipleRegisters(2902, buffer) // Disable inverter
+        //client227.writeMultipleRegisters(33, buffer) // 1=Charger Only;2=Inverter Only;3=On;4=Off
+        client100.writeMultipleRegisters(2902, buffer) // 1=ESS with Phase Compensation;2=ESS without phase compensation;3=Disabled/External Control
 
     ]).then((results) => {
 

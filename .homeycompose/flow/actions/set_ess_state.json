@@ -1,0 +1,30 @@
+{
+    "id": "set_ess_state",
+    "title": {
+        "en": "Set multiphase regulation state",
+        "sv": "Uppdatera fas reglering status"
+    },
+    "titleFormatted": {
+        "en": "Set multiphase regulation state to [[mode]]",
+        "sv": "Uppdatera fas reglering status till [[mode]]"
+    },
+    "args": [
+        {
+            "name": "mode",
+            "type": "autocomplete",
+            "title": {
+                "en": "Mode",
+                "sv": "Mode"
+            }
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=gx"
+        }
+    ]
+}

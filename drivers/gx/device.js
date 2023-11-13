@@ -271,7 +271,6 @@ class GXDevice extends Device {
 
         self.api.on('properties', message => {
             self.updateSetting('vrmId', message.vrmId);
-            self.updateSetting('essMode', enums.decodeESSState(message.essMode));
         });
 
         self.api.on('readings', message => {
@@ -326,7 +325,8 @@ class GXDevice extends Device {
 
             self.setSettings({
                 minimumSOC: `${message.minimumSOC}%`,
-                timeSinceLastFullCharge: tSinceLastFullCharge
+                timeSinceLastFullCharge: tSinceLastFullCharge,
+                essMode: enums.decodeESSState(message.essMode)
             }).catch(err => {
                 self.error(`Failed to update settings`, err);
             });

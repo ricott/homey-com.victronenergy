@@ -24,7 +24,7 @@ class VRMDriver extends Homey.Driver {
 
             const vrm = new VRM();
             const response = await vrm.login(data.username, data.password);
-            const installations = await vrm.getInstallations(response.token, response.userId);
+            const installations = vrm.getInstallations(response.token, response.userId);
             installations.forEach(installation => {
                 devices.push({
                     name: installation.name,

@@ -35,9 +35,11 @@ socket.on('connect', function () {
         client30.readHoldingRegisters(2601, 1),
         client30.readHoldingRegisters(2602, 1),
         */
-        client30.readHoldingRegisters(2634, 2),
-        client30.readHoldingRegisters(2636, 2),
+        
+        // client30.readHoldingRegisters(2634, 2),
+        // client30.readHoldingRegisters(2636, 2),
 
+        client100.readHoldingRegisters(2902, 1),
 
 
     ]).then((results) => {
@@ -47,8 +49,8 @@ socket.on('connect', function () {
             let result = results[index];
 
             //console.log(result.response);
-            //console.log(result.response._body._valuesAsBuffer.readInt16BE(0));
-            console.log(result.response._body._valuesAsBuffer.readUInt32BE(0));
+            console.log(result.response._body._valuesAsBuffer.readInt16BE(0));
+            //console.log(result.response._body._valuesAsBuffer.readUInt32BE(0));
 
         }
 

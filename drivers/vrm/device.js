@@ -21,48 +21,54 @@ class VRMDevice extends Homey.Device {
         }
 
         await this.refreshToken();
-        await this.refreshForecast();
+        this.refreshForecast();
 
         this._initilializeTimers();
     }
 
-    async refreshForecast() {
+    refreshForecast() {
+        let self = this;
         const vrm = new VRM();
-        try {
-            const forecastToday = await vrm.getPVForecastRestOfToday(this.getToken(), this.getData().id);
-            if (!isNaN(forecastToday)) {
-                this._updateProperty('measure_pv_forecast_today', (forecastToday / 1000));
-            }
-        } catch (reason) {
-            this.logError(reason);
-        }
 
-        try {
-            const forecastTomorrow = await vrm.getPVForecastNextDay(this.getToken(), this.getData().id);
-            if (!isNaN(forecastTomorrow)) {
-                this._updateProperty('measure_pv_forecast_tomorrow', (forecastTomorrow / 1000));
-            }
-        } catch (reason) {
-            this.logError(reason);
-        }
+        vrm.getPVForecastRestOfToday(this.getToken(), this.getData().id)
+            .then(function (forecast) {
+                if (!isNaN(forecast)) {
+                    self._updateProperty('measure_pv_forecast_today', (forecast / 1000));
+                }
+            })
+            .catch(reason => {
+                self.logError(reason);
+            });
 
-        try {
-            const forecastToday = await vrm.getConsumptionForecastRestOfToday(this.getToken(), this.getData().id);
-            if (!isNaN(forecastToday)) {
-                this._updateProperty('measure_consumption_forecast_today', (forecastToday / 1000));
-            }
-        } catch (reason) {
-            this.logError(reason);
-        }
+        vrm.getPVForecastNextDay(this.getToken(), this.getData().id)
+            .then(function (forecast) {
+                if (!isNaN(forecast)) {
+                    self._updateProperty('measure_pv_forecast_tomorrow', (forecast / 1000));
+                }
+            })
+            .catch(reason => {
+                self.logError(reason);
+            });
 
-        try {
-            const forecastTomorrow = await vrm.getConsumptionForecastNextDay(this.getToken(), this.getData().id);
-            if (!isNaN(forecastTomorrow)) {
-                this._updateProperty('measure_consumption_forecast_tomorrow', (forecastTomorrow / 1000));
-            }
-        } catch (reason) {
-            this.logError(reason);
-        }
+        vrm.getConsumptionForecastRestOfToday(this.getToken(), this.getData().id)
+            .then(function (forecast) {
+                if (!isNaN(forecast)) {
+                    self._updateProperty('measure_consumption_forecast_today', (forecast / 1000));
+                }
+            })
+            .catch(reason => {
+                self.logError(reason);
+            });
+
+        vrm.getConsumptionForecastNextDay(this.getToken(), this.getData().id)
+            .then(function (forecast) {
+                if (!isNaN(forecast)) {
+                    self._updateProperty('measure_consumption_forecast_tomorrow', (forecast / 1000));
+                }
+            })
+            .catch(reason => {
+                self.logError(reason);
+            });
     }
 
     async refreshToken() {
@@ -80,8 +86,8 @@ class VRMDevice extends Homey.Device {
     _initilializeTimers() {
         this.logMessage('Adding timers');
         // Refresh forecasts
-        this.homey.setInterval(async () => {
-            await this.refreshForecast();
+        this.homey.setInterval(() => {
+            this.refreshForecast();
         }, 60 * 1000 * 30);
 
         // Refresh token, once per week
