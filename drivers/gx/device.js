@@ -93,10 +93,11 @@ class GXDevice extends Device {
         await this.removeCapabilityHelper('battery_capacity');
 
         // Seem like too excessive refresh will cause out of memory problems
-        if (this.getSettings().refreshInterval < 5) {
-            this.logMessage(`Changing refresh interval from '${this.getSettings().refreshInterval}' to 5.`);
-            this.setSettings({ refreshInterval: 5 }).catch(err => {
-                this.error(`Failed to update setting '${key}' with value '${value}'`, err);
+        let value = 10;
+        if (this.getSettings().refreshInterval < value) {
+            this.logMessage(`Changing refresh interval from '${this.getSettings().refreshInterval}' to '${value}'.`);
+            this.setSettings({ refreshInterval: value }).catch(err => {
+                this.error(`Failed to update setting 'refreshInterval' with value '${value}'`, err);
             });
         }
     }
