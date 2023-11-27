@@ -1,4 +1,8 @@
 {
+    "1.2.1": {
+        "en": "Maintenance",
+        "sv": "Underhåll"
+    },
     "1.2.0": {
         "en": "New action for controlling the ESS multiphase regulation setting"
     },
