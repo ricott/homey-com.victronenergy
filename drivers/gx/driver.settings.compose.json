@@ -28,10 +28,10 @@
             {
                 "id": "refreshInterval",
                 "type": "number",
-                "value": 5,
+                "value": 10,
                 "step": 1,
                 "attr": {
-                    "min": 5,
+                    "min": 10,
                     "max": 3600
                 },
                 "label": {
