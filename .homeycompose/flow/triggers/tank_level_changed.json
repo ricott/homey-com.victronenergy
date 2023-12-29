@@ -1,0 +1,35 @@
+{
+    "id": "tank_level_changed",
+    "title": {
+        "en": "Tank level changed",
+        "sv": "Tankens nivå ändrades"
+    },
+    "titleFormatted": {
+        "en": "Tank level changed to [[level]]",
+        "sv": "Tankens nivå ändrades till [[level]]"
+    },
+    "tokens": [
+        {
+            "name": "level",
+            "type": "number",
+            "title": {
+                "en": "Level (%)",
+                "sv": "Nivå (%)"
+            },
+            "example": {
+                "en": "56"
+            }
+        }
+    ],
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=tank"
+        }
+    ]
+}

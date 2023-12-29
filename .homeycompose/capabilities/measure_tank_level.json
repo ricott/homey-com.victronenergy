@@ -1,0 +1,17 @@
+{
+  "type": "number",
+  "decimals": 2,
+  "title": {
+    "en": "Tank level",
+    "sv": "Tank nivå"
+  },
+  "insights": true,
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/tank_level.svg",
+  "units": {
+    "en": "%",
+    "sv": "%"
+  }
+}

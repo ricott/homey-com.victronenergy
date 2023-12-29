@@ -1,6 +1,7 @@
 'use strict';
 const Homey = require('homey');
 const VRM = require('../../lib/vrm');
+const utilFunctions = require('../../lib/util.js');
 const crypto = require('crypto');
 const algorithm = 'aes-256-cbc';
 
@@ -177,7 +178,7 @@ class VRMDevice extends Homey.Device {
     logError(error) {
         this.error(error);
         let message = '';
-        if (this.isError(error)) {
+        if (utilFunctions.isError(error)) {
             message = error.stack;
         } else {
             try {
@@ -189,10 +190,6 @@ class VRMDevice extends Homey.Device {
         }
         let dateTime = new Date().toISOString();
         this.updateSetting('last_error', dateTime + '\n' + message);
-    }
-
-    isError(err) {
-        return (err && err.stack && err.message);
     }
 
     storeCredentialsEncrypted(plainUser, plainPassword) {

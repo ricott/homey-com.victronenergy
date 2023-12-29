@@ -1,0 +1,35 @@
+{
+    "id": "sensor_status_changed",
+    "title": {
+        "en": "Status changed",
+        "sv": "Status ändrades"
+    },
+    "titleFormatted": {
+        "en": "Status changed to [[status]]",
+        "sv": "Status ändrades till [[status]]"
+    },
+    "tokens": [
+        {
+            "name": "status",
+            "type": "string",
+            "title": {
+                "en": "Status",
+                "sv": "Status"
+            },
+            "example": {
+                "en": "OK"
+            }
+        }
+    ],
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select GX device",
+                "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=temperature|tank"
+        }
+    ]
+}

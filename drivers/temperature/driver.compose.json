@@ -1,0 +1,40 @@
+{
+    "name": {
+        "en": "Temperature sensor"
+    },
+    "images": {
+        "small": "drivers/temperature/assets/images/small.png",
+        "large": "drivers/temperature/assets/images/large.png",
+        "xlarge": "drivers/temperature/assets/images/xlarge.png"
+    },
+    "class": "sensor",
+    "platforms": [
+        "local"
+    ],
+    "connectivity": [
+        "lan"
+    ],
+    "capabilities": [
+        "measure_temperature",
+        "measure_humidity",
+        "measure_pressure",
+        "measure_voltage",
+        "sensor_status"
+    ],
+    "pair": [
+        {
+            "id": "settings"
+        },
+        {
+            "id": "list_devices",
+            "template": "list_devices",
+            "navigation": {
+                "next": "add_devices"
+            }
+        },
+        {
+            "id": "add_devices",
+            "template": "add_devices"
+        }
+    ]
+}

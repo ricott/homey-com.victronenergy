@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.victronenergy",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -291,6 +291,41 @@
         ]
       },
       {
+        "id": "sensor_status_changed",
+        "title": {
+          "en": "Status changed",
+          "sv": "Status ändrades"
+        },
+        "titleFormatted": {
+          "en": "Status changed to [[status]]",
+          "sv": "Status ändrades till [[status]]"
+        },
+        "tokens": [
+          {
+            "name": "status",
+            "type": "string",
+            "title": {
+              "en": "Status",
+              "sv": "Status"
+            },
+            "example": {
+              "en": "OK"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+              "en": "Select GX device",
+              "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=temperature|tank"
+          }
+        ]
+      },
+      {
         "id": "soc_changed",
         "title": {
           "en": "SoC changed",
@@ -358,6 +393,41 @@
               "sv": "Välj GX enhet"
             },
             "filter": "driver_id=gx"
+          }
+        ]
+      },
+      {
+        "id": "tank_level_changed",
+        "title": {
+          "en": "Tank level changed",
+          "sv": "Tankens nivå ändrades"
+        },
+        "titleFormatted": {
+          "en": "Tank level changed to [[level]]",
+          "sv": "Tankens nivå ändrades till [[level]]"
+        },
+        "tokens": [
+          {
+            "name": "level",
+            "type": "number",
+            "title": {
+              "en": "Level (%)",
+              "sv": "Nivå (%)"
+            },
+            "example": {
+              "en": "56"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+              "en": "Select GX device",
+              "sv": "Välj GX enhet"
+            },
+            "filter": "driver_id=tank"
           }
         ]
       },
@@ -2169,6 +2239,309 @@
     },
     {
       "name": {
+        "en": "Tank sensor"
+      },
+      "images": {
+        "small": "drivers/tank/assets/images/small.png",
+        "large": "drivers/tank/assets/images/large.png",
+        "xlarge": "drivers/tank/assets/images/xlarge.png"
+      },
+      "class": "sensor",
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "capabilities": [
+        "measure_tank_level",
+        "sensor_status"
+      ],
+      "pair": [
+        {
+          "id": "settings"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "tank",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Network",
+            "sv": "Nätverk"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "sv": "IP Adress"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "sv": "Port"
+              }
+            },
+            {
+              "id": "refreshInterval",
+              "type": "number",
+              "value": 1,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1440
+              },
+              "label": {
+                "en": "Refresh interval (minutes)",
+                "sv": "Uppdateringsfrekvens (minuter)"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Modbus TCP",
+            "sv": "Modbus TCP"
+          },
+          "children": [
+            {
+              "id": "modbus_unitId",
+              "type": "number",
+              "step": 1,
+              "value": 20,
+              "label": {
+                "en": "com.victronenergy.tank",
+                "sv": "com.victronenergy.tank"
+              },
+              "hint": {
+                "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
+                "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Information",
+            "sv": "Information"
+          },
+          "children": [
+            {
+              "id": "productId",
+              "type": "label",
+              "label": {
+                "en": "Product ID",
+                "sv": "Produkt ID"
+              },
+              "value": ""
+            },
+            {
+              "id": "type",
+              "type": "label",
+              "label": {
+                "en": "Tank fluid type",
+                "sv": "Typ av vätska i tanken"
+              },
+              "value": ""
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Debug",
+            "sv": "Felsökning"
+          },
+          "children": [
+            {
+              "id": "last_error",
+              "type": "textarea",
+              "label": {
+                "en": "Most recent API error",
+                "sv": "Senaste API felmeddelandet"
+              },
+              "value": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": {
+        "en": "Temperature sensor"
+      },
+      "images": {
+        "small": "drivers/temperature/assets/images/small.png",
+        "large": "drivers/temperature/assets/images/large.png",
+        "xlarge": "drivers/temperature/assets/images/xlarge.png"
+      },
+      "class": "sensor",
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "capabilities": [
+        "measure_temperature",
+        "measure_humidity",
+        "measure_pressure",
+        "measure_voltage",
+        "sensor_status"
+      ],
+      "pair": [
+        {
+          "id": "settings"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "temperature",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Network",
+            "sv": "Nätverk"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "sv": "IP Adress"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "sv": "Port"
+              }
+            },
+            {
+              "id": "refreshInterval",
+              "type": "number",
+              "value": 1,
+              "step": 1,
+              "attr": {
+                "min": 1,
+                "max": 1440
+              },
+              "label": {
+                "en": "Refresh interval (minutes)",
+                "sv": "Uppdateringsfrekvens (minuter)"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Modbus TCP",
+            "sv": "Modbus TCP"
+          },
+          "children": [
+            {
+              "id": "modbus_unitId",
+              "type": "number",
+              "step": 1,
+              "value": 20,
+              "label": {
+                "en": "com.victronenergy.temperature",
+                "sv": "com.victronenergy.temperature"
+              },
+              "hint": {
+                "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
+                "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Information",
+            "sv": "Information"
+          },
+          "children": [
+            {
+              "id": "productId",
+              "type": "label",
+              "label": {
+                "en": "Product ID",
+                "sv": "Product ID"
+              },
+              "value": ""
+            },
+            {
+              "id": "type",
+              "type": "label",
+              "label": {
+                "en": "Temperature type",
+                "sv": "Typ av termometer"
+              },
+              "value": ""
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Debug",
+            "sv": "Felsökning"
+          },
+          "children": [
+            {
+              "id": "last_error",
+              "type": "textarea",
+              "label": {
+                "en": "Most recent API error",
+                "sv": "Senaste API felmeddelandet"
+              },
+              "value": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": {
         "en": "Victron VRM"
       },
       "images": {
@@ -2329,6 +2702,34 @@
       "units": {
         "en": "kWh"
       }
+    },
+    "measure_tank_level": {
+      "type": "number",
+      "decimals": 2,
+      "title": {
+        "en": "Tank level",
+        "sv": "Tank nivå"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/tank_level.svg",
+      "units": {
+        "en": "%",
+        "sv": "%"
+      }
+    },
+    "sensor_status": {
+      "type": "string",
+      "title": {
+        "en": "Status",
+        "sv": "Status"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/vebus_status.svg"
     },
     "switch_position": {
       "type": "string",

@@ -1,0 +1,37 @@
+{
+    "name": {
+        "en": "Tank sensor"
+    },
+    "images": {
+        "small": "drivers/tank/assets/images/small.png",
+        "large": "drivers/tank/assets/images/large.png",
+        "xlarge": "drivers/tank/assets/images/xlarge.png"
+    },
+    "class": "sensor",
+    "platforms": [
+        "local"
+    ],
+    "connectivity": [
+        "lan"
+    ],
+    "capabilities": [
+        "measure_tank_level",
+        "sensor_status"
+    ],
+    "pair": [
+        {
+            "id": "settings"
+        },
+        {
+            "id": "list_devices",
+            "template": "list_devices",
+            "navigation": {
+                "next": "add_devices"
+            }
+        },
+        {
+            "id": "add_devices",
+            "template": "add_devices"
+        }
+    ]
+}

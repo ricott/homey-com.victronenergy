@@ -1,0 +1,112 @@
+[
+    {
+        "type": "group",
+        "label": {
+            "en": "Network",
+            "sv": "Nätverk"
+        },
+        "children": [
+            {
+                "id": "address",
+                "type": "text",
+                "value": "0.0.0.0",
+                "label": {
+                    "en": "IP Address",
+                    "sv": "IP Adress"
+                }
+            },
+            {
+                "id": "port",
+                "type": "number",
+                "value": 502,
+                "step": 1,
+                "label": {
+                    "en": "Port",
+                    "sv": "Port"
+                }
+            },
+            {
+                "id": "refreshInterval",
+                "type": "number",
+                "value": 1,
+                "step": 1,
+                "attr": {
+                    "min": 1,
+                    "max": 1440
+                },
+                "label": {
+                    "en": "Refresh interval (minutes)",
+                    "sv": "Uppdateringsfrekvens (minuter)"
+                }
+            }
+        ]
+    },
+    {
+        "type": "group",
+        "label": {
+            "en": "Modbus TCP",
+            "sv": "Modbus TCP"
+        },
+        "children": [
+            {
+                "id": "modbus_unitId",
+                "type": "number",
+                "step": 1,
+                "value": 20,
+                "label": {
+                    "en": "com.victronenergy.tank",
+                    "sv": "com.victronenergy.tank"
+                },
+                "hint": {
+                    "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
+                    "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
+                }
+            }
+        ]
+    },
+    {
+        "type": "group",
+        "label": {
+            "en": "Information",
+            "sv": "Information"
+        },
+        "children": [
+            {
+                "id": "productId",
+                "type": "label",
+                "label": {
+                    "en": "Product ID",
+                    "sv": "Produkt ID"
+                },
+                "value": ""
+            },
+            {
+                "id": "type",
+                "type": "label",
+                "label": {
+                    "en": "Tank fluid type",
+                    "sv": "Typ av vätska i tanken"
+                },
+                "value": ""
+            }
+        ]
+    },
+    {
+        "type": "group",
+        "label": {
+            "en": "Debug",
+            "sv": "Felsökning"
+        },
+        "children": [
+            {
+                "id": "last_error",
+                "type": "textarea",
+                "label": {
+                    "en": "Most recent API error",
+                    "sv": "Senaste API felmeddelandet"
+                },
+                "value": ""
+            }
+        ]
+    }
+]

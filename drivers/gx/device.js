@@ -4,6 +4,7 @@ const { Device } = require('homey');
 const VictronGX = require('../../lib/victron');
 const { GX } = require('../../lib/devices/gx');
 const enums = require('../../lib/enums');
+const utilFunctions = require('../../lib/util.js');
 const minGridSuplusPower = 200;
 
 class GXDevice extends Device {
@@ -344,7 +345,7 @@ class GXDevice extends Device {
             self.error('Houston we have a problem', error);
 
             let message = '';
-            if (self.isError(error)) {
+            if (utilFunctions.isError(error)) {
                 message = error.stack;
             } else {
                 try {
@@ -361,10 +362,6 @@ class GXDevice extends Device {
                     self.error('Failed to update settings', err);
                 });
         });
-    }
-
-    isError(err) {
-        return (err && err.stack && err.message);
     }
 
     _updateProperty(key, value) {

@@ -7,22 +7,22 @@ let victron = new Victron({
     debug: true,
     host: '192.168.200.90',
     port: 502,
-    vebusUnitId: 224,
-    refreshInterval: 5
+    vebusUnitId: 227,
+    refreshInterval: 10
 });
-/*
 victron.on('readings', readings => {
-    console.log(readings);
+    console.log('Victron 1');
+    console.log(readings.essMode);
 });
 
-victron.on('properties', props => {
-    console.log(props);
-});
-*/
+// victron.on('properties', props => {
+//     console.log('Victron 1');
+//     console.log(props);
+// });
 
-victron.enableChargingSchedule('root', config.private_key, 1).then(res => {
-    console.log(res);
-});
+// victron.enableChargingSchedule('root', config.private_key, 1).then(res => {
+//     console.log(res);
+// });
 
 /*
 victron.disableChargingSchedule('root', 'etaQte4WbgeT', 1).then(res => {
