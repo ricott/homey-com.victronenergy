@@ -49,11 +49,11 @@ class TankDriver extends Driver {
         session.setHandler('list_devices', async (data) => {
 
             if (discoveryResponse.outcome == 'success') {
-                this.log(`Found device: ${discoveryResponse.returnValue}`);
+                this.log(`Found device with Product ID: ${discoveryResponse.returnValue}`);
                 devices.push({
-                    name: `Tank (${discoveryResponse.returnValue})`,
+                    name: `Tank (Unit ID: ${settings.modbus_unitId})`,
                     data: {
-                        id: discoveryResponse.returnValue
+                        id: `${settings.address}|${settings.port}|${settings.modbus_unitId}`
                     },
                     settings: {
                         address: settings.address,

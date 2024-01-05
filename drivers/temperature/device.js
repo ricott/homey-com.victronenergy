@@ -23,7 +23,7 @@ class TemperatureDevice extends Device {
         this.api = await new VictronSensor({
             host: host,
             port: port,
-            deviceType: 'Temperature', // 'DummyTemperature',
+            deviceType: 'Temperature',
             modbus_unitId: modbus_unitId,
             refreshInterval: refreshInterval,
             device: this

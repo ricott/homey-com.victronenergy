@@ -3,7 +3,6 @@
 const { Driver } = require('homey');
 const Discovery = require('../../lib/discovery.js');
 const { Temperature } = require('../../lib/devices/temperature.js');
-// const { DummyTemperature } = require('../../lib/devices/dummyTemperature.js');
 
 class TemperatureDriver extends Driver {
 
@@ -37,18 +36,17 @@ class TemperatureDriver extends Driver {
                 Number(settings.port),
                 Number(settings.modbus_unitId),
                 Temperature.productId
-                // DummyTemperature.productId
             );
         });
 
         session.setHandler('list_devices', async (data) => {
 
             if (discoveryResponse.outcome == 'success') {
-                this.log(`Found device: ${discoveryResponse.returnValue}`);
+                this.log(`Found device with Product ID: ${discoveryResponse.returnValue}`);
                 devices.push({
-                    name: `Temperature (${discoveryResponse.returnValue})`,
+                    name: `Temperature (Unit ID: ${settings.modbus_unitId})`,
                     data: {
-                        id: discoveryResponse.returnValue
+                        id: `${settings.address}|${settings.port}|${settings.modbus_unitId}`
                     },
                     settings: {
                         address: settings.address,
