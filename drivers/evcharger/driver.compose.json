@@ -1,0 +1,57 @@
+{
+    "name": {
+        "en": "EV Charger"
+    },
+    "images": {
+        "small": "drivers/evcharger/assets/images/small.png",
+        "large": "drivers/evcharger/assets/images/large.png",
+        "xlarge": "drivers/evcharger/assets/images/xlarge.png"
+    },
+    "class": "sensor",
+    "platforms": [
+        "local"
+    ],
+    "connectivity": [
+        "lan"
+    ],
+    "capabilities": [
+        "onoff",
+        "measure_power",
+        "measure_current",
+        "measure_time",
+        "sensor_status",
+        "measure_current.max",
+        "sensor_status.mode",
+        "meter_power"
+    ],
+    "capabilitiesOptions": {
+        "measure_current.max": {
+            "title": {
+                "en": "Max charge current",
+                "sv": "Max laddström"
+            }
+        },
+        "sensor_status.mode": {
+            "title": {
+                "en": "Mode",
+                "sv": "Mode"
+            }
+        }
+    },
+    "pair": [
+        {
+            "id": "settings"
+        },
+        {
+            "id": "list_devices",
+            "template": "list_devices",
+            "navigation": {
+                "next": "add_devices"
+            }
+        },
+        {
+            "id": "add_devices",
+            "template": "add_devices"
+        }
+    ]
+}

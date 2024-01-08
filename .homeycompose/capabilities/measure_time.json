@@ -1,0 +1,15 @@
+{
+    "type": "number",
+    "decimals": 0,
+    "title": {
+      "en": "Charging time"
+    },
+    "insights": true,
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "/assets/measure_time.svg",
+    "units": {
+      "en": "s"
+    }
+  }
