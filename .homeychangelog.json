@@ -1,4 +1,8 @@
 {
+    "1.2.9": {
+        "en": "New device for the EV Chargers. New icons for the different device types.",
+        "sv": "Ny enhet för billaddare. Nya ikoner för de olika enheterna."
+    },
     "1.2.8": {
         "en": "New devices for temperature and tank sensors",
         "sv": "Nya enheter för temperatur samt tank sensorer"
