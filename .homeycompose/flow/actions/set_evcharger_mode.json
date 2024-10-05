@@ -1,0 +1,26 @@
+{
+    "id": "set_evcharger_mode",
+    "title": {
+        "en": "Set EV charger mode",
+        "sv": "Uppdatera laddboxens mode"
+    },
+    "titleFormatted": {
+        "en": "Set EV charger mode to [[mode]]",
+        "sv": "Uppdatera laddboxens mode till [[mode]]"
+    },
+    "args": [
+        {
+            "name": "mode",
+            "type": "autocomplete",
+            "title": {
+                "en": "Mode",
+                "sv": "Mode"
+            }
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=evcharger"
+        }
+    ]
+}

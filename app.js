@@ -580,6 +580,37 @@ class VictronEnergyApp extends App {
                     return Promise.reject('Failed to update grid setpoint');
                 });
         });
+
+        const set_evcharger_mode = this.homey.flow.getActionCard('set_evcharger_mode');
+        set_evcharger_mode.registerRunListener(async (args) => {
+            this.log(`[${args.device.getName()}] Action 'set_evcharger_mode' triggered`);
+            this.log(`[${args.device.getName()}] - state: '${args.mode.id}' (${args.mode.name})`);
+
+            return args.device.api.setChargerMode(args.mode.id)
+                .then(function (result) {
+                    return Promise.resolve(true);
+                }).catch(reason => {
+                    return Promise.reject('Failed to set EV charger mode');
+                });
+        });
+        set_evcharger_mode.registerArgumentAutocompleteListener('mode',
+            async (query, args) => {
+                return enums.getEvChargerModeType();
+            }
+        );
+
+        const set_evcharger_current = this.homey.flow.getActionCard('set_evcharger_current');
+        set_evcharger_current.registerRunListener(async (args) => {
+            this.log(`[${args.device.getName()}] Action 'set_evcharger_current' triggered`);
+            this.log(`[${args.device.getName()}] - current: '${args.current}'`);
+
+            return args.device.api.setChargerCurrent(args.current)
+                .then(function (result) {
+                    return Promise.resolve(true);
+                }).catch(reason => {
+                    return Promise.reject('Failed to set charger current');
+                });
+        });
     }
 }
 
