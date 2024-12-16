@@ -1,0 +1,115 @@
+{
+    "name": {
+        "en": "Energy Meter",
+        "sv": "Elmätare"
+    },
+    "images": {
+        "xlarge": "drivers/energy/assets/images/xlarge.png",
+        "large": "drivers/energy/assets/images/large.png",
+        "small": "drivers/energy/assets/images/small.png"
+    },
+    "class": "sensor",
+    "capabilities": [
+        "measure_power",
+        "measure_power.L1",
+        "measure_current.L1",
+        "measure_voltage.L1",
+        "measure_power.L2",
+        "measure_current.L2",
+        "measure_voltage.L2",
+        "measure_power.L3",
+        "measure_current.L3",
+        "measure_voltage.L3",
+        "meter_power",
+        "meter_power.export"
+    ],
+    "capabilitiesOptions": {
+        "measure_power.L1": {
+            "title": {
+                "en": "L1 power",
+                "sv": "L1 effekt"
+            }
+        },
+        "measure_current.L1": {
+            "title": {
+                "en": "L1 current",
+                "sv": "L1 ström"
+            }
+        },
+        "measure_voltage.L1": {
+            "title": {
+                "en": "L1 voltage",
+                "sv": "L1 spänning"
+            }
+        },
+        "measure_power.L2": {
+            "title": {
+                "en": "L2 power",
+                "sv": "L2 effekt"
+            }
+        },
+        "measure_current.L2": {
+            "title": {
+                "en": "L2 current",
+                "sv": "L2 ström"
+            }
+        },
+        "measure_voltage.L2": {
+            "title": {
+                "en": "L2 voltage",
+                "sv": "L2 spänning"
+            }
+        },
+        "measure_power.L3": {
+            "title": {
+                "en": "L3 power",
+                "sv": "L3 effekt"
+            }
+        },
+        "measure_current.L3": {
+            "title": {
+                "en": "L3 current",
+                "sv": "L3 ström"
+            }
+        },
+        "measure_voltage.L3": {
+            "title": {
+                "en": "L3 voltage",
+                "sv": "L3 spänning"
+            }
+        },
+        "meter_power": {
+            "title": {
+                "en": "Lifetime import",
+                "sv": "Livstid import"
+            }
+        },
+        "meter_power.export": {
+            "title": {
+                "en": "Lifetime export",
+                "sv": "Livstid export"
+            }
+        }
+    },
+    "energy": {
+        "cumulative": true,
+        "cumulativeImportedCapability": "meter_power",
+        "cumulativeExportedCapability": "meter_power.export"
+    },
+    "pair": [
+        {
+            "id": "settings"
+        },
+        {
+            "id": "list_devices",
+            "template": "list_devices",
+            "navigation": {
+                "next": "add_devices"
+            }
+        },
+        {
+            "id": "add_devices",
+            "template": "add_devices"
+        }
+    ]
+}

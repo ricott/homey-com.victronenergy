@@ -28,15 +28,15 @@
             {
                 "id": "refreshInterval",
                 "type": "number",
-                "value": 1,
-                "step": 1,
+                "value": 60,
+                "step": 60,
                 "attr": {
-                    "min": 1,
-                    "max": 1440
+                    "min": 60,
+                    "max": 86400
                 },
                 "label": {
-                    "en": "Refresh interval (minutes)",
-                    "sv": "Uppdateringsfrekvens (minuter)"
+                    "en": "Refresh interval (seconds)",
+                    "sv": "Uppdateringsfrekvens (sekunder)"
                 }
             }
         ]

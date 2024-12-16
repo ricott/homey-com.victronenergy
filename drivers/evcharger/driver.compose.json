@@ -7,7 +7,7 @@
         "large": "drivers/evcharger/assets/images/large.png",
         "xlarge": "drivers/evcharger/assets/images/xlarge.png"
     },
-    "class": "sensor",
+    "class": "evcharger",
     "platforms": [
         "local"
     ],

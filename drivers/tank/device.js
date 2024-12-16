@@ -1,7 +1,7 @@
 'use strict';
 
 const { Device } = require('homey');
-const VictronSensor = require('../../lib/victronSensor.js');
+const TankSensor = require('../../lib/tankSensor.js');
 const utilFunctions = require('../../lib/util.js');
 const enums = require('../../lib/enums');
 
@@ -20,12 +20,11 @@ class TankDevice extends Device {
     }
 
     async setupGXSession(host, port, modbus_unitId, refreshInterval) {
-        this.api = await new VictronSensor({
+        this.api = new TankSensor({
             host: host,
             port: port,
-            deviceType: 'Tank', // 'DummyTank',
             modbus_unitId: modbus_unitId,
-            refreshInterval: refreshInterval,
+            refreshInterval: Math.max(60, refreshInterval),
             device: this
         });
 

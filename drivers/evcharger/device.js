@@ -1,15 +1,22 @@
 'use strict';
 
 const { Device } = require('homey');
-const VictronEvCharger = require('../../lib/victronEvCharger.js');
+const VehicleCharger = require('../../lib/VehicleCharger.js');
 const utilFunctions = require('../../lib/util.js');
 const enums = require('../../lib/enums');
+
+const deviceClass = 'evcharger';
 
 class EvChargerDevice extends Device {
 
     async onInit() {
         this.api = null;
         this.logMessage(`Victron EV Charger device initiated`);
+
+        // Change device class to evcharger if not already
+        if (this.getClass() !== deviceClass) {
+            await this.setClass(deviceClass);
+        }
 
         await this.setupCapabilities();
 
@@ -31,7 +38,7 @@ class EvChargerDevice extends Device {
     }
 
     async setupGXSession(host, port, modbus_unitId, refreshInterval) {
-        this.api = await new VictronEvCharger({
+        this.api = new VehicleCharger({
             host: host,
             port: port,
             modbus_unitId: modbus_unitId,

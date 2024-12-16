@@ -28,15 +28,15 @@
             {
                 "id": "refreshInterval",
                 "type": "number",
-                "value": 60,
-                "step": 60,
+                "value": 10,
+                "step": 1,
                 "attr": {
-                    "min": 60,
-                    "max": 86400
+                    "min": 5,
+                    "max": 3600
                 },
                 "label": {
                     "en": "Refresh interval (seconds)",
-                    "sv": "Uppdateringsfrekvens (sekunder)"
+                    "sv": "Uppdateringsfrekvens (seconds)"
                 }
             }
         ]
@@ -54,8 +54,8 @@
                 "step": 1,
                 "value": 20,
                 "label": {
-                    "en": "com.victronenergy.tank",
-                    "sv": "com.victronenergy.tank"
+                    "en": "com.victronenergy.grid",
+                    "sv": "com.victronenergy.grid"
                 },
                 "hint": {
                     "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
@@ -72,20 +72,11 @@
         },
         "children": [
             {
-                "id": "productId",
+                "id": "serial",
                 "type": "label",
                 "label": {
-                    "en": "Product ID",
-                    "sv": "Produkt ID"
-                },
-                "value": ""
-            },
-            {
-                "id": "type",
-                "type": "label",
-                "label": {
-                    "en": "Tank fluid type",
-                    "sv": "Typ av vätska i tanken"
+                    "en": "Serial",
+                    "sv": "Serienummer"
                 },
                 "value": ""
             }

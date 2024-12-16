@@ -2,18 +2,13 @@
 
 const { Driver } = require('homey');
 const Discovery = require('../../lib/discovery.js');
-const { EvCharger } = require('../../lib/devices/evCharger.js');
+const { Energy } = require('../../lib/devices/energy.js');
 
-class EvChargerDriver extends Driver {
+class EnergyMeterDriver extends Driver {
 
     async onInit() {
-        this.log('Victron EV Charger driver has been initialized');
+        this.log('Victron Energy Meter driver has been initialized');
 
-        this._sensor_status_changed = this.homey.flow.getDeviceTriggerCard('sensor_status_changed');
-    }
-
-    triggerSensorStatusChanged(device, tokens) {
-        this._sensor_status_changed.trigger(device, tokens, {}).catch(this.error);
     }
 
     async onPair(session) {
@@ -35,16 +30,16 @@ class EvChargerDriver extends Driver {
                 settings.address,
                 Number(settings.port),
                 Number(settings.modbus_unitId),
-                EvCharger.serial
+                Energy.serial
             );
         });
 
         session.setHandler('list_devices', async (data) => {
 
             if (discoveryResponse.outcome == 'success') {
-                this.log(`Found EV Charger with serial: ${discoveryResponse.returnValue}`);
+                this.log(`Found Energy meter with serial: ${discoveryResponse.returnValue}`);
                 devices.push({
-                    name: `EV Charger (${discoveryResponse.returnValue})`,
+                    name: `Energy Meter (${discoveryResponse.returnValue})`,
                     data: {
                         id: `${discoveryResponse.returnValue}`
                     },
@@ -64,4 +59,4 @@ class EvChargerDriver extends Driver {
     }
 
 }
-module.exports = EvChargerDriver;
+module.exports = EnergyMeterDriver;

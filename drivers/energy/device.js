@@ -1,15 +1,14 @@
 'use strict';
 
 const { Device } = require('homey');
-const TempSensor = require('../../lib/tempSensor.js');
+const EnergyMeter = require('../../lib/energyMeter.js');
 const utilFunctions = require('../../lib/util.js');
-const enums = require('../../lib/enums');
 
-class TemperatureDevice extends Device {
+class EnergyMeterDevice extends Device {
 
     async onInit() {
         this.api = null;
-        this.logMessage(`Victron Temperature device initiated`);
+        this.logMessage(`Victron Energy Meter device initiated`);
 
         await this.setupGXSession(
             this.getSettings().address,
@@ -20,11 +19,11 @@ class TemperatureDevice extends Device {
     }
 
     async setupGXSession(host, port, modbus_unitId, refreshInterval) {
-        this.api = new TempSensor({
+        this.api = new EnergyMeter({
             host: host,
             port: port,
             modbus_unitId: modbus_unitId,
-            refreshInterval: Math.max(60, refreshInterval),
+            refreshInterval: refreshInterval,
             device: this
         });
 
@@ -46,17 +45,26 @@ class TemperatureDevice extends Device {
         let self = this;
 
         self.api.on('properties', message => {
-            self.updateSetting('productId', message.productId);
-            self.updateSetting('type', enums.decodeTemperatureType(message.type));
+            self.updateSetting('serial', message.serial);
         });
 
         self.api.on('readings', message => {
 
-            self._updateProperty('measure_temperature', message.temperature || 0);
-            self._updateProperty('measure_humidity', message.humidity || 0);
-            self._updateProperty('measure_pressure', message.pressure || 0);
-            self._updateProperty('measure_voltage', message.batteryVoltage || 0);
-            self._updateProperty('sensor_status', enums.decodeSensorStatus(message.status));
+            const power = message.powerL1 + message.powerL2 + message.powerL3;
+            self._updateProperty('measure_power', power);
+            self._updateProperty('measure_power.L1', message.powerL1 || 0);
+            self._updateProperty('measure_current.L1', message.currentL1 || 0);
+            self._updateProperty('measure_voltage.L1', message.voltageL1 || 0);
+            self._updateProperty('measure_power.L2', message.powerL2 || 0);
+            self._updateProperty('measure_current.L2', message.currentL2 || 0);
+            self._updateProperty('measure_voltage.L2', message.voltageL2 || 0);
+            self._updateProperty('measure_power.L3', message.powerL3 || 0);
+            self._updateProperty('measure_current.L3', message.currentL3 || 0);
+            self._updateProperty('measure_voltage.L3', message.voltageL3 || 0);
+
+            self._updateProperty('meter_power', message.lifeTimeImport || 0);
+            self._updateProperty('meter_power.export', message.lifeTimeExport || 0);
+
         });
 
         self.api.on('error', error => {
@@ -122,7 +130,7 @@ class TemperatureDevice extends Device {
     }
 
     onDeleted() {
-        this.logMessage(`Deleting Victron Temperature device from Homey.`);
+        this.logMessage(`Deleting Victron Energy Meter device from Homey.`);
         this.api.disconnect();
         this.api = null;
     }
@@ -177,4 +185,4 @@ class TemperatureDevice extends Device {
         this.log(`[${this.getName()}] ${message}`);
     }
 }
-module.exports = TemperatureDevice;
+module.exports = EnergyMeterDevice;
