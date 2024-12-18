@@ -1,13 +1,13 @@
 'use strict';
 
-const EnergyMeter = require('../../lib/energyMeter.js');
+const PVInverter = require('../../lib/pvInverter.js');
 const utilFunctions = require('../../lib/util.js');
 const BaseDevice = require('../baseDevice.js');
 
-class EnergyMeterDevice extends BaseDevice {
+class PVInverterDevice extends BaseDevice {
 
     async setupGXSession(host, port, modbus_unitId, refreshInterval) {
-        this.api = new EnergyMeter({
+        this.api = new PVInverter({
             host: host,
             port: port,
             modbus_unitId: modbus_unitId,
@@ -39,9 +39,6 @@ class EnergyMeterDevice extends BaseDevice {
             self._updateProperty('measure_current.L3', message.currentL3 || 0);
             self._updateProperty('measure_voltage.L3', message.voltageL3 ? Math.round(message.voltageL3) : 0);
 
-            self._updateProperty('meter_power', message.lifeTimeImport || 0);
-            self._updateProperty('meter_power.export', message.lifeTimeExport || 0);
-
         });
 
         self.api.on('error', error => {
@@ -66,6 +63,5 @@ class EnergyMeterDevice extends BaseDevice {
                 });
         });
     }
-
 }
-module.exports = EnergyMeterDevice;
+module.exports = PVInverterDevice;

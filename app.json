@@ -2704,6 +2704,355 @@
     },
     {
       "name": {
+        "en": "PV Inverter",
+        "sv": "Växelriktare"
+      },
+      "images": {
+        "xlarge": "drivers/pvinverter/assets/images/xlarge.png",
+        "large": "drivers/pvinverter/assets/images/large.png",
+        "small": "drivers/pvinverter/assets/images/small.png"
+      },
+      "class": "solarpanel",
+      "capabilities": [
+        "measure_power",
+        "measure_power.L1",
+        "measure_current.L1",
+        "measure_voltage.L1",
+        "measure_power.L2",
+        "measure_current.L2",
+        "measure_voltage.L2",
+        "measure_power.L3",
+        "measure_current.L3",
+        "measure_voltage.L3"
+      ],
+      "capabilitiesOptions": {
+        "measure_power.L1": {
+          "title": {
+            "en": "L1 power",
+            "sv": "L1 effekt"
+          }
+        },
+        "measure_current.L1": {
+          "title": {
+            "en": "L1 current",
+            "sv": "L1 ström"
+          }
+        },
+        "measure_voltage.L1": {
+          "title": {
+            "en": "L1 voltage",
+            "sv": "L1 spänning"
+          }
+        },
+        "measure_power.L2": {
+          "title": {
+            "en": "L2 power",
+            "sv": "L2 effekt"
+          }
+        },
+        "measure_current.L2": {
+          "title": {
+            "en": "L2 current",
+            "sv": "L2 ström"
+          }
+        },
+        "measure_voltage.L2": {
+          "title": {
+            "en": "L2 voltage",
+            "sv": "L2 spänning"
+          }
+        },
+        "measure_power.L3": {
+          "title": {
+            "en": "L3 power",
+            "sv": "L3 effekt"
+          }
+        },
+        "measure_current.L3": {
+          "title": {
+            "en": "L3 current",
+            "sv": "L3 ström"
+          }
+        },
+        "measure_voltage.L3": {
+          "title": {
+            "en": "L3 voltage",
+            "sv": "L3 spänning"
+          }
+        }
+      },
+      "pair": [
+        {
+          "id": "settings"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "pvinverter",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Network",
+            "sv": "Nätverk"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "sv": "IP Adress"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "sv": "Port"
+              }
+            },
+            {
+              "id": "refreshInterval",
+              "type": "number",
+              "value": 10,
+              "step": 1,
+              "attr": {
+                "min": 5,
+                "max": 3600
+              },
+              "label": {
+                "en": "Refresh interval (seconds)",
+                "sv": "Uppdateringsfrekvens (seconds)"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Modbus TCP",
+            "sv": "Modbus TCP"
+          },
+          "children": [
+            {
+              "id": "modbus_unitId",
+              "type": "number",
+              "step": 1,
+              "value": 20,
+              "label": {
+                "en": "com.victronenergy.pvinverter",
+                "sv": "com.victronenergy.pvinverter"
+              },
+              "hint": {
+                "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
+                "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Information",
+            "sv": "Information"
+          },
+          "children": [
+            {
+              "id": "serial",
+              "type": "label",
+              "label": {
+                "en": "Serial",
+                "sv": "Serienummer"
+              },
+              "value": ""
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Debug",
+            "sv": "Felsökning"
+          },
+          "children": [
+            {
+              "id": "last_error",
+              "type": "textarea",
+              "label": {
+                "en": "Most recent API error",
+                "sv": "Senaste API felmeddelandet"
+              },
+              "value": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": {
+        "en": "Solar Charger",
+        "sv": "Solcellsregulator"
+      },
+      "images": {
+        "xlarge": "drivers/solar/assets/images/xlarge.png",
+        "large": "drivers/solar/assets/images/large.png",
+        "small": "drivers/solar/assets/images/small.png"
+      },
+      "class": "solarpanel",
+      "capabilities": [
+        "sensor_status",
+        "vebus_status",
+        "measure_power",
+        "measure_current",
+        "measure_voltage",
+        "meter_power.daily",
+        "meter_power.total"
+      ],
+      "capabilitiesOptions": {
+        "sensor_status": {
+          "title": {
+            "en": "Mode",
+            "sv": "Mode"
+          }
+        },
+        "vebus_status": {
+          "title": {
+            "en": "Status",
+            "sv": "Status"
+          }
+        },
+        "meter_power.daily": {
+          "title": {
+            "en": "Daily Yield",
+            "sv": "Dagens produktion"
+          }
+        },
+        "meter_power.total": {
+          "title": {
+            "en": "Total Yield",
+            "sv": "Total produktion"
+          }
+        }
+      },
+      "pair": [
+        {
+          "id": "settings"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "solar",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Network",
+            "sv": "Nätverk"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "sv": "IP Adress"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "sv": "Port"
+              }
+            },
+            {
+              "id": "refreshInterval",
+              "type": "number",
+              "value": 60,
+              "step": 60,
+              "attr": {
+                "min": 60,
+                "max": 86400
+              },
+              "label": {
+                "en": "Refresh interval (seconds)",
+                "sv": "Uppdateringsfrekvens (sekunder)"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Modbus TCP",
+            "sv": "Modbus TCP"
+          },
+          "children": [
+            {
+              "id": "modbus_unitId",
+              "type": "number",
+              "step": 1,
+              "value": 20,
+              "label": {
+                "en": "com.victronenergy.solarcharger",
+                "sv": "com.victronenergy.solarcharger"
+              },
+              "hint": {
+                "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
+                "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Debug",
+            "sv": "Felsökning"
+          },
+          "children": [
+            {
+              "id": "last_error",
+              "type": "textarea",
+              "label": {
+                "en": "Most recent API error",
+                "sv": "Senaste API felmeddelandet"
+              },
+              "value": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": {
         "en": "Tank sensor"
       },
       "images": {

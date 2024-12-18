@@ -1,0 +1,63 @@
+{
+    "name": {
+        "en": "Solar Charger",
+        "sv": "Solcellsregulator"
+    },
+    "images": {
+        "xlarge": "drivers/solar/assets/images/xlarge.png",
+        "large": "drivers/solar/assets/images/large.png",
+        "small": "drivers/solar/assets/images/small.png"
+    },
+    "class": "solarpanel",
+    "capabilities": [
+        "sensor_status",
+        "vebus_status",
+        "measure_power",
+        "measure_current",
+        "measure_voltage",
+        "meter_power.daily",
+        "meter_power.total"
+    ],
+    "capabilitiesOptions": {
+        "sensor_status": {
+            "title": {
+                "en": "Mode",
+                "sv": "Mode"
+            }
+        },
+        "vebus_status": {
+            "title": {
+                "en": "Status",
+                "sv": "Status"
+            }
+        },
+        "meter_power.daily": {
+            "title": {
+                "en": "Daily Yield",
+                "sv": "Dagens produktion"
+            }
+        },
+        "meter_power.total": {
+            "title": {
+                "en": "Total Yield",
+                "sv": "Total produktion"
+            }
+        }
+    },
+    "pair": [
+        {
+            "id": "settings"
+        },
+        {
+            "id": "list_devices",
+            "template": "list_devices",
+            "navigation": {
+                "next": "add_devices"
+            }
+        },
+        {
+            "id": "add_devices",
+            "template": "add_devices"
+        }
+    ]
+}

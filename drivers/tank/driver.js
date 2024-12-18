@@ -1,15 +1,11 @@
 'use strict';
 
-const { Driver } = require('homey');
-const Discovery = require('../../lib/discovery.js');
+const BaseDriver = require('../baseDriver.js');
 const { Tank } = require('../../lib/devices/tank.js');
-// const { DummyTank } = require('../../lib/devices/dummyTank.js');
 
-class TankDriver extends Driver {
+class TankDriver extends BaseDriver {
 
     async onInit() {
-        this.log('Victron Tank driver has been initialized');
-
         this._sensor_status_changed = this.homey.flow.getDeviceTriggerCard('sensor_status_changed');
         this._tank_level_changed = this.homey.flow.getDeviceTriggerCard('tank_level_changed');
     }
@@ -23,51 +19,7 @@ class TankDriver extends Driver {
     }
 
     async onPair(session) {
-        let devices = [];
-        let settings;
-        let discoveryResponse = {};
-
-        session.setHandler('settings', async (data) => {
-            settings = data;
-            let discovery = new Discovery();
-
-            discovery.on('result', message => {
-                discoveryResponse = message;
-                discovery.disconnect();
-                session.nextView();
-            });
-
-            discovery.validateSingleUnitId(
-                settings.address,
-                Number(settings.port),
-                Number(settings.modbus_unitId),
-                Tank.productId
-                //DummyTank.productId
-            );
-        });
-
-        session.setHandler('list_devices', async (data) => {
-
-            if (discoveryResponse.outcome == 'success') {
-                this.log(`Found device with Product ID: ${discoveryResponse.returnValue}`);
-                devices.push({
-                    name: `Tank (Unit ID: ${settings.modbus_unitId})`,
-                    data: {
-                        id: `${settings.address}|${settings.port}|${settings.modbus_unitId}`
-                    },
-                    settings: {
-                        address: settings.address,
-                        port: Number(settings.port),
-                        modbus_unitId: Number(settings.modbus_unitId)
-                    }
-                });
-            } else if (discoveryResponse.outcome == 'connect_failure') {
-                this.log(discoveryResponse);
-                throw new Error(`Couldn't connect to host '${settings.address}' on port '${settings.port}'`);
-            }
-
-            return devices;
-        });
+        return await super.pair(Tank.productId, 'Tank', session);
     }
 
 }
