@@ -5,7 +5,7 @@ const Discovery = require('../lib/discovery.js');
 
 class BaseDriver extends Driver {
 
-    async pair(identifier, deviceName, session) {
+    async pair(identifier, deviceName, session, useUnitIdAsIdentifier = false) {
         let devices = [];
         let settings;
         let discoveryResponse = {};
@@ -30,12 +30,14 @@ class BaseDriver extends Driver {
 
         session.setHandler('list_devices', async (data) => {
 
+            let deviceId = useUnitIdAsIdentifier ? settings.modbus_unitId : discoveryResponse.returnValue;
+
             if (discoveryResponse.outcome == 'success') {
-                this.log(`Found ${deviceName} with id: ${discoveryResponse.returnValue}`);
+                this.log(`Found ${deviceName} with id: ${deviceId}`);
                 devices.push({
-                    name: `${deviceName} (${discoveryResponse.returnValue})`,
+                    name: `${deviceName} (${deviceId})`,
                     data: {
-                        id: `${discoveryResponse.returnValue}`
+                        id: `${deviceId}`
                     },
                     settings: {
                         address: settings.address,

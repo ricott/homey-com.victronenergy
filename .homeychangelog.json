@@ -1,4 +1,8 @@
 {
+    "1.3.3": {
+        "en": "New device type for Solar Charger and PV Inverter",
+        "sv": "Ny enhetstyp för Solar Charger och PV Inverter"
+    },
     "1.3.2": {
         "en": "Energy meter device type added",
         "sv": "Elmätare enhetstyp tillagd"
