@@ -30,7 +30,7 @@ class BaseDriver extends Driver {
 
         session.setHandler('list_devices', async (data) => {
 
-            let deviceId = useUnitIdAsIdentifier ? settings.modbus_unitId : discoveryResponse.returnValue;
+            let deviceId = String(useUnitIdAsIdentifier ? settings.modbus_unitId : discoveryResponse.returnValue).replace(/[^a-z0-9]/gi, '');
 
             if (discoveryResponse.outcome == 'success') {
                 this.log(`Found ${deviceName} with id: ${deviceId}`);
