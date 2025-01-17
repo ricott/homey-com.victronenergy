@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseDriver = require('../baseDriver.js');
-const { Tank } = require('../../lib/devices/tank.js');
+const { Tank } = require('../../lib/modbus/registry/tank.js');
 
 class TankDriver extends BaseDriver {
 

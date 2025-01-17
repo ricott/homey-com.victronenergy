@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseDriver = require('../baseDriver.js');
-const { Solar } = require('../../lib/devices/solar.js');
+const { Solar } = require('../../lib/modbus/registry/solar.js');
 
 class SolarChargerDriver extends BaseDriver {
 

@@ -54,8 +54,8 @@
                 "step": 1,
                 "value": 20,
                 "label": {
-                    "en": "com.victronenergy.solarcharger",
-                    "sv": "com.victronenergy.solarcharger"
+                    "en": "com.victronenergy.generator",
+                    "sv": "com.victronenergy.generator"
                 },
                 "hint": {
                     "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",

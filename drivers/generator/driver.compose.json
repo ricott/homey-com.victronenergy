@@ -1,0 +1,46 @@
+{
+    "name": {
+        "en": "Generator",
+        "sv": "Generator"
+    },
+    "images": {
+        "xlarge": "drivers/generator/assets/images/xlarge.png",
+        "large": "drivers/generator/assets/images/large.png",
+        "small": "drivers/generator/assets/images/small.png"
+    },
+    "class": "sensor",
+    "capabilities": [
+        "sensor_status",
+        "measure_power.genset"
+    ],
+    "capabilitiesOptions": {
+        "sensor_status": {
+            "title": {
+                "en": "State",
+                "sv": "Status"
+            }
+        },
+        "measure_power.genset": {
+            "title": {
+                "en": "Power",
+                "sv": "Effekt"
+            }
+        }
+    },
+    "pair": [
+        {
+            "id": "settings"
+        },
+        {
+            "id": "list_devices",
+            "template": "list_devices",
+            "navigation": {
+                "next": "add_devices"
+            }
+        },
+        {
+            "id": "add_devices",
+            "template": "add_devices"
+        }
+    ]
+}

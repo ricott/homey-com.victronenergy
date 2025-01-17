@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseDriver = require('../baseDriver.js');
-const { EvCharger } = require('../../lib/devices/evCharger.js');
+const { EvCharger } = require('../../lib/modbus/registry/evCharger.js');
 
 class EvChargerDriver extends BaseDriver {
 

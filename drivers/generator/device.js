@@ -1,14 +1,14 @@
 'use strict';
 
-const SolarCharger = require('../../lib/devices/solarCharger.js');
+const Generator = require('../../lib/devices/generator.js');
 const utilFunctions = require('../../lib/util.js');
 const BaseDevice = require('../baseDevice.js');
 const enums = require('../../lib/enums.js');
 
-class SolarChargerDevice extends BaseDevice {
+class GeneratorDevice extends BaseDevice {
 
     async setupGXSession(host, port, modbus_unitId, refreshInterval) {
-        this.api = new SolarCharger({
+        this.api = new Generator({
             host: host,
             port: port,
             modbus_unitId: modbus_unitId,
@@ -28,13 +28,8 @@ class SolarChargerDevice extends BaseDevice {
 
         self.api.on('readings', message => {
 
-            self._updateProperty('sensor_status', message.mode == 1 ? 'On' : 'Off');
-            self._updateProperty('vebus_status', enums.decodeVEBusStatus(message.state));
-            self._updateProperty('measure_power', message.power || 0);
-            self._updateProperty('measure_current', message.current || 0);
-            self._updateProperty('measure_voltage', message.voltage ? Math.round(message.voltage) : 0);
-            self._updateProperty('meter_power.daily', message.dailyYield || 0);
-            self._updateProperty('meter_power.total', message.totalYield || 0);
+            self._updateProperty('sensor_status', enums.decodeGenSetState(message.state));
+            //self._updateProperty('measure_power.genset', message.power || 0);
 
         });
 
@@ -61,4 +56,4 @@ class SolarChargerDevice extends BaseDevice {
         });
     }
 }
-module.exports = SolarChargerDevice;
+module.exports = GeneratorDevice;

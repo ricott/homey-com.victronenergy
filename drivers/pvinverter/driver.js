@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseDriver = require('../baseDriver.js');
-const { Inverter } = require('../../lib/devices/inverter.js');
+const { Inverter } = require('../../lib/modbus/registry/inverter.js');
 
 class PVInverterDriver extends BaseDriver {
 

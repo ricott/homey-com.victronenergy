@@ -1,6 +1,6 @@
 'use strict';
 const Homey = require('homey');
-const VRM = require('../../lib/vrm');
+const VRM = require('../../lib/devices/vrm.js');
 
 class VRMDriver extends Homey.Driver {
 

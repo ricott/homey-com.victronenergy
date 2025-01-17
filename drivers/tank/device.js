@@ -1,8 +1,8 @@
 'use strict';
 
-const TankSensor = require('../../lib/tankSensor.js');
+const TankSensor = require('../../lib/devices/tankSensor.js');
 const utilFunctions = require('../../lib/util.js');
-const enums = require('../../lib/enums');
+const enums = require('../../lib/enums.js');
 const BaseDevice = require('../baseDevice.js');
 
 class TankDevice extends BaseDevice {

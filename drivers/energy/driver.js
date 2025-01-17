@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseDriver = require('../baseDriver.js');
-const { Energy } = require('../../lib/devices/energy.js');
+const { Energy } = require('../../lib/modbus/registry/energy.js');
 
 class EnergyMeterDriver extends BaseDriver {
 

@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseDriver = require('../baseDriver.js');
-const { Temperature } = require('../../lib/devices/temperature.js');
+const { Temperature } = require('../../lib/modbus/registry/temperature.js');
 
 class TemperatureDriver extends BaseDriver {
 

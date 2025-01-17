@@ -1,6 +1,6 @@
 'use strict';
 
-const PVInverter = require('../../lib/pvInverter.js');
+const PVInverter = require('../../lib/devices/pvInverter.js');
 const utilFunctions = require('../../lib/util.js');
 const BaseDevice = require('../baseDevice.js');
 

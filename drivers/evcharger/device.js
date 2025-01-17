@@ -1,9 +1,9 @@
 'use strict';
 
 const { Device } = require('homey');
-const VehicleCharger = require('../../lib/vehicleCharger.js');
+const VehicleCharger = require('../../lib/devices/vehicleCharger.js');
 const utilFunctions = require('../../lib/util.js');
-const enums = require('../../lib/enums');
+const enums = require('../../lib/enums.js');
 
 const deviceClass = 'evcharger';
 

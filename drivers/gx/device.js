@@ -1,9 +1,9 @@
 'use strict';
 
 const { Device } = require('homey');
-const VictronGX = require('../../lib/victron');
-const { GX } = require('../../lib/devices/gx');
-const enums = require('../../lib/enums');
+const VictronGX = require('../../lib/devices/victron.js');
+const { GX } = require('../../lib/modbus/registry/gx.js');
+const enums = require('../../lib/enums.js');
 const utilFunctions = require('../../lib/util.js');
 const minGridSuplusPower = 200;
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const EnergyMeter = require('../../lib/energyMeter.js');
+const EnergyMeter = require('../../lib/devices/energyMeter.js');
 const utilFunctions = require('../../lib/util.js');
 const BaseDevice = require('../baseDevice.js');
 

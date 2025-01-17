@@ -1,7 +1,7 @@
 'use strict';
 
 const { Driver } = require('homey');
-const Discovery = require('../lib/discovery.js');
+const Discovery = require('../lib/modbus/discovery.js');
 
 class BaseDriver extends Driver {
 

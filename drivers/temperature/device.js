@@ -1,8 +1,8 @@
 'use strict';
 
-const TempSensor = require('../../lib/tempSensor.js');
+const TempSensor = require('../../lib/devices/tempSensor.js');
 const utilFunctions = require('../../lib/util.js');
-const enums = require('../../lib/enums');
+const enums = require('../../lib/enums.js');
 const BaseDevice = require('../baseDevice.js');
 
 class TemperatureDevice extends BaseDevice {

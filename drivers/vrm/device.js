@@ -1,6 +1,6 @@
 'use strict';
 const Homey = require('homey');
-const VRM = require('../../lib/vrm');
+const VRM = require('../../lib/devices/vrm.js');
 const utilFunctions = require('../../lib/util.js');
 const crypto = require('crypto');
 const algorithm = 'aes-256-cbc';
