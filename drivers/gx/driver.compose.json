@@ -3,9 +3,9 @@
         "en": "Victron GX"
     },
     "images": {
-        "xlarge": "drivers/gx/assets/images/xlarge.jpg",
-        "large": "drivers/gx/assets/images/large.jpg",
-        "small": "drivers/gx/assets/images/small.jpg"
+        "xlarge": "drivers/gx/assets/images/xlarge.png",
+        "large": "drivers/gx/assets/images/large.png",
+        "small": "drivers/gx/assets/images/small.png"
     },
     "class": "sensor",
     "platforms": [
