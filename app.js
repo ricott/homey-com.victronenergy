@@ -91,19 +91,6 @@ class VictronEnergyApp extends App {
             }
         );
 
-        const battery_soc_condition = this.homey.flow.getConditionCard('battery_soc_condition');
-        battery_soc_condition.registerRunListener(async (args, state) => {
-            //this.log(`[${args.device.getName()}] Condition 'battery_soc_condition' triggered`);
-            const soc = args.device.getCapabilityValue('measure_battery');
-            //this.log(`[${args.device.getName()}] - battery soc: ${soc}, condition soc: ${args.soc}`);
-
-            if (soc < args.soc) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-
         const consumption_power_condition = this.homey.flow.getConditionCard('consumption_power_condition');
         consumption_power_condition.registerRunListener(async (args, state) => {
             //this.log(`[${args.device.getName()}] Condition 'consumption_power_condition' triggered`);
@@ -293,10 +280,10 @@ class VictronEnergyApp extends App {
         const timeSinceLastFullCharge_condition = this.homey.flow.getConditionCard('timeSinceLastFullCharge_condition');
         timeSinceLastFullCharge_condition.registerRunListener(async (args, state) => {
             //this.log(`[${args.device.getName()}] Condition 'timeSinceLastFullCharge_condition' triggered`);
-            const previousReadings = args.device.getStoreValue('previousReadings');
+            const tSinceLastFullCharge = args.device.getSettings().timeSinceLastFullCharge;
             //this.log(`[${args.device.getName()}] - Time since last full charge: ${previousReadings.timeSinceLastFullCharge}, condition time: ${args.time}`);
 
-            if (previousReadings.timeSinceLastFullCharge < args.time) {
+            if (tSinceLastFullCharge < args.time) {
                 return true;
             } else {
                 return false;

@@ -3,6 +3,7 @@
         "en": "Victron GX"
     },
     "images": {
+        "xlarge": "drivers/gx/assets/images/xlarge.jpg",
         "large": "drivers/gx/assets/images/large.jpg",
         "small": "drivers/gx/assets/images/small.jpg"
     },
@@ -13,16 +14,7 @@
     "connectivity": [
         "lan"
     ],
-    "energy": {
-        "cumulative": true,
-        "cumulativeImportedCapability": "meter_power",
-        "cumulativeExportedCapability": "meter_power.export",
-        "batteries": [
-            "OTHER"
-        ]
-    },
     "capabilities": [
-        "measure_battery",
         "measure_power",
         "input_source",
         "measure_power.grid",
@@ -31,16 +23,11 @@
         "measure_power.genset",
         "vebus_status",
         "alarm_status",
-        "battery_status",
-        "measure_voltage.battery",
-        "measure_current.battery",
         "switch_position",
         "measure_power.gridSetpoint",
         "measure_power.maxGridFeedin",
         "measure_power.maxDischarge",
-        "measure_current.maxCharge",
-        "meter_power",
-        "meter_power.export"
+        "measure_current.maxCharge"
     ],
     "capabilitiesOptions": {
         "measure_power": {
@@ -73,18 +60,6 @@
                 "sv": "Generator"
             }
         },
-        "measure_voltage.battery": {
-            "title": {
-                "en": "Battery voltage",
-                "sv": "Batterispänning"
-            }
-        },
-        "measure_current.battery": {
-            "title": {
-                "en": "Battery current",
-                "sv": "Batterisström"
-            }
-        },
         "measure_power.gridSetpoint": {
             "title": {
                 "en": "Grid setpoint",
@@ -107,18 +82,6 @@
             "title": {
                 "en": "Max charge current",
                 "sv": "Max laddström"
-            }
-        },
-        "meter_power": {
-            "title": {
-                "en": "Grid lifetime import",
-                "sv": "Nät livstid import"
-            }
-        },
-        "meter_power.export": {
-            "title": {
-                "en": "Grid lifetime export",
-                "sv": "Nät livstid export"
             }
         }
     },

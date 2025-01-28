@@ -6,6 +6,7 @@ const Discovery = require('../lib/modbus/discovery.js');
 class BaseDriver extends Driver {
 
     async pair(identifier, deviceName, session, useUnitIdAsIdentifier = false) {
+        let self = this;
         let devices = [];
         let settings;
         let discoveryResponse = {};
@@ -17,7 +18,11 @@ class BaseDriver extends Driver {
             discovery.on('result', message => {
                 discoveryResponse = message;
                 discovery.disconnect();
-                session.nextView();
+                try {
+                    session.nextView();
+                } catch (error) {
+                    self.log(error);
+                }
             });
 
             discovery.validateSingleUnitId(
@@ -33,7 +38,7 @@ class BaseDriver extends Driver {
             let deviceId = String(useUnitIdAsIdentifier ? settings.modbus_unitId : discoveryResponse.returnValue).replace(/[^a-z0-9]/gi, '');
 
             if (discoveryResponse.outcome == 'success') {
-                this.log(`Found ${deviceName} with id: ${deviceId}`);
+                self.log(`Found ${deviceName} with id: ${deviceId}`);
                 devices.push({
                     name: `${deviceName} (${deviceId})`,
                     data: {
@@ -46,7 +51,7 @@ class BaseDriver extends Driver {
                     }
                 });
             } else if (discoveryResponse.outcome == 'connect_failure') {
-                this.log(discoveryResponse);
+                self.log(discoveryResponse);
                 throw new Error(`Couldn't connect to host '${settings.address}' on port '${settings.port}'`);
             }
 

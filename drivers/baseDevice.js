@@ -112,9 +112,46 @@ class BaseDevice extends Device {
         });
     }
 
+    updateSettingIfChanged(key, newValue, oldValue) {
+        if (newValue != oldValue) {
+            this.updateSetting(key, newValue);
+        }
+    }
+
+    updateNumericSettingIfChanged(key, newValue, oldValue, suffix) {
+        if (!isNaN(newValue)) {
+            this.updateSettingIfChanged(key, `${newValue}${suffix}`, `${oldValue}${suffix}`);
+        }
+    }
+
     logMessage(message) {
         this.log(`[${this.getName()}] ${message}`);
     }
+
+    async addCapabilityHelper(capability) {
+        if (!this.hasCapability(capability)) {
+            try {
+                this.logMessage(`Adding missing capability '${capability}'`);
+                await this.addCapability(capability);
+            } catch (reason) {
+                this.error(`Failed to add capability '${capability}'`);
+                this.error(reason);
+            }
+        }
+    }
+
+    async removeCapabilityHelper(capability) {
+        if (this.hasCapability(capability)) {
+            try {
+                this.logMessage(`Remove existing capability '${capability}'`);
+                await this.removeCapability(capability);
+            } catch (reason) {
+                this.error(`Failed to removed capability '${capability}'`);
+                this.error(reason);
+            }
+        }
+    }
+
 }
 
 module.exports = BaseDevice;

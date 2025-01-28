@@ -155,46 +155,7 @@
           {
             "name": "device",
             "type": "device",
-            "placeholder": {
-              "en": "Select GX device",
-              "sv": "Välj GX enhet"
-            },
-            "filter": "driver_id=gx"
-          }
-        ]
-      },
-      {
-        "id": "battery_voltage_changed",
-        "title": {
-          "en": "Battery voltage changed",
-          "sv": "Batterispänningen ändrades"
-        },
-        "titleFormatted": {
-          "en": "Battery voltage changed to [[voltage]]",
-          "sv": "Batterispänningen ändrades till [[voltage]]"
-        },
-        "tokens": [
-          {
-            "name": "voltage",
-            "type": "number",
-            "title": {
-              "en": "Voltage",
-              "sv": "Spänning"
-            },
-            "example": {
-              "en": "54.5"
-            }
-          }
-        ],
-        "args": [
-          {
-            "name": "device",
-            "type": "device",
-            "placeholder": {
-              "en": "Select GX device",
-              "sv": "Välj GX enhet"
-            },
-            "filter": "driver_id=gx"
+            "filter": "driver_id=battery"
           }
         ]
       },
@@ -247,11 +208,7 @@
           {
             "name": "device",
             "type": "device",
-            "placeholder": {
-              "en": "Select GX device",
-              "sv": "Välj GX enhet"
-            },
-            "filter": "driver_id=gx"
+            "filter": "driver_id=energy"
           }
         ]
       },
@@ -320,42 +277,6 @@
             "filter": "driver_id=temperature|tank|evcharger"
           }
         ]
-      },
-      {
-        "id": "soc_changed",
-        "title": {
-          "en": "SoC changed",
-          "sv": "SoC ändrades"
-        },
-        "titleFormatted": {
-          "en": "SoC changed to [[soc]]",
-          "sv": "SoC ändrades till [[soc]]"
-        },
-        "tokens": [
-          {
-            "name": "soc",
-            "type": "number",
-            "title": {
-              "en": "SoC (%)",
-              "sv": "SoC (%)"
-            },
-            "example": {
-              "en": "33.5"
-            }
-          }
-        ],
-        "args": [
-          {
-            "name": "device",
-            "type": "device",
-            "placeholder": {
-              "en": "Select GX device",
-              "sv": "Välj GX enhet"
-            },
-            "filter": "driver_id=gx"
-          }
-        ],
-        "deprecated": true
       },
       {
         "id": "switch_position_changed",
@@ -594,40 +515,6 @@
             },
             "filter": "driver_id=gx"
           }
-        ]
-      },
-      {
-        "id": "battery_soc_condition",
-        "title": {
-          "en": "Battery SoC is !{{below|above}}",
-          "sv": "Batteriets nivå är !{{under|över}}"
-        },
-        "titleFormatted": {
-          "en": "Battery SoC is !{{below|above}} [[soc]]",
-          "sv": "Batteriets SoC är !{{under|över}} [[soc]]"
-        },
-        "args": [
-          {
-            "name": "soc",
-            "type": "range",
-            "title": {
-              "en": "SoC",
-              "sv": "SoC"
-            },
-            "min": 0,
-            "max": 100,
-            "step": 0.5,
-            "label": "%"
-          },
-          {
-            "name": "device",
-            "type": "device",
-            "placeholder": {
-              "en": "Select GX device",
-              "sv": "Välj GX enhet"
-            },
-            "filter": "driver_id=gx"
-          }
         ],
         "deprecated": true
       },
@@ -653,11 +540,7 @@
           {
             "name": "device",
             "type": "device",
-            "placeholder": {
-              "en": "Select GX device",
-              "sv": "Välj GX enhet"
-            },
-            "filter": "driver_id=gx"
+            "filter": "driver_id=battery"
           }
         ]
       },
@@ -694,10 +577,6 @@
           {
             "name": "device",
             "type": "device",
-            "placeholder": {
-              "en": "Select GX device",
-              "sv": "Välj GX enhet"
-            },
             "filter": "driver_id=gx"
           }
         ]
@@ -1113,11 +992,7 @@
           {
             "name": "device",
             "type": "device",
-            "placeholder": {
-              "en": "Select GX device",
-              "sv": "Välj GX enhet"
-            },
-            "filter": "driver_id=gx"
+            "filter": "driver_id=battery"
           }
         ]
       },
@@ -1690,6 +1565,184 @@
   "drivers": [
     {
       "name": {
+        "en": "Battery",
+        "sv": "Batteri"
+      },
+      "images": {
+        "xlarge": "drivers/battery/assets/images/xlarge.png",
+        "large": "drivers/battery/assets/images/large.png",
+        "small": "drivers/battery/assets/images/small.png"
+      },
+      "class": "battery",
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "energy": {
+        "homeBattery": true,
+        "batteries": [
+          "OTHER"
+        ]
+      },
+      "capabilities": [
+        "measure_battery",
+        "battery_status",
+        "alarm_generic",
+        "measure_power",
+        "measure_voltage",
+        "measure_current",
+        "measure_temperature",
+        "measure_voltage.minCell",
+        "measure_voltage.maxCell"
+      ],
+      "capabilitiesOptions": {
+        "measure_voltage.minCell": {
+          "title": {
+            "en": "Minimum cell voltage",
+            "sv": "Minimal cellspänning"
+          }
+        },
+        "measure_voltage.maxCell": {
+          "title": {
+            "en": "Maximum cell voltage",
+            "sv": "Maximal cellspänning"
+          }
+        }
+      },
+      "pair": [
+        {
+          "id": "settings"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "battery",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Network",
+            "sv": "Nätverk"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "sv": "IP Adress"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "sv": "Port"
+              }
+            },
+            {
+              "id": "refreshInterval",
+              "type": "number",
+              "value": 10,
+              "step": 1,
+              "attr": {
+                "min": 5,
+                "max": 3600
+              },
+              "label": {
+                "en": "Refresh interval (seconds)",
+                "sv": "Uppdateringsfrekvens (seconds)"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Modbus TCP",
+            "sv": "Modbus TCP"
+          },
+          "children": [
+            {
+              "id": "modbus_unitId",
+              "type": "number",
+              "step": 1,
+              "value": 20,
+              "label": {
+                "en": "com.victronenergy.battery",
+                "sv": "com.victronenergy.battery"
+              },
+              "hint": {
+                "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
+                "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Information",
+            "sv": "Information"
+          },
+          "children": [
+            {
+              "id": "capacity",
+              "type": "label",
+              "label": {
+                "en": "Capacity",
+                "sv": "Kapacitet"
+              },
+              "value": ""
+            },
+            {
+              "id": "timeSinceLastFullCharge",
+              "type": "label",
+              "label": {
+                "en": "Time since last full charge",
+                "sv": "Tid sedan senaste fulladdning"
+              },
+              "value": ""
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Debug",
+            "sv": "Felsökning"
+          },
+          "children": [
+            {
+              "id": "last_error",
+              "type": "textarea",
+              "label": {
+                "en": "Most recent API error",
+                "sv": "Senaste API felmeddelandet"
+              },
+              "value": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": {
         "en": "Energy Meter",
         "sv": "Elmätare"
       },
@@ -2232,6 +2285,7 @@
         "en": "Victron GX"
       },
       "images": {
+        "xlarge": "drivers/gx/assets/images/xlarge.jpg",
         "large": "drivers/gx/assets/images/large.jpg",
         "small": "drivers/gx/assets/images/small.jpg"
       },
@@ -2242,16 +2296,7 @@
       "connectivity": [
         "lan"
       ],
-      "energy": {
-        "cumulative": true,
-        "cumulativeImportedCapability": "meter_power",
-        "cumulativeExportedCapability": "meter_power.export",
-        "batteries": [
-          "OTHER"
-        ]
-      },
       "capabilities": [
-        "measure_battery",
         "measure_power",
         "input_source",
         "measure_power.grid",
@@ -2260,16 +2305,11 @@
         "measure_power.genset",
         "vebus_status",
         "alarm_status",
-        "battery_status",
-        "measure_voltage.battery",
-        "measure_current.battery",
         "switch_position",
         "measure_power.gridSetpoint",
         "measure_power.maxGridFeedin",
         "measure_power.maxDischarge",
-        "measure_current.maxCharge",
-        "meter_power",
-        "meter_power.export"
+        "measure_current.maxCharge"
       ],
       "capabilitiesOptions": {
         "measure_power": {
@@ -2302,18 +2342,6 @@
             "sv": "Generator"
           }
         },
-        "measure_voltage.battery": {
-          "title": {
-            "en": "Battery voltage",
-            "sv": "Batterispänning"
-          }
-        },
-        "measure_current.battery": {
-          "title": {
-            "en": "Battery current",
-            "sv": "Batterisström"
-          }
-        },
         "measure_power.gridSetpoint": {
           "title": {
             "en": "Grid setpoint",
@@ -2336,18 +2364,6 @@
           "title": {
             "en": "Max charge current",
             "sv": "Max laddström"
-          }
-        },
-        "meter_power": {
-          "title": {
-            "en": "Grid lifetime import",
-            "sv": "Nät livstid import"
-          }
-        },
-        "meter_power.export": {
-          "title": {
-            "en": "Grid lifetime export",
-            "sv": "Nät livstid export"
           }
         }
       },
@@ -2402,7 +2418,7 @@
               "step": 1,
               "attr": {
                 "min": 10,
-                "max": 3600
+                "max": 7200
               },
               "label": {
                 "en": "Refresh interval",
@@ -2428,40 +2444,13 @@
               "value": "100"
             },
             {
-              "id": "modbus_vebus_unitId",
+              "id": "modbus_unitId",
               "type": "number",
               "step": 1,
               "value": -1,
               "label": {
                 "en": "com.victronenergy.vebus",
                 "sv": "com.victronenergy.vebus"
-              },
-              "hint": {
-                "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
-                "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
-              }
-            },
-            {
-              "id": "modbus_battery_unitId",
-              "type": "number",
-              "step": 1,
-              "value": -1,
-              "label": {
-                "en": "com.victronenergy.battery",
-                "sv": "com.victronenergy.battery"
-              },
-              "hint": {
-                "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
-                "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
-              }
-            },
-            {
-              "id": "modbus_grid_unitId",
-              "type": "number",
-              "step": 1,
-              "label": {
-                "en": "com.victronenergy.grid",
-                "sv": "com.victronenergy.grid"
               },
               "hint": {
                 "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
@@ -2773,15 +2762,6 @@
               "label": {
                 "en": "ESS Mode",
                 "sv": "ESS Mode"
-              },
-              "value": ""
-            },
-            {
-              "id": "timeSinceLastFullCharge",
-              "type": "label",
-              "label": {
-                "en": "Time since last full charge",
-                "sv": "Tid sedan full laddning"
               },
               "value": ""
             },

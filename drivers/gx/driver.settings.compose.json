@@ -32,7 +32,7 @@
                 "step": 1,
                 "attr": {
                     "min": 10,
-                    "max": 3600
+                    "max": 7200
                 },
                 "label": {
                     "en": "Refresh interval",
@@ -58,40 +58,13 @@
                 "value": "100"
             },
             {
-                "id": "modbus_vebus_unitId",
+                "id": "modbus_unitId",
                 "type": "number",
                 "step": 1,
                 "value": -1,
                 "label": {
                     "en": "com.victronenergy.vebus",
                     "sv": "com.victronenergy.vebus"
-                },
-                "hint": {
-                    "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
-                    "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
-                }
-            },
-            {
-                "id": "modbus_battery_unitId",
-                "type": "number",
-                "step": 1,
-                "value": -1,
-                "label": {
-                    "en": "com.victronenergy.battery",
-                    "sv": "com.victronenergy.battery"
-                },
-                "hint": {
-                    "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
-                    "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
-                }
-            },
-            {
-                "id": "modbus_grid_unitId",
-                "type": "number",
-                "step": 1,
-                "label": {
-                    "en": "com.victronenergy.grid",
-                    "sv": "com.victronenergy.grid"
                 },
                 "hint": {
                     "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
@@ -403,15 +376,6 @@
                 "label": {
                     "en": "ESS Mode",
                     "sv": "ESS Mode"
-                },
-                "value": ""
-            },
-            {
-                "id": "timeSinceLastFullCharge",
-                "type": "label",
-                "label": {
-                    "en": "Time since last full charge",
-                    "sv": "Tid sedan full laddning"
                 },
                 "value": ""
             },

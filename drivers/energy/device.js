@@ -3,8 +3,59 @@
 const EnergyMeter = require('../../lib/devices/energyMeter.js');
 const utilFunctions = require('../../lib/util.js');
 const BaseDevice = require('../baseDevice.js');
+const minGridSuplusPower = 300;
 
 class EnergyMeterDevice extends BaseDevice {
+
+    async onInit() {
+        await super.onInit();
+        await this.setStoreValue('grid_surplus', 0);
+        this._grid_surplus_changed = this.homey.flow.getDeviceTriggerCard('grid_surplus_changed');
+    }
+
+    _updateProperty(key, value) {
+        let self = this;
+        //Ignore unknown capabilities
+        if (self.hasCapability(key)) {
+            //All trigger logic only applies to changed values
+            if (self.isCapabilityValueChanged(key, value)) {
+                self.setCapabilityValue(key, value)
+                    .then(function () {
+                        if (key == 'measure_power') {
+                            let power = 0;
+                            if (value < 0) {
+                                power = value * -1;
+                            }
+
+                            if (self.getStoreValue('grid_surplus') != power) {
+                                //Filter out most of the "false positives" when surplus is bouncing
+                                //eg grid setpoint is set to 0
+                                if (power === 0 || power > minGridSuplusPower) {
+                                    self.setStoreValue('grid_surplus', power);
+                                    const tokens = {
+                                        power: power,
+                                        single_phase: Math.round(power / 230),
+                                        three_phase: Math.round(power / 3 / 230)
+                                    }
+                                    self._grid_surplus_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
+
+                                }
+                            }
+                        }
+
+                    }).catch(reason => {
+                        self.error(reason);
+                    });
+
+            } else {
+                //Update value to refresh timestamp in app
+                self.setCapabilityValue(key, value)
+                    .catch(reason => {
+                        self.error(reason);
+                    });
+            }
+        }
+    }
 
     async setupGXSession(host, port, modbus_unitId, refreshInterval) {
         this.api = new EnergyMeter({

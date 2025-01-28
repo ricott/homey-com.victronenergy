@@ -31,10 +31,6 @@
         {
             "name": "device",
             "type": "device",
-            "placeholder": {
-                "en": "Select GX device",
-                "sv": "Välj GX enhet"
-            },
             "filter": "driver_id=gx"
         }
     ]

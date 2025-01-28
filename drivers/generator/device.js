@@ -28,8 +28,9 @@ class GeneratorDevice extends BaseDevice {
 
         self.api.on('readings', message => {
 
+            const genset = message.gensetL1 + message.gensetL2 + message.gensetL3;
             self._updateProperty('sensor_status', enums.decodeGenSetState(message.state));
-            //self._updateProperty('measure_power.genset', message.power || 0);
+            self._updateProperty('measure_power.genset', genset);
 
         });
 

@@ -1,7 +1,7 @@
 {
     "1.3.7": {
-        "en": "New device type for ",
-        "sv": "Ny enhetstyp för "
+        "en": "New device type for Battery and Generator",
+        "sv": "Ny enhetstyp för Batteri och Generator"
     },
     "1.3.6": {
         "en": "New device type for Solar Charger and PV Inverter",
