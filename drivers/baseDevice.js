@@ -28,15 +28,27 @@ class BaseDevice extends Device {
             await this.setupGXSession(host, port, modbus_unitId, refreshInterval);
             // Connection successful, make sure device is marked as available
             await this.setAvailable();
+            // Clear any existing retry timer on successful connection
+            if (this._retryTimeout) {
+                this.homey.clearTimeout(this._retryTimeout);
+                this._retryTimeout = null;
+            }
         } catch (error) {
             this.error('Failed to initialize device connection:', error);
             // Set device as unavailable with error message
             await this.setUnavailable(error.message || 'Connection failed');
-            // Schedule a retry after 1 minute
-            this.homey.setTimeout(() => {
+            
+            // Clear any existing retry timer before setting a new one
+            if (this._retryTimeout) {
+                this.homey.clearTimeout(this._retryTimeout);
+            }
+            
+            // Schedule a retry after 10 minutes
+            this._retryTimeout = this.homey.setTimeout(() => {
+                this.logMessage('Retrying connection...');
                 this.initializeGXSession(host, port, modbus_unitId, refreshInterval)
                     .catch(err => this.error('Retry failed:', err));
-            }, 60000);
+            }, 10 * 60 * 1000); // 10 minutes
         }
     }
 
@@ -75,6 +87,10 @@ class BaseDevice extends Device {
 
     onDeleted() {
         this.logMessage(`Victron ${this.constructor.name} device deleted`);
+        // Clear any pending retry timer
+        if (this._retryTimeout) {
+            this.homey.clearTimeout(this._retryTimeout);
+        }
         this.api.disconnect();
         this.api = null;
     }

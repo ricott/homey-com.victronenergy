@@ -78,8 +78,12 @@ class VRMDevice extends Homey.Device {
             const vrm = new VRM();
             const response = await vrm.login(this.getUsername(), this.getPassword());
             this.setToken(response.token);
-            // If we successfully get a token, make sure device is available
+            // If we successfully get a token, make sure device is available and clear any retry timer
             await this.setAvailable();
+            if (this._mfaRetryTimeout) {
+                this.homey.clearTimeout(this._mfaRetryTimeout);
+                this._mfaRetryTimeout = null;
+            }
 
         } catch (reason) {
             this.logError(reason);
