@@ -15,22 +15,17 @@ class BaseDriver extends Driver {
             settings = data;
             let discovery = new Discovery();
 
-            discovery.on('result', message => {
-                discoveryResponse = message;
-                discovery.disconnect();
-                try {
-                    session.nextView();
-                } catch (error) {
-                    self.log(error);
-                }
-            });
-
-            discovery.validateSingleUnitId(
-                settings.address,
-                Number(settings.port),
-                Number(settings.modbus_unitId),
-                identifier
-            );
+            try {
+                discoveryResponse = await discovery.validateUnitId(
+                    settings.address,
+                    Number(settings.port),
+                    Number(settings.modbus_unitId),
+                    identifier
+                );
+                await session.nextView();
+            } catch (error) {
+                self.error('Discovery validation failed:', error);
+            }
         });
 
         session.setHandler('list_devices', async (data) => {
@@ -52,7 +47,7 @@ class BaseDriver extends Driver {
                 });
             } else if (discoveryResponse.outcome == 'connect_failure') {
                 self.log(discoveryResponse);
-                throw new Error(`Couldn't connect to host '${settings.address}' on port '${settings.port}'`);
+                throw new Error(`Error: ${discoveryResponse.reason}`);
             }
 
             return devices;
