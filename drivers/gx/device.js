@@ -32,6 +32,7 @@ class GXDevice extends BaseDevice {
             device: this
         });
 
+        await this.api.initialize();
         await this._initializeEventListeners();
     }
 

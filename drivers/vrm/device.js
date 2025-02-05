@@ -78,9 +78,24 @@ class VRMDevice extends Homey.Device {
             const vrm = new VRM();
             const response = await vrm.login(this.getUsername(), this.getPassword());
             this.setToken(response.token);
+            // If we successfully get a token, make sure device is available
+            await this.setAvailable();
 
         } catch (reason) {
             this.logError(reason);
+            
+            // Check if error is MFA related
+            if (reason.message && reason.message.includes('MFA enabled')) {
+                this.logMessage('MFA is enabled - setting device unavailable');
+                await this.setUnavailable('Multi-Factor Authentication is enabled on this VRM account. Please disable MFA or create a separate VRM account without MFA.');
+                
+                // Schedule retry in 10 minutes
+                this.homey.clearTimeout(this._mfaRetryTimeout);
+                this._mfaRetryTimeout = this.homey.setTimeout(async () => {
+                    this.logMessage('Retrying login after MFA error...');
+                    await this.refreshToken();
+                }, 10 * 60 * 1000); // 10 minutes
+            }
         }
     }
 
@@ -91,9 +106,11 @@ class VRMDevice extends Homey.Device {
             this.refreshForecast();
         }, 60 * 1000 * 30);
 
-        // Refresh token, once per week
+        // Refresh token, once per week (only if device is available)
         this.homey.setInterval(async () => {
-            await this.refreshToken();
+            if (this.getAvailable()) {
+                await this.refreshToken();
+            }
         }, 60 * 1000 * 60 * 24 * 7);
     }
 
@@ -265,6 +282,11 @@ class VRMDevice extends Homey.Device {
 
     onDeleted() {
         this.log(`Deleting VRM device '${this.getName()}' from Homey.`);
+
+        // Clear any pending MFA retry timer
+        if (this._mfaRetryTimeout) {
+            this.homey.clearTimeout(this._mfaRetryTimeout);
+        }
 
         this.homey.settings.unset(`${this.getData().id}.username`);
         this.homey.settings.unset(`${this.getData().id}.password`);

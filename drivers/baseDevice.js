@@ -8,7 +8,7 @@ class BaseDevice extends Device {
         this.api = null;
         this.logMessage(`Victron ${this.constructor.name} device initiated`);
 
-        await this.setupGXSession(
+        await this.initializeGXSession(
             this.getSettings().address,
             this.getSettings().port,
             this.getSettings().modbus_unitId,
@@ -22,9 +22,22 @@ class BaseDevice extends Device {
         }
     }
 
-    async reinitializeGXSession(host, port, modbus_unitId, refreshInterval) {
-        await this.destroyGXSession();
-        await this.setupGXSession(host, port, modbus_unitId, refreshInterval);
+    async initializeGXSession(host, port, modbus_unitId, refreshInterval) {
+        try {
+            await this.destroyGXSession();
+            await this.setupGXSession(host, port, modbus_unitId, refreshInterval);
+            // Connection successful, make sure device is marked as available
+            await this.setAvailable();
+        } catch (error) {
+            this.error('Failed to initialize device connection:', error);
+            // Set device as unavailable with error message
+            await this.setUnavailable(error.message || 'Connection failed');
+            // Schedule a retry after 1 minute
+            this.homey.setTimeout(() => {
+                this.initializeGXSession(host, port, modbus_unitId, refreshInterval)
+                    .catch(err => this.error('Retry failed:', err));
+            }, 60000);
+        }
     }
 
     _updateProperty(key, value) {
@@ -95,7 +108,7 @@ class BaseDevice extends Device {
 
         if (changeConn) {
             //We need to re-initialize the GX session since setting(s) are changed
-            this.reinitializeGXSession(
+            this.initializeGXSession(
                 host || this.getSettings().address,
                 port || this.getSettings().port,
                 modbus_unitId || this.getSettings().modbus_unitId,

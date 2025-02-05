@@ -46,6 +46,7 @@ class EvChargerDevice extends Device {
             device: this
         });
 
+        await this.api.initialize();
         await this._initializeEventListeners();
     }
 
