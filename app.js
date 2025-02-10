@@ -568,6 +568,37 @@ class VictronEnergyApp extends App {
                 });
         });
 
+        const limit_import_peakshaving = this.homey.flow.getActionCard('limit_import_peakshaving');
+        limit_import_peakshaving.registerRunListener(async (args) => {
+            this.log(`[${args.device.getName()}] Action 'limit_import_peakshaving' triggered`);
+            this.log(`[${args.device.getName()}] - power: '${args.power}'`);
+
+            return args.device.api.limitImportPeakshavingPower(args.power)
+                .then(function (result) {
+                    return Promise.resolve(true);
+                }).catch(reason => {
+                    return Promise.reject('Failed to set AC import limit');
+                });
+        });
+
+        const set_dynamic_ess_mode = this.homey.flow.getActionCard('set_dynamic_ess_mode');
+        set_dynamic_ess_mode.registerRunListener(async (args) => {
+            this.log(`[${args.device.getName()}] Action 'set_dynamic_ess_mode' triggered`);
+            this.log(`[${args.device.getName()}] - mode: '${args.mode.id}' (${args.mode.name})`);
+
+            return args.device.api.setDynamicESSMode(args.mode.id)
+                .then(function (result) {
+                    return Promise.resolve(true);
+                }).catch(reason => {
+                    return Promise.reject('Failed to set dynamic ESS mode');
+                });
+        });
+        set_dynamic_ess_mode.registerArgumentAutocompleteListener('mode',
+            async (query, args) => {
+                return enums.getDynamicESSMode();
+            }
+        );
+
         const set_evcharger_mode = this.homey.flow.getActionCard('set_evcharger_mode');
         set_evcharger_mode.registerRunListener(async (args) => {
             this.log(`[${args.device.getName()}] Action 'set_evcharger_mode' triggered`);

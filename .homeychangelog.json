@@ -1,4 +1,8 @@
 {
+    "1.4.1": {
+        "en": "New action for setting the dynamic ESS mode",
+        "sv": "Ny handling för att ställa in dynamisk ESS-läge"
+    },
     "1.4.0": {
         "en": "New device type for Battery and Generator",
         "sv": "Ny enhetstyp för Batteri och Generator"

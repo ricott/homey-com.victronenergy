@@ -1,0 +1,29 @@
+{
+    "id": "limit_import_peakshaving",
+    "title": {
+        "en": "AC import limit when peakshaving",
+        "sv": "Begränsa AC import när peakshaving"
+    },
+    "titleFormatted": {
+        "en": "Limit AC import to [[power]] when peakshaving",
+        "sv": "Begränsa AC import till [[power]] när peakshaving"
+    },
+    "args": [
+        {
+            "name": "power",
+            "type": "number",
+            "title": {
+                "en": "Power (W)",
+                "sv": "Effekt (W)"
+            },
+            "min": -32767,
+            "max": 32767,
+            "step": 1
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=gx"
+        }
+    ]
+}

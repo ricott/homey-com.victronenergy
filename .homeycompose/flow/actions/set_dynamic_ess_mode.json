@@ -1,12 +1,12 @@
 {
-    "id": "set_ess_state",
+    "id": "set_dynamic_ess_mode",
     "title": {
-        "en": "Set multiphase regulation state",
-        "sv": "Uppdatera fas reglering status"
+        "en": "Set dynamic ESS mode",
+        "sv": "Uppdatera dynamisk ESS status"
     },
     "titleFormatted": {
-        "en": "Set multiphase regulation state to [[mode]]",
-        "sv": "Uppdatera fas reglering status till [[mode]]"
+        "en": "Set dynamic ESS mode to [[mode]]",
+        "sv": "Uppdatera dynamisk ESS status till [[mode]]"
     },
     "args": [
         {
