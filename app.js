@@ -7,9 +7,25 @@ const conditionHandler = require('./lib/conditionHandler.js');
 class VictronEnergyApp extends App {
     async onInit() {
         this.homeyLog = new Log({ homey: this.homey });
+        this.setupGlobalFetch();
         await this.loadConditions();
         await this.loadActions();
         this.log(`Victron Energy v${this.getAppVersion()} has been initialized`);
+    }
+
+    setupGlobalFetch() {
+        if (!global.fetch) {
+            global.fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+        }
+        if (!global.AbortSignal.timeout) {
+            global.AbortSignal.timeout = timeout => {
+                const controller = new AbortController();
+                const abort = setTimeout(() => {
+                    controller.abort();
+                }, timeout);
+                return controller.signal;
+            }
+        }
     }
 
     getAppVersion() {
