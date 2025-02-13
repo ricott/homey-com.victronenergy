@@ -587,9 +587,9 @@ class VictronEnergyApp extends App {
         const limit_import_peakshaving = this.homey.flow.getActionCard('limit_import_peakshaving');
         limit_import_peakshaving.registerRunListener(async (args) => {
             this.log(`[${args.device.getName()}] Action 'limit_import_peakshaving' triggered`);
-            this.log(`[${args.device.getName()}] - power: '${args.power}'`);
+            this.log(`[${args.device.getName()}] - current: '${args.current}'`);
 
-            return args.device.api.limitImportPeakshavingPower(args.power)
+            return args.device.api.limitImportPeakshavingCurrent(args.current)
                 .then(function (result) {
                     return Promise.resolve(true);
                 }).catch(reason => {

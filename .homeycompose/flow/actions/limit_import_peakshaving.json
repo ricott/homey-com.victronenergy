@@ -5,16 +5,20 @@
         "sv": "Begränsa AC import när peakshaving"
     },
     "titleFormatted": {
-        "en": "Limit AC import to [[power]] when peakshaving",
-        "sv": "Begränsa AC import till [[power]] när peakshaving"
+        "en": "Limit AC import to [[current]] when peakshaving",
+        "sv": "Begränsa AC import till [[current]] när peakshaving"
+    },
+    "hint": {
+        "en": "Passing value -1 will disable the limit",
+        "sv": "Ange värde -1 för att inaktivera gränsen"
     },
     "args": [
         {
-            "name": "power",
+            "name": "current",
             "type": "number",
             "title": {
-                "en": "Power (W)",
-                "sv": "Effekt (W)"
+                "en": "Current (A)",
+                "sv": "Ström (A)"
             },
             "min": -32767,
             "max": 32767,
