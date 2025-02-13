@@ -22,12 +22,14 @@
         "measure_power.PV",
         "measure_power.genset",
         "vebus_status",
+        "dynamic_ess_mode",
         "alarm_status",
         "switch_position",
         "measure_power.gridSetpoint",
         "measure_power.maxGridFeedin",
         "measure_power.maxDischarge",
-        "measure_current.maxCharge"
+        "measure_current.maxCharge",
+        "measure_current.importPeakshaving"
     ],
     "capabilitiesOptions": {
         "measure_power": {
@@ -82,6 +84,12 @@
             "title": {
                 "en": "Max charge current",
                 "sv": "Max laddström"
+            }
+        },
+        "measure_current.importPeakshaving": {
+            "title": {
+                "en": "Import peakshaving current",
+                "sv": "Import peakshaving ström"
             }
         }
     },

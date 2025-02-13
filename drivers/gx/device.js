@@ -12,12 +12,6 @@ class GXDevice extends BaseDevice {
 
         await this.upgradeDevice();
         await super.onInit();
-
-        this._switch_position_changed = this.homey.flow.getDeviceTriggerCard('switch_position_changed');
-        this._vebus_status_changed = this.homey.flow.getDeviceTriggerCard('vebus_status_changed');
-        this._alarm_status_changed = this.homey.flow.getDeviceTriggerCard('alarm_status_changed');
-        this._input_source_changed = this.homey.flow.getDeviceTriggerCard('input_source_changed');
-        
         this.logMessage(`Control charge current: ${this.getSettings().controlChargeCurrent}`);
 
         await this.registerFlowTokens();
@@ -76,6 +70,8 @@ class GXDevice extends BaseDevice {
         await this.addCapabilityHelper('measure_power.maxGridFeedin');
         await this.addCapabilityHelper('measure_power.maxDischarge');
         await this.addCapabilityHelper('measure_current.maxCharge');
+        await this.addCapabilityHelper('measure_current.importPeakshaving');
+        await this.addCapabilityHelper('dynamic_ess_mode');
     }
 
     handleAlarmStatuses(message) {
@@ -213,6 +209,9 @@ class GXDevice extends BaseDevice {
             self._updateProperty('measure_power.maxDischarge', message.maxDischargePower);
             self._updateProperty('measure_current.maxCharge', message.maxChargeCurrent);
 
+            self._updateProperty('measure_current.importPeakshaving', message.importPeakshavingCurrent);
+            self._updateProperty('dynamic_ess_mode', enums.decodeDynamicESSMode(message.dynamicESSMode));
+
             self.setSettings({
                 vrmId: message.vrmId,
                 minimumSOC: `${message.minimumSOC}%`,
@@ -263,13 +262,13 @@ class GXDevice extends BaseDevice {
                             const tokens = {
                                 source: value
                             }
-                            self._input_source_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
+                            self.driver.triggerInputSourceChanged(self, tokens);
 
                         } else if (key == 'vebus_status') {
                             const tokens = {
                                 status: value
                             }
-                            self._vebus_status_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
+                            self.driver.triggerVebusStatusChanged(self, tokens);
 
                         } else if (key == 'alarm_status') {
                             const tokens = {
@@ -277,14 +276,19 @@ class GXDevice extends BaseDevice {
                                 alarms: self.getSetting('vebusAlarms'),
                                 warnings: self.getSetting('vebusWarnings')
                             }
-                            self._alarm_status_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
+                            self.driver.triggerAlarmStatusChanged(self, tokens);
 
                         } else if (key == 'switch_position') {
                             const tokens = {
                                 mode: value
                             }
-                            self._switch_position_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
+                            self.driver.triggerSwitchPositionChanged(self, tokens);
 
+                        } else if (key == 'dynamic_ess_mode') {
+                            const tokens = {
+                                mode: value
+                            }
+                            self.driver.triggerDynamicESSModeChanged(self, tokens);
                         }
 
                     }).catch(reason => {

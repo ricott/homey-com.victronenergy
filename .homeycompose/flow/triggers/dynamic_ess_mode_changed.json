@@ -1,0 +1,26 @@
+{
+    "id": "dynamic_ess_mode_changed",
+    "title": {
+        "en": "Dynamic ESS mode changed",
+        "sv": "Dynamiskt ESS-läge ändrades"
+    },
+    "titleFormatted": {
+        "en": "Dynamic ESS mode changed to [[mode]]",
+        "sv": "Dynamiskt ESS-läge ändrades till [[mode]]"
+    },
+    "args": [
+        {
+            "name": "mode",
+            "type": "autocomplete",
+            "title": {
+                "en": "Mode",
+                "sv": "Läge"
+            }
+        },
+        {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
+        }
+    ]
+}
