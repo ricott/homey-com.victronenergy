@@ -16,7 +16,7 @@
         "measure_current",
         "measure_voltage",
         "meter_power.daily",
-        "meter_power.total"
+        "meter_power"
     ],
     "capabilitiesOptions": {
         "sensor_status": {
@@ -37,7 +37,7 @@
                 "sv": "Dagens produktion"
             }
         },
-        "meter_power.total": {
+        "meter_power": {
             "title": {
                 "en": "Total Yield",
                 "sv": "Total produktion"

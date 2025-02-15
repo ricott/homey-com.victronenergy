@@ -7,6 +7,11 @@ const enums = require('../../lib/enums.js');
 
 class SolarChargerDevice extends BaseDevice {
 
+    async onInit() {
+        await this.setupCapabilities();
+        await super.onInit();
+    }
+
     async setupGXSession(host, port, modbus_unitId, refreshInterval) {
         this.api = new SolarCharger({
             host: host,
@@ -18,6 +23,14 @@ class SolarChargerDevice extends BaseDevice {
 
         await this.api.initialize();
         await this._initializeEventListeners();
+    }
+
+    async setupCapabilities() {
+        this.logMessage('Setting up capabilities');
+
+        // Rename meter_power.total to meter_power
+        await this.removeCapabilityHelper('meter_power.total');
+        await this.addCapability('meter_power');
     }
 
     async _initializeEventListeners() {
@@ -35,7 +48,7 @@ class SolarChargerDevice extends BaseDevice {
             self._updateProperty('measure_current', message.current || 0);
             self._updateProperty('measure_voltage', message.voltage ? Math.round(message.voltage) : 0);
             self._updateProperty('meter_power.daily', message.dailyYield || 0);
-            self._updateProperty('meter_power.total', message.totalYield || 0);
+            self._updateProperty('meter_power', message.totalYield || 0);
 
         });
 
