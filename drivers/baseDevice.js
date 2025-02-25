@@ -37,12 +37,12 @@ class BaseDevice extends Device {
             this.error('Failed to initialize device connection:', error);
             // Set device as unavailable with error message
             await this.setUnavailable(error.message || 'Connection failed');
-            
+
             // Clear any existing retry timer before setting a new one
             if (this._retryTimeout) {
                 this.homey.clearTimeout(this._retryTimeout);
             }
-            
+
             // Schedule a retry after 10 minutes
             this._retryTimeout = this.homey.setTimeout(() => {
                 this.logMessage('Retrying connection...');
@@ -181,6 +181,17 @@ class BaseDevice extends Device {
         }
     }
 
+    async updateCapabilityOptions(capability, options) {
+        if (this.hasCapability(capability)) {
+            try {
+                this.logMessage(`Updating capability options '${capability}'`);
+                await this.setCapabilityOptions(capability, options);
+            } catch (reason) {
+                this.error(`Failed to update capability options for '${capability}'`);
+                this.error(reason);
+            }
+        }
+    }
 }
 
 module.exports = BaseDevice;

@@ -1,37 +1,28 @@
 'use strict';
 
-const { Device } = require('homey');
 const VehicleCharger = require('../../lib/devices/vehicleCharger.js');
 const utilFunctions = require('../../lib/util.js');
+const BaseDevice = require('../baseDevice.js');
 const enums = require('../../lib/enums.js');
 
 const deviceClass = 'evcharger';
 
-class EvChargerDevice extends Device {
+class EvChargerDevice extends BaseDevice {
 
     async onInit() {
-        this.api = null;
-        this.logMessage(`Victron EV Charger device initiated`);
+        await this.upgradeDevice();
+        await this.setupCapabilityListeners();
+        await super.onInit();
+    }
+
+    async upgradeDevice() {
+        this.logMessage('Upgrading existing device');
 
         // Change device class to evcharger if not already
         if (this.getClass() !== deviceClass) {
+            this.logMessage(`Changing device class to ${deviceClass}`);
             await this.setClass(deviceClass);
         }
-
-        await this.setupCapabilities();
-
-        await this.setupGXSession(
-            this.getSettings().address,
-            this.getSettings().port,
-            this.getSettings().modbus_unitId,
-            this.getSettings().refreshInterval
-        );
-
-        await this.setupCapabilityListeners();
-    }
-
-    async setupCapabilities() {
-        this.logMessage('Setting up capabilities');
 
         // Don't want the option of single click in mobile app to start/stop charging
         await this.updateCapabilityOptions('onoff', { uiQuickAction: false });
@@ -48,17 +39,6 @@ class EvChargerDevice extends Device {
 
         await this.api.initialize();
         await this._initializeEventListeners();
-    }
-
-    async destroyGXSession() {
-        if (this.api) {
-            await this.api.disconnect();
-        }
-    }
-
-    async reinitializeGXSession(host, port, modbus_unitId, refreshInterval) {
-        await this.destroyGXSession();
-        await this.setupGXSession(host, port, modbus_unitId, refreshInterval);
     }
 
     async setupCapabilityListeners() {
@@ -165,84 +145,6 @@ class EvChargerDevice extends Device {
                     });
             }
         }
-    }
-
-    isCapabilityValueChanged(key, value) {
-        let oldValue = this.getCapabilityValue(key);
-        // If oldValue===null then it is a newly added device, lets not trigger flows on that
-        if (oldValue !== null && oldValue != value) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    onDeleted() {
-        this.logMessage(`Deleting Victron Temperature device from Homey.`);
-        this.api.disconnect();
-        this.api = null;
-    }
-
-    async onSettings({ oldSettings, newSettings, changedKeys }) {
-        let changeConn = false;
-        let host, port, modbus_unitId, refreshInterval;
-        if (changedKeys.indexOf("address") > -1) {
-            this.logMessage(`Address value was change to: '${newSettings.address}'`);
-            host = newSettings.address;
-            changeConn = true;
-        }
-
-        if (changedKeys.indexOf("port") > -1) {
-            this.logMessage(`Port value was change to: '${newSettings.port}'`);
-            port = newSettings.port;
-            changeConn = true;
-        }
-
-        if (changedKeys.indexOf("modbus_unitId") > -1) {
-            this.logMessage(`Modbus UnitId was change to: '${newSettings.modbus_unitId}'`);
-            modbus_unitId = newSettings.modbus_unitId;
-            changeConn = true;
-        }
-
-        if (changedKeys.indexOf("refreshInterval") > -1) {
-            this.logMessage(`Refresh interval value was change to: '${newSettings.refreshInterval}'`);
-            refreshInterval = newSettings.refreshInterval;
-            changeConn = true;
-        }
-
-        if (changeConn) {
-            // We need to re-initialize the GX session since setting(s) are changed
-            this.reinitializeGXSession(
-                host || this.getSettings().address,
-                port || this.getSettings().port,
-                modbus_unitId || this.getSettings().modbus_unitId,
-                refreshInterval || this.getSettings().refreshInterval
-            );
-        }
-    }
-
-    updateSetting(key, value) {
-        let obj = {};
-        obj[key] = String(value);
-        this.setSettings(obj).catch(err => {
-            this.error(`Failed to update setting '${key}' with value '${value}'`, err);
-        });
-    }
-
-    async updateCapabilityOptions(capability, options) {
-        if (this.hasCapability(capability)) {
-            try {
-                this.logMessage(`Updating capability options '${capability}'`);
-                await this.setCapabilityOptions(capability, options);
-            } catch (reason) {
-                this.error(`Failed to update capability options for '${capability}'`);
-                this.error(reason);
-            }
-        }
-    }
-
-    logMessage(message) {
-        this.log(`[${this.getName()}] ${message}`);
     }
 }
 module.exports = EvChargerDevice;
