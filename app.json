@@ -129,37 +129,6 @@
         ]
       },
       {
-        "id": "battery_status_changed",
-        "title": {
-          "en": "Battery status changed",
-          "sv": "Batteristatus ändrades"
-        },
-        "titleFormatted": {
-          "en": "Battery status changed to [[status]]",
-          "sv": "Batteristatus ändrades till [[status]]"
-        },
-        "tokens": [
-          {
-            "name": "status",
-            "type": "string",
-            "title": {
-              "en": "Status",
-              "sv": "Status"
-            },
-            "example": {
-              "en": "Idle"
-            }
-          }
-        ],
-        "args": [
-          {
-            "name": "device",
-            "type": "device",
-            "filter": "driver_id=battery"
-          }
-        ]
-      },
-      {
         "id": "dynamic_ess_mode_changed",
         "title": {
           "en": "Dynamic ESS mode changed",
@@ -543,32 +512,6 @@
           }
         ],
         "deprecated": true
-      },
-      {
-        "id": "battery_status_condition",
-        "title": {
-          "en": "Battery status is !{{|not}}",
-          "sv": "Batteristatus är !{{|inte}}"
-        },
-        "titleFormatted": {
-          "en": "Battery status is !{{|not}} [[status]]",
-          "sv": "Batteristatus är !{{|inte}} [[status]]"
-        },
-        "args": [
-          {
-            "name": "status",
-            "type": "autocomplete",
-            "title": {
-              "en": "Status",
-              "sv": "Status"
-            }
-          },
-          {
-            "name": "device",
-            "type": "device",
-            "filter": "driver_id=battery"
-          }
-        ]
       },
       {
         "id": "charger_current_condition",
@@ -1665,7 +1608,7 @@
       },
       "capabilities": [
         "measure_battery",
-        "battery_status",
+        "battery_charging_state",
         "alarm_generic",
         "measure_power",
         "measure_voltage",
@@ -3631,17 +3574,6 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/assets/alarm_status.svg"
-    },
-    "battery_status": {
-      "type": "string",
-      "title": {
-        "en": "Battery status",
-        "sv": "Batteristatus"
-      },
-      "getable": true,
-      "setable": false,
-      "uiComponent": "sensor",
-      "icon": "/assets/battery_status.svg"
     },
     "dynamic_ess_mode": {
       "type": "string",

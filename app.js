@@ -1,4 +1,5 @@
 'use strict';
+
 const { App } = require('homey');
 const { Log } = require('homey-log');
 const enums = require('./lib/enums.js');
@@ -68,24 +69,6 @@ class VictronEnergyApp extends App {
         switch_position_condition.registerArgumentAutocompleteListener('mode',
             async (query, args) => {
                 return enums.getSwitchPositions();
-            }
-        );
-
-        const battery_status_condition = this.homey.flow.getConditionCard('battery_status_condition');
-        battery_status_condition.registerRunListener(async (args, state) => {
-            //this.log(`[${args.device.getName()}] Condition 'battery_status_condition' triggered`);
-            const status = args.device.getCapabilityValue('battery_status');
-            //this.log(`[${args.device.getName()}] - battery status: ${status}, condition status: ${args.status.name}`);
-
-            if (status == args.status.name) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-        battery_status_condition.registerArgumentAutocompleteListener('status',
-            async (query, args) => {
-                return enums.getBatteryStatuses();
             }
         );
 

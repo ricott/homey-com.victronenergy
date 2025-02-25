@@ -23,7 +23,7 @@
     },
     "capabilities": [
         "measure_battery",
-        "battery_status",
+        "battery_charging_state",
         "alarm_generic",
         "measure_power",
         "measure_voltage",

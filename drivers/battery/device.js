@@ -8,36 +8,15 @@ const enums = require('../../lib/enums.js');
 class BatteryDevice extends BaseDevice {
 
     async onInit() {
+        await this.upgradeDevice();
         await super.onInit();
-        this._battery_status_changed = this.homey.flow.getDeviceTriggerCard('battery_status_changed');
     }
 
-    _updateProperty(key, value) {
-        let self = this;
-        //Ignore unknown capabilities
-        if (self.hasCapability(key)) {
-            //All trigger logic only applies to changed values
-            if (self.isCapabilityValueChanged(key, value)) {
-                self.setCapabilityValue(key, value)
-                    .then(function () {
-                        if (key == 'battery_status') {
-                            const tokens = {
-                                status: value
-                            }
-                            self._battery_status_changed.trigger(self, tokens, {}).catch(error => { self.error(error) });
-                        }
-                    }).catch(reason => {
-                        self.error(reason);
-                    });
+    async upgradeDevice() {
+        this.logMessage('Upgrading existing device');
 
-            } else {
-                //Update value to refresh timestamp in app
-                self.setCapabilityValue(key, value)
-                    .catch(reason => {
-                        self.error(reason);
-                    });
-            }
-        }
+        await this.removeCapabilityHelper('battery_status');
+        await this.addCapabilityHelper('battery_charging_state');
     }
 
     async setupGXSession(host, port, modbus_unitId, refreshInterval) {
@@ -69,7 +48,7 @@ class BatteryDevice extends BaseDevice {
             self._updateProperty('measure_temperature', message.temperature);
             self._updateProperty('measure_voltage.minCell', message.minCellVoltage);
             self._updateProperty('measure_voltage.maxCell', message.maxCellVoltage);
-            self._updateProperty('battery_status', enums.decodeBatteryStatus(message.status));
+            self._updateProperty('battery_charging_state', enums.decodeBatteryStatus(message.status));
             self._updateProperty('alarm_generic', (message.alarm || 0) == 2);
 
             let tSinceLastFullCharge = '';
