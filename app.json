@@ -2,7 +2,7 @@
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.victronenergy",
   "version": "1.4.1",
-  "compatibility": ">=12.1.2",
+  "compatibility": ">=12.3.0",
   "sdk": 3,
   "platforms": [
     "local"
@@ -156,6 +156,32 @@
             "name": "device",
             "type": "device",
             "filter": "driver_id=battery"
+          }
+        ]
+      },
+      {
+        "id": "dynamic_ess_mode_changed",
+        "title": {
+          "en": "Dynamic ESS mode changed",
+          "sv": "Dynamiskt ESS-läge ändrades"
+        },
+        "titleFormatted": {
+          "en": "Dynamic ESS mode changed to [[mode]]",
+          "sv": "Dynamiskt ESS-läge ändrades till [[mode]]"
+        },
+        "args": [
+          {
+            "name": "mode",
+            "type": "autocomplete",
+            "title": {
+              "en": "Mode",
+              "sv": "Läge"
+            }
+          },
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gx"
           }
         ]
       },
@@ -2355,12 +2381,14 @@
         "measure_power.PV",
         "measure_power.genset",
         "vebus_status",
+        "dynamic_ess_mode",
         "alarm_status",
         "switch_position",
         "measure_power.gridSetpoint",
         "measure_power.maxGridFeedin",
         "measure_power.maxDischarge",
-        "measure_current.maxCharge"
+        "measure_current.maxCharge",
+        "measure_current.importPeakshaving"
       ],
       "capabilitiesOptions": {
         "measure_power": {
@@ -2415,6 +2443,12 @@
           "title": {
             "en": "Max charge current",
             "sv": "Max laddström"
+          }
+        },
+        "measure_current.importPeakshaving": {
+          "title": {
+            "en": "Import peakshaving current",
+            "sv": "Import peakshaving ström"
           }
         }
       },
@@ -3083,7 +3117,7 @@
         "measure_current",
         "measure_voltage",
         "meter_power.daily",
-        "meter_power.total"
+        "meter_power"
       ],
       "capabilitiesOptions": {
         "sensor_status": {
@@ -3104,7 +3138,7 @@
             "sv": "Dagens produktion"
           }
         },
-        "meter_power.total": {
+        "meter_power": {
           "title": {
             "en": "Total Yield",
             "sv": "Total produktion"
@@ -3526,7 +3560,7 @@
         "large": "drivers/vrm/assets/images/large.png",
         "xlarge": "drivers/vrm/assets/images/xlarge.png"
       },
-      "class": "sensor",
+      "class": "service",
       "platforms": [
         "local"
       ],
@@ -3608,6 +3642,17 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/assets/battery_status.svg"
+    },
+    "dynamic_ess_mode": {
+      "type": "string",
+      "title": {
+        "en": "Dynamic ESS Mode",
+        "sv": "Dynamiskt ESS-läge"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/vebus_status.svg"
     },
     "input_source": {
       "type": "string",

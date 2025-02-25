@@ -5,10 +5,17 @@ const utilFunctions = require('../../lib/util.js');
 const crypto = require('crypto');
 const algorithm = 'aes-256-cbc';
 
+const deviceClass = 'service';
+
 class VRMDevice extends Homey.Device {
 
     async onInit() {
         this.logMessage(`VRM device initiated`);
+
+        // Change device class to service if not already
+        if (this.getClass() !== deviceClass) {
+            await this.setClass(deviceClass);
+        }
 
         await this.setupCapabilities();
 
@@ -87,12 +94,12 @@ class VRMDevice extends Homey.Device {
 
         } catch (reason) {
             this.logError(reason);
-            
+
             // Check if error is MFA related
             if (reason.message && reason.message.includes('MFA enabled')) {
                 this.logMessage('MFA is enabled - setting device unavailable');
                 await this.setUnavailable('Multi-Factor Authentication is enabled on this VRM account. Please disable MFA or create a separate VRM account without MFA.');
-                
+
                 // Schedule retry in 10 minutes
                 this.homey.clearTimeout(this._mfaRetryTimeout);
                 this._mfaRetryTimeout = this.homey.setTimeout(async () => {

@@ -7,7 +7,7 @@
         "large": "drivers/vrm/assets/images/large.png",
         "xlarge": "drivers/vrm/assets/images/xlarge.png"
     },
-    "class": "sensor",
+    "class": "service",
     "platforms": [
         "local"
     ],
