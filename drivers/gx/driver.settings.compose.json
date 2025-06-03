@@ -31,7 +31,7 @@
                 "value": 10,
                 "step": 1,
                 "attr": {
-                    "min": 10,
+                    "min": 5,
                     "max": 7200
                 },
                 "label": {
