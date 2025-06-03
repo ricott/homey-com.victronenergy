@@ -24,8 +24,10 @@ class EvChargerDevice extends BaseDevice {
             await this.setClass(deviceClass);
         }
 
-        // Don't want the option of single click in mobile app to start/stop charging
-        await this.updateCapabilityOptions('onoff', { uiQuickAction: false });
+        // Homey v12.4.5+ mandatory EV charger capabilities
+        await this.addCapabilityHelper('evcharger_charging');
+        await this.addCapabilityHelper('evcharger_charging_state');
+        await this.removeCapabilityHelper('onoff');
     }
 
     async setupGXSession(host, port, modbus_unitId, refreshInterval) {
@@ -42,7 +44,7 @@ class EvChargerDevice extends BaseDevice {
     }
 
     async setupCapabilityListeners() {
-        this.registerCapabilityListener('onoff', async (value) => {
+        this.registerCapabilityListener('evcharger_charging', async (value) => {
             if (value) {
                 // Start
                 await this.api.startCharging()
@@ -78,13 +80,10 @@ class EvChargerDevice extends BaseDevice {
         });
 
         self.api.on('readings', message => {
-
             const statusText = enums.decodeEvChargerStatusType(message.status);
-            if (statusText == enums.decodeEvChargerStatusType('Charging')) {
-                self._updateProperty('onoff', true);
-            } else {
-                self._updateProperty('onoff', false);
-            }
+            const isCharging = statusText == enums.decodeEvChargerStatusType('Charging');
+            self._updateProperty('evcharger_charging', isCharging);
+            self._updateProperty('evcharger_charging_state', enums.decodeEnergyChargerMode(message.mode));
 
             self._updateProperty('measure_power', message.power);
             self._updateProperty('measure_current', message.current);

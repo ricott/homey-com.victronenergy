@@ -1,4 +1,8 @@
 {
+    "1.4.2": {
+        "en": "New Modbus socket handling, added new capabilities for EV chargers",
+        "sv": "Ny Modbus socket hantering, samt nya egenskaper för billaddare"
+    },
     "1.4.1": {
         "en": "New action for setting the dynamic ESS mode",
         "sv": "Ny handling för att ställa in dynamisk ESS-läge"

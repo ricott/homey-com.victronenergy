@@ -14,15 +14,20 @@
     "connectivity": [
         "lan"
     ],
+    "energy": {
+        "evCharger": true,
+        "meterPowerImportedCapability": "meter_power"
+    },
     "capabilities": [
-        "onoff",
+        "evcharger_charging",
         "measure_power",
         "measure_current",
         "measure_time",
         "sensor_status",
         "measure_current.max",
         "sensor_status.mode",
-        "meter_power"
+        "meter_power",
+        "evcharger_charging_state"
     ],
     "capabilitiesOptions": {
         "measure_current.max": {

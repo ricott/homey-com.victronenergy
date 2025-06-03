@@ -1,12 +1,12 @@
 {
     "id": "minimum_soc_condition",
     "title": {
-        "en": "Min SoC is !{{|not}}",
-        "sv": "Lägsta SoC är !{{|inte}}"
+        "en": "ESS Minimum SoC (unless grid fails) is !{{|not}}",
+        "sv": "ESS lägsta SoC (om elnätet inte är borta) är !{{|inte}}"
     },
     "titleFormatted": {
-        "en": "Min SoC is !{{|not}} [[conditionType]] [[soc]]",
-        "sv": "Lägsta SoC är !{{|inte}} [[conditionType]] [[soc]]"
+        "en": "ESS Minimum SoC (unless grid fails) is !{{|not}} [[conditionType]] [[soc]]",
+        "sv": "ESS lägsta SoC (om elnätet inte är borta) är !{{|inte}} [[conditionType]] [[soc]]"
     },
     "args": [
         {
