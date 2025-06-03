@@ -1601,10 +1601,7 @@
         "lan"
       ],
       "energy": {
-        "homeBattery": true,
-        "batteries": [
-          "OTHER"
-        ]
+        "homeBattery": true
       },
       "capabilities": [
         "measure_battery",
@@ -1996,15 +1993,20 @@
       "connectivity": [
         "lan"
       ],
+      "energy": {
+        "evCharger": true,
+        "meterPowerImportedCapability": "meter_power"
+      },
       "capabilities": [
-        "onoff",
+        "evcharger_charging",
         "measure_power",
         "measure_current",
         "measure_time",
         "sensor_status",
         "measure_current.max",
         "sensor_status.mode",
-        "meter_power"
+        "meter_power",
+        "evcharger_charging_state"
       ],
       "capabilitiesOptions": {
         "measure_current.max": {
@@ -2445,7 +2447,7 @@
               "value": 10,
               "step": 1,
               "attr": {
-                "min": 10,
+                "min": 5,
                 "max": 7200
               },
               "label": {
@@ -3261,7 +3263,7 @@
               "value": 60,
               "step": 60,
               "attr": {
-                "min": 60,
+                "min": 5,
                 "max": 86400
               },
               "label": {
@@ -3414,7 +3416,7 @@
               "value": 60,
               "step": 60,
               "attr": {
-                "min": 60,
+                "min": 5,
                 "max": 86400
               },
               "label": {

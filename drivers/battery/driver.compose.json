@@ -16,10 +16,7 @@
         "lan"
     ],
     "energy": {
-        "homeBattery": true,
-        "batteries": [
-            "OTHER"
-        ]
+        "homeBattery": true
     },
     "capabilities": [
         "measure_battery",
