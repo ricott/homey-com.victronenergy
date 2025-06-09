@@ -1,6 +1,7 @@
 'use strict';
 
 const { Device } = require('homey');
+const utilFunctions = require('../lib/util.js');
 
 class BaseDevice extends Device {
 
@@ -99,8 +100,6 @@ class BaseDevice extends Device {
     }
 
     _formatErrorMessage(error) {
-        const utilFunctions = require('../lib/util.js');
-        
         if (utilFunctions.isError(error)) {
             return error.stack;
         }
