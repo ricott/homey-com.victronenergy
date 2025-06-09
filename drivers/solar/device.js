@@ -1,7 +1,6 @@
 'use strict';
 
 const SolarCharger = require('../../lib/devices/solarCharger.js');
-const utilFunctions = require('../../lib/util.js');
 const BaseDevice = require('../baseDevice.js');
 const enums = require('../../lib/enums.js');
 
@@ -34,45 +33,33 @@ class SolarChargerDevice extends BaseDevice {
     }
 
     async _initializeEventListeners() {
-        let self = this;
+        // this.api.on('properties', this._handlePropertiesEvent.bind(this));
+        this.api.on('readings', this._handleReadingsEvent.bind(this));
+        this.api.on('error', this._handleErrorEvent.bind(this));
+    }
 
-        // self.api.on('properties', message => {
-        //     self.updateSetting('serial', message.serial);
-        // });
+    // _handlePropertiesEvent(message) {
+    //     this.updateSetting('serial', message.serial);
+    // }
 
-        self.api.on('readings', message => {
+    async _handleReadingsEvent(message) {
+        try {
+            await this._updateSolarChargerProperties(message);
+        } catch (error) {
+            this.error('Failed to process solar charger readings event:', error);
+        }
+    }
 
-            self._updateProperty('sensor_status', message.mode == 1 ? 'On' : 'Off');
-            self._updateProperty('vebus_status', enums.decodeVEBusStatus(message.state));
-            self._updateProperty('measure_power', message.power || 0);
-            self._updateProperty('measure_current', message.current || 0);
-            self._updateProperty('measure_voltage', message.voltage ? Math.round(message.voltage) : 0);
-            self._updateProperty('meter_power.daily', message.dailyYield || 0);
-            self._updateProperty('meter_power', message.totalYield || 0);
-
-        });
-
-        self.api.on('error', error => {
-            self.error('Houston we have a problem', error);
-
-            let message = '';
-            if (utilFunctions.isError(error)) {
-                message = error.stack;
-            } else {
-                try {
-                    message = JSON.stringify(error, null, "  ");
-                } catch (e) {
-                    self.log('Failed to stringify object', e);
-                    message = 'Unknown error';
-                }
-            }
-
-            const timeString = new Date().toLocaleString('sv-SE', { hour12: false, timeZone: self.homey.clock.getTimezone() });
-            self.setSettings({ last_error: timeString + '\n' + message })
-                .catch(err => {
-                    self.error('Failed to update settings', err);
-                });
-        });
+    async _updateSolarChargerProperties(message) {
+        await Promise.all([
+            this._updateProperty('sensor_status', message.mode === 1 ? 'On' : 'Off'),
+            this._updateProperty('vebus_status', enums.decodeVEBusStatus(message.state)),
+            this._updateProperty('measure_power', message.power || 0),
+            this._updateProperty('measure_current', message.current || 0),
+            this._updateProperty('measure_voltage', message.voltage ? Math.round(message.voltage) : 0),
+            this._updateProperty('meter_power.daily', message.dailyYield || 0),
+            this._updateProperty('meter_power', message.totalYield || 0)
+        ]);
     }
 }
 module.exports = SolarChargerDevice;

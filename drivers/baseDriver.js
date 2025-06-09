@@ -6,14 +6,13 @@ const Discovery = require('../lib/modbus/discovery.js');
 class BaseDriver extends Driver {
 
     async pair(identifier, deviceName, session, useUnitIdAsIdentifier = false) {
-        let self = this;
-        let devices = [];
+        const devices = [];
         let settings;
         let discoveryResponse = {};
 
         session.setHandler('settings', async (data) => {
             settings = data;
-            let discovery = new Discovery();
+            const discovery = new Discovery();
 
             try {
                 discoveryResponse = await discovery.validateUnitId(
@@ -24,20 +23,21 @@ class BaseDriver extends Driver {
                 );
                 await session.nextView();
             } catch (error) {
-                self.error('Discovery validation failed:', error);
+                this.error('Discovery validation failed:', error);
             }
         });
 
-        session.setHandler('list_devices', async (data) => {
+        session.setHandler('list_devices', async () => {
+            const deviceId = String(
+                useUnitIdAsIdentifier ? settings.modbus_unitId : discoveryResponse.returnValue
+            ).replace(/[^a-z0-9]/gi, '');
 
-            let deviceId = String(useUnitIdAsIdentifier ? settings.modbus_unitId : discoveryResponse.returnValue).replace(/[^a-z0-9]/gi, '');
-
-            if (discoveryResponse.outcome == 'success') {
-                self.log(`Found ${deviceName} with id: ${deviceId}`);
+            if (discoveryResponse.outcome === 'success') {
+                this.log(`Found ${deviceName} with id: ${deviceId}`);
                 devices.push({
                     name: `${deviceName} (${deviceId})`,
                     data: {
-                        id: `${deviceId}`
+                        id: deviceId
                     },
                     settings: {
                         address: settings.address,
@@ -45,8 +45,8 @@ class BaseDriver extends Driver {
                         modbus_unitId: Number(settings.modbus_unitId)
                     }
                 });
-            } else if (discoveryResponse.outcome == 'connect_failure') {
-                self.log(discoveryResponse);
+            } else if (discoveryResponse.outcome === 'connect_failure') {
+                this.log(discoveryResponse);
                 throw new Error(`Error: ${discoveryResponse.reason}`);
             }
 

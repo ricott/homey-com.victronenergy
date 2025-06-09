@@ -4,16 +4,6 @@ const VRM = require('../../lib/devices/vrm.js');
 
 class VRMDriver extends Homey.Driver {
 
-    async onInit() {
-        this.log(`VRM driver has been initialized`);
-        this._registerFlows();
-    }
-
-    _registerFlows() {
-        this.log('Registering flows');
-
-    }
-
     async onPair(session) {
         let devices = [];
 

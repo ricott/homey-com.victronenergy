@@ -29,54 +29,38 @@ class VRMDevice extends Homey.Device {
         }
 
         await this.refreshToken();
-        this.refreshForecast();
+        await this.refreshForecast();
 
-        this._initilializeTimers();
+        this._initializeTimers();
     }
 
-    refreshForecast() {
-        let self = this;
+    async refreshForecast() {
         const vrm = new VRM();
+        const token = this.getToken();
+        const deviceId = this.getData().id;
 
-        vrm.getPVForecastRestOfToday(this.getToken(), this.getData().id)
-            .then(function (forecast) {
-                if (!isNaN(forecast)) {
-                    self._updateProperty('measure_pv_forecast_today', (forecast / 1000));
-                }
-            })
-            .catch(reason => {
-                self.logError(reason);
-            });
+        const forecastRequests = [
+            { method: 'getPVForecastRestOfToday', capability: 'measure_pv_forecast_today' },
+            { method: 'getPVForecastNextDay', capability: 'measure_pv_forecast_tomorrow' },
+            { method: 'getConsumptionForecastRestOfToday', capability: 'measure_consumption_forecast_today' },
+            { method: 'getConsumptionForecastNextDay', capability: 'measure_consumption_forecast_tomorrow' }
+        ];
 
-        vrm.getPVForecastNextDay(this.getToken(), this.getData().id)
-            .then(function (forecast) {
-                if (!isNaN(forecast)) {
-                    self._updateProperty('measure_pv_forecast_tomorrow', (forecast / 1000));
-                }
-            })
-            .catch(reason => {
-                self.logError(reason);
-            });
+        // Process all forecasts concurrently
+        await Promise.allSettled(
+            forecastRequests.map(request => this._processForecastRequest(vrm, request, token, deviceId))
+        );
+    }
 
-        vrm.getConsumptionForecastRestOfToday(this.getToken(), this.getData().id)
-            .then(function (forecast) {
-                if (!isNaN(forecast)) {
-                    self._updateProperty('measure_consumption_forecast_today', (forecast / 1000));
-                }
-            })
-            .catch(reason => {
-                self.logError(reason);
-            });
-
-        vrm.getConsumptionForecastNextDay(this.getToken(), this.getData().id)
-            .then(function (forecast) {
-                if (!isNaN(forecast)) {
-                    self._updateProperty('measure_consumption_forecast_tomorrow', (forecast / 1000));
-                }
-            })
-            .catch(reason => {
-                self.logError(reason);
-            });
+    async _processForecastRequest(vrm, request, token, deviceId) {
+        try {
+            const forecast = await vrm[request.method](token, deviceId);
+            if (!isNaN(forecast)) {
+                await this._updateProperty(request.capability, forecast / 1000);
+            }
+        } catch (error) {
+            this.logError(error);
+        }
     }
 
     async refreshToken() {
@@ -136,19 +120,20 @@ class VRMDevice extends Homey.Device {
         }
     }
 
-    _initilializeTimers() {
+    _initializeTimers() {
         this.logMessage('Adding timers');
-        // Refresh forecasts
-        this.homey.setInterval(() => {
-            this.refreshForecast();
-        }, 60 * 1000 * 30);
 
-        // Refresh token, once per week (only if device is available)
+        // Refresh forecasts every 30 minutes
+        this.homey.setInterval(async () => {
+            await this.refreshForecast();
+        }, 30 * 60 * 1000);
+
+        // Refresh token once per week (only if device is available)
         this.homey.setInterval(async () => {
             if (this.getAvailable()) {
                 await this.refreshToken();
             }
-        }, 60 * 1000 * 60 * 24 * 7);
+        }, 7 * 24 * 60 * 60 * 1000);
     }
 
     getToken() {
@@ -216,13 +201,9 @@ class VRMDevice extends Homey.Device {
     }
 
     updateSetting(key, value) {
-        let obj = {};
-        if (typeof value === 'string' || value instanceof String) {
-            obj[key] = value;
-        } else {
-            //If not of type string then make it string
-            obj[key] = String(value);
-        }
+        const obj = {
+            [key]: typeof value === 'string' ? value : String(value)
+        };
 
         this.setSettings(obj).catch(err => {
             this.error(`Failed to update setting '${key}' with value '${value}'`, err);
@@ -231,19 +212,23 @@ class VRMDevice extends Homey.Device {
 
     logError(error) {
         this.error(error);
-        let message = '';
+
+        const errorMessage = this._formatErrorMessage(error);
+        const dateTime = new Date().toISOString();
+        this.updateSetting('last_error', `${dateTime}\n${errorMessage}`);
+    }
+
+    _formatErrorMessage(error) {
         if (utilFunctions.isError(error)) {
-            message = error.stack;
-        } else {
-            try {
-                message = JSON.stringify(error, null, "  ");
-            } catch (e) {
-                this.error('Failed to stringify object', e);
-                message = error.toString();
-            }
+            return error.stack;
         }
-        let dateTime = new Date().toISOString();
-        this.updateSetting('last_error', dateTime + '\n' + message);
+
+        try {
+            return JSON.stringify(error, null, '  ');
+        } catch (stringifyError) {
+            this.error('Failed to stringify error object:', stringifyError);
+            return error.toString();
+        }
     }
 
     storeCredentialsEncrypted(plainUser, plainPassword) {
@@ -281,40 +266,38 @@ class VRMDevice extends Homey.Device {
         return decrypted.toString();
     }
 
-    _updateProperty(key, value) {
-        let self = this;
-        if (self.hasCapability(key)) {
-            if (typeof value !== 'undefined' && value !== null) {
-                let oldValue = self.getCapabilityValue(key);
-                if (oldValue !== null && oldValue != value) {
-
-                    self.setCapabilityValue(key, value)
-                        .then(function () {
-
-                            // if (key === 'charger_status') {
-                            //     let tokens = {
-                            //         status: value
-                            //     }
-                            //     // New trigger uses state
-                            //     self._charger_status_changedv2.trigger(self, {}, tokens).catch(error => { self.error(error) });
-                            // }
-
-                        }).catch(reason => {
-                            self.logError(reason);
-                        });
-                } else {
-                    self.setCapabilityValue(key, value)
-                        .catch(reason => {
-                            self.logError(reason);
-                        });
-                }
-
-            } else {
-                self.logMessage(`Value for capability '${key}' is 'undefined'`);
-            }
-        } else {
-            self.logMessage(`Trying to set value for missing capability '${key}'`);
+    async _updateProperty(key, value) {
+        // Check if capability exists
+        if (!this.hasCapability(key)) {
+            this.logMessage(`Trying to set value for missing capability '${key}'`);
+            return;
         }
+
+        // Check if value is valid
+        if (typeof value === 'undefined' || value === null) {
+            this.logMessage(`Value for capability '${key}' is 'undefined'`);
+            return;
+        }
+
+        try {
+            const oldValue = this.getCapabilityValue(key);
+            await this.setCapabilityValue(key, value);
+
+            // Trigger flows only for changed values
+            if (oldValue !== null && oldValue !== value) {
+                await this._handlePropertyTriggers(key, value);
+            }
+        } catch (error) {
+            this.logError(error);
+        }
+    }
+
+    async _handlePropertyTriggers(key, value) {
+        // Placeholder for future VRM-specific triggers
+        // Example:
+        // if (key === 'measure_pv_forecast_today') {
+        //     await this.driver.triggerPVForecastChanged(this, { forecast: value });
+        // }
     }
 
     onDeleted() {
@@ -334,14 +317,6 @@ class VRMDevice extends Homey.Device {
 
     logMessage(message) {
         this.log(`[${this.getName()}] ${message}`);
-    }
-
-    #sleep(time) {
-        return new Promise((resolve) => this.homey.setTimeout(resolve, time));
-    }
-
-    #isInt(value) {
-        return !isNaN(value) && (function (x) { return (x | 0) === x; })(parseFloat(value))
     }
 }
 module.exports = VRMDevice;

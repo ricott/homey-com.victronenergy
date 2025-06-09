@@ -52,26 +52,64 @@ class BaseDevice extends Device {
         }
     }
 
-    _updateProperty(key, value) {
-        let self = this;
-        //Ignore unknown capabilities
-        if (self.hasCapability(key)) {
-            //All trigger logic only applies to changed values
-            if (self.isCapabilityValueChanged(key, value)) {
-                self.setCapabilityValue(key, value)
-                    .then(function () {
+    async _updateProperty(key, value) {
+        // Ignore unknown capabilities
+        if (!this.hasCapability(key)) {
+            return;
+        }
 
-                    }).catch(reason => {
-                        self.error(reason);
-                    });
+        try {
+            // Update capability value
+            await this.setCapabilityValue(key, value);
 
-            } else {
-                //Update value to refresh timestamp in app
-                self.setCapabilityValue(key, value)
-                    .catch(reason => {
-                        self.error(reason);
-                    });
+            // Trigger device-specific events only for changed values
+            if (this.isCapabilityValueChanged(key, value)) {
+                await this._handlePropertyTriggers(key, value);
             }
+        } catch (error) {
+            this.error(`Failed to update property ${key}:`, error);
+        }
+    }
+
+    async _handlePropertyTriggers(key, value) {
+        // Placeholder method for device-specific event triggers
+        // Override this method in child classes to implement custom trigger logic
+        // Example:
+        // if (key === 'some_capability') {
+        //     await this.driver.triggerSomeEvent(this, { value });
+        // }
+    }
+
+    async _handleErrorEvent(error) {
+        this.error('Houston we have a problem', error);
+
+        const errorMessage = this._formatErrorMessage(error);
+        const timeString = new Date().toLocaleString('sv-SE', {
+            hour12: false,
+            timeZone: this.homey.clock.getTimezone()
+        });
+
+        try {
+            await this.setSettings({
+                last_error: `${timeString}\n${errorMessage}`
+            });
+        } catch (settingsError) {
+            this.error('Failed to update error settings:', settingsError);
+        }
+    }
+
+    _formatErrorMessage(error) {
+        const utilFunctions = require('../lib/util.js');
+        
+        if (utilFunctions.isError(error)) {
+            return error.stack;
+        }
+
+        try {
+            return JSON.stringify(error, null, '  ');
+        } catch (stringifyError) {
+            this.log('Failed to stringify error object:', stringifyError);
+            return 'Unknown error';
         }
     }
 

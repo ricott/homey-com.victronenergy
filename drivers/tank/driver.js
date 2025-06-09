@@ -10,17 +10,16 @@ class TankDriver extends BaseDriver {
         this._tank_level_changed = this.homey.flow.getDeviceTriggerCard('tank_level_changed');
     }
 
-    triggerSensorStatusChanged(device, tokens) {
-        this._sensor_status_changed.trigger(device, tokens, {}).catch(this.error);
+    async triggerSensorStatusChanged(device, tokens) {
+        await this._sensor_status_changed.trigger(device, tokens, {}).catch(this.error);
     }
 
-    triggerTankLevelChanged(device, tokens) {
-        this._tank_level_changed.trigger(device, tokens, {}).catch(this.error);
+    async triggerTankLevelChanged(device, tokens) {
+        await this._tank_level_changed.trigger(device, tokens, {}).catch(this.error);
     }
 
     async onPair(session) {
         return await super.pair(Tank.productId, 'Tank', session);
     }
-
 }
 module.exports = TankDriver;

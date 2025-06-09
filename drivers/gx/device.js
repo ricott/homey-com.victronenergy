@@ -61,10 +61,6 @@ class GXDevice extends BaseDevice {
         await this.removeCapabilityHelper('measure_current.battery');
         await this.removeCapabilityHelper('meter_power');
         await this.removeCapabilityHelper('meter_power.export');
-        // await this.removeCapabilityHelper('measure_power.grid');
-        // await this.removeCapabilityHelper('measure_power.PV');
-        // await this.removeCapabilityHelper('measure_power.battery');
-        // await this.removeCapabilityHelper('measure_power.genset');
 
         await this.addCapabilityHelper('measure_power.gridSetpoint');
         await this.addCapabilityHelper('measure_power.maxGridFeedin');
@@ -74,46 +70,52 @@ class GXDevice extends BaseDevice {
         await this.addCapabilityHelper('dynamic_ess_mode');
     }
 
-    handleAlarmStatuses(message) {
-        let alarmArr = [];
-        let warningArr = [];
-        Object.keys(message).forEach(function (key) {
-            if (key.startsWith('alarm')) {
-                if (message[key] == 1) {
-                    //We have a warning
-                    warningArr.push(GX[key].comment);
-                } else if (message[key] == 2) {
-                    //We have an alarm
-                    alarmArr.push(GX[key].comment);
+    async handleAlarmStatuses(message) {
+        const { alarms, warnings } = this._extractAlarmData(message);
+
+        const alarmMsg = alarms.length > 0 ? alarms.join(', ') : 'Ok';
+        const warningMsg = warnings.length > 0 ? warnings.join(', ') : 'Ok';
+
+        await this._updateAlarmSettings(alarmMsg, warningMsg);
+
+        return this._determineAlarmStatus(alarms, warnings);
+    }
+
+    _extractAlarmData(message) {
+        const alarms = [];
+        const warnings = [];
+
+        Object.entries(message)
+            .filter(([key]) => key.startsWith('alarm'))
+            .forEach(([key, value]) => {
+                const comment = GX[key]?.comment;
+                if (!comment) return;
+
+                if (value === 1) {
+                    warnings.push(comment);
+                } else if (value === 2) {
+                    alarms.push(comment);
                 }
-            }
-        });
+            });
 
-        let alarmMsg = 'Ok'
-        if (alarmArr.length > 0) {
-            alarmMsg = alarmArr.join(', ');
+        return { alarms, warnings };
+    }
+
+    async _updateAlarmSettings(alarmMsg, warningMsg) {
+        try {
+            await this.setSettings({
+                vebusAlarms: alarmMsg,
+                vebusWarnings: warningMsg
+            });
+        } catch (error) {
+            this.error('Failed to update alarm status settings:', error);
         }
+    }
 
-        let warningMsg = 'Ok'
-        if (warningArr.length > 0) {
-            warningMsg = warningArr.join(', ');
-        }
-
-        this.setSettings({
-            vebusAlarms: alarmMsg,
-            vebusWarnings: warningMsg
-        }).catch(err => {
-            this.error(`Failed to update alarm status settings`, err);
-        });
-
-        let status = 'Ok';
-        if (alarmArr.length > 0) {
-            status = 'Alarm';
-        } else if (warningArr.length > 0) {
-            status = 'Warning';
-        }
-
-        return status;
+    _determineAlarmStatus(alarms, warnings) {
+        if (alarms.length > 0) return 'Alarm';
+        if (warnings.length > 0) return 'Warning';
+        return 'Ok';
     }
 
     calculateChargeCurrent(soc) {
@@ -164,143 +166,124 @@ class GXDevice extends BaseDevice {
     }
 
     async _initializeEventListeners() {
-        let self = this;
+        this.api.on('properties', this._handlePropertiesEvent.bind(this));
+        this.api.on('readings', this._handleReadingsEvent.bind(this));
+        this.api.on('error', this._handleErrorEvent.bind(this));
+    }
 
-        self.api.on('properties', message => {
-            // self.updateSetting('vrmId', message.vrmId);
-        });
+    _handlePropertiesEvent(message) {
+        // Reserved for future property updates
+        // this.updateSetting('vrmId', message.vrmId);
+    }
 
-        self.api.on('readings', message => {
+    async _handleReadingsEvent(message) {
+        try {
+            this._initializePreviousReadings();
+            await this._updateFlowTokens(message);
+            await this._updatePowerMeasurements(message);
+            await this._updateStatusProperties(message);
+            await this._updateControlProperties(message);
+            await this._updateDeviceSettings(message);
+            await this.adjustChargeCurrent(message.batterySOC, message.maxChargeCurrent);
+            this.setStoreValue('previousReadings', message);
+        } catch (error) {
+            this.error('Failed to process readings event:', error);
+        }
+    }
 
-            let previousReadings = self.getStoreValue('previousReadings');
-            if (previousReadings == null) {
-                self.log('Previous readings is null');
-                previousReadings = {};
-            }
+    _initializePreviousReadings() {
+        let previousReadings = this.getStoreValue('previousReadings');
+        if (previousReadings === null) {
+            this.log('Previous readings is null');
+            this.setStoreValue('previousReadings', {});
+        }
+    }
 
-            //Update flow tokens with power by phase for consumption/loads
-            self.loadsPowerL1.setValue(message.consumptionL1 || 0);
-            self.loadsPowerL2.setValue(message.consumptionL2 || 0);
-            self.loadsPowerL3.setValue(message.consumptionL3 || 0);
+    async _updateFlowTokens(message) {
+        // Update flow tokens with power by phase for consumption/loads
+        this.loadsPowerL1.setValue(message.consumptionL1 || 0);
+        this.loadsPowerL2.setValue(message.consumptionL2 || 0);
+        this.loadsPowerL3.setValue(message.consumptionL3 || 0);
+    }
 
-            // Calculate power by phase for grid, genset and PV
-            const grid = message.gridL1 + message.gridL2 + message.gridL3;
-            const genset = message.gensetL1 + message.gensetL2 + message.gensetL3;
-            let pvPower = message.acPVInputL1 + message.acPVInputL2 + message.acPVInputL3;
-            pvPower += message.acPVOutputL1 + message.acPVOutputL2 + message.acPVOutputL3;
-            pvPower += message.dcPV;
+    async _updatePowerMeasurements(message) {
+        // Calculate power by phase for grid, genset and PV
+        const grid = message.gridL1 + message.gridL2 + message.gridL3;
+        const genset = message.gensetL1 + message.gensetL2 + message.gensetL3;
+        const pvPower = this._calculatePVPower(message);
 
-            //Calculate self consumption
-            const consumption = pvPower - message.batteryPower + grid + genset;
-            self._updateProperty('measure_power', consumption);
-            self._updateProperty('measure_power.grid', grid);
-            self._updateProperty('measure_power.PV', pvPower);
-            self._updateProperty('measure_power.battery', message.batteryPower);
-            self._updateProperty('measure_power.genset', genset);
+        // Calculate self consumption
+        const consumption = pvPower - message.batteryPower + grid + genset;
 
-            self._updateProperty('input_source', enums.decodeInputPowerSource(message.activeInputSource));
-            self._updateProperty('vebus_status', enums.decodeVEBusStatus(message.veBusStatus));
-            const alarmStatus = self.handleAlarmStatuses(message);
-            self._updateProperty('alarm_status', alarmStatus);
-            self._updateProperty('switch_position', enums.decodeSwitchPosition(message.switchPosition));
+        await Promise.all([
+            this._updateProperty('measure_power', consumption),
+            this._updateProperty('measure_power.grid', grid),
+            this._updateProperty('measure_power.PV', pvPower),
+            this._updateProperty('measure_power.battery', message.batteryPower),
+            this._updateProperty('measure_power.genset', genset)
+        ]);
+    }
 
-            self._updateProperty('measure_power.gridSetpoint', message.gridSetpointPower);
-            self._updateProperty('measure_power.maxGridFeedin', message.maxGridFeedinPower);
-            self._updateProperty('measure_power.maxDischarge', message.maxDischargePower);
-            self._updateProperty('measure_current.maxCharge', message.maxChargeCurrent);
+    _calculatePVPower(message) {
+        let pvPower = message.acPVInputL1 + message.acPVInputL2 + message.acPVInputL3;
+        pvPower += message.acPVOutputL1 + message.acPVOutputL2 + message.acPVOutputL3;
+        pvPower += message.dcPV;
+        return pvPower;
+    }
 
-            self._updateProperty('measure_current.importPeakshaving', message.importPeakshavingCurrent);
-            self._updateProperty('dynamic_ess_mode', enums.decodeDynamicESSMode(message.dynamicESSMode));
+    async _updateStatusProperties(message) {
+        const alarmStatus = await this.handleAlarmStatuses(message);
 
-            self.setSettings({
+        await Promise.all([
+            this._updateProperty('input_source', enums.decodeInputPowerSource(message.activeInputSource)),
+            this._updateProperty('vebus_status', enums.decodeVEBusStatus(message.veBusStatus)),
+            this._updateProperty('alarm_status', alarmStatus),
+            this._updateProperty('switch_position', enums.decodeSwitchPosition(message.switchPosition))
+        ]);
+    }
+
+    async _updateControlProperties(message) {
+        await Promise.all([
+            this._updateProperty('measure_power.gridSetpoint', message.gridSetpointPower),
+            this._updateProperty('measure_power.maxGridFeedin', message.maxGridFeedinPower),
+            this._updateProperty('measure_power.maxDischarge', message.maxDischargePower),
+            this._updateProperty('measure_current.maxCharge', message.maxChargeCurrent),
+            this._updateProperty('measure_current.importPeakshaving', message.importPeakshavingCurrent),
+            this._updateProperty('dynamic_ess_mode', enums.decodeDynamicESSMode(message.dynamicESSMode))
+        ]);
+    }
+
+    async _updateDeviceSettings(message) {
+        try {
+            await this.setSettings({
                 vrmId: message.vrmId,
                 minimumSOC: `${message.minimumSOC}%`,
                 essMode: enums.decodeESSState(message.essMode)
-            }).catch(err => {
-                self.error(`Failed to update settings`, err);
             });
-
-            self.adjustChargeCurrent(message.batterySOC, message.maxChargeCurrent);
-
-            //Store a copy of the json
-            self.setStoreValue('previousReadings', message);
-        });
-
-        self.api.on('error', error => {
-            self.error('Houston we have a problem', error);
-
-            let message = '';
-            if (utilFunctions.isError(error)) {
-                message = error.stack;
-            } else {
-                try {
-                    message = JSON.stringify(error, null, "  ");
-                } catch (e) {
-                    self.log('Failed to stringify object', e);
-                    message = 'Unknown error';
-                }
-            }
-
-            const timeString = new Date().toLocaleString('sv-SE', { hour12: false, timeZone: self.homey.clock.getTimezone() });
-            self.setSettings({ last_error: timeString + '\n' + message })
-                .catch(err => {
-                    self.error('Failed to update settings', err);
-                });
-        });
+        } catch (error) {
+            this.error('Failed to update device settings:', error);
+        }
     }
 
-    _updateProperty(key, value) {
-        let self = this;
-        //Ignore unknown capabilities
-        if (self.hasCapability(key)) {
-            //All trigger logic only applies to changed values
-            if (self.isCapabilityValueChanged(key, value)) {
-                self.setCapabilityValue(key, value)
-                    .then(function () {
+    async _handlePropertyTriggers(key, value) {
+        const triggerMap = {
+            'input_source': () => this.driver.triggerInputSourceChanged(this, { source: value }),
+            'vebus_status': () => this.driver.triggerVebusStatusChanged(this, { status: value }),
+            'alarm_status': () => this.driver.triggerAlarmStatusChanged(this, {
+                status: value,
+                alarms: this.getSetting('vebusAlarms'),
+                warnings: this.getSetting('vebusWarnings')
+            }),
+            'switch_position': () => this.driver.triggerSwitchPositionChanged(this, { mode: value }),
+            'dynamic_ess_mode': () => this.driver.triggerDynamicESSModeChanged(this, { mode: value })
+        };
 
-                        if (key == 'input_source') {
-                            const tokens = {
-                                source: value
-                            }
-                            self.driver.triggerInputSourceChanged(self, tokens);
-
-                        } else if (key == 'vebus_status') {
-                            const tokens = {
-                                status: value
-                            }
-                            self.driver.triggerVebusStatusChanged(self, tokens);
-
-                        } else if (key == 'alarm_status') {
-                            const tokens = {
-                                status: value,
-                                alarms: self.getSetting('vebusAlarms'),
-                                warnings: self.getSetting('vebusWarnings')
-                            }
-                            self.driver.triggerAlarmStatusChanged(self, tokens);
-
-                        } else if (key == 'switch_position') {
-                            const tokens = {
-                                mode: value
-                            }
-                            self.driver.triggerSwitchPositionChanged(self, tokens);
-
-                        } else if (key == 'dynamic_ess_mode') {
-                            const tokens = {
-                                mode: value
-                            }
-                            self.driver.triggerDynamicESSModeChanged(self, tokens);
-                        }
-
-                    }).catch(reason => {
-                        self.error(reason);
-                    });
-
-            } else {
-                //Update value to refresh timestamp in app
-                self.setCapabilityValue(key, value)
-                    .catch(reason => {
-                        self.error(reason);
-                    });
+        const triggerFunction = triggerMap[key];
+        if (triggerFunction) {
+            try {
+                await triggerFunction();
+            } catch (error) {
+                this.error(`Failed to trigger flow for ${key}:`, error);
             }
         }
     }

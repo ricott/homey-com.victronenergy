@@ -9,8 +9,8 @@ class TemperatureDriver extends BaseDriver {
         this._sensor_status_changed = this.homey.flow.getDeviceTriggerCard('sensor_status_changed');
     }
 
-    triggerSensorStatusChanged(device, tokens) {
-        this._sensor_status_changed.trigger(device, tokens, {}).catch(this.error);
+    async triggerSensorStatusChanged(device, tokens) {
+        await this._sensor_status_changed.trigger(device, tokens, {}).catch(this.error);
     }
 
     async onPair(session) {

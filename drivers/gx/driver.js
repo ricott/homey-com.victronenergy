@@ -25,24 +25,24 @@ class GXDriver extends BaseDriver {
         );
     }
 
-    triggerDynamicESSModeChanged(device, tokens) {
-        this._dynamic_ess_mode_changed.trigger(device, {}, tokens).catch(error => { this.error(error) });
+    async triggerDynamicESSModeChanged(device, tokens) {
+        await this._dynamic_ess_mode_changed.trigger(device, {}, tokens).catch(error => { this.error(error) });
     }
 
-    triggerSwitchPositionChanged(device, tokens) {
-        this._switch_position_changed.trigger(device, {}, tokens).catch(error => { this.error(error) });
+    async triggerSwitchPositionChanged(device, tokens) {
+        await this._switch_position_changed.trigger(device, {}, tokens).catch(error => { this.error(error) });
     }
 
-    triggerVebusStatusChanged(device, tokens) {
-        this._vebus_status_changed.trigger(device, {}, tokens).catch(error => { this.error(error) });
+    async triggerVebusStatusChanged(device, tokens) {
+        await this._vebus_status_changed.trigger(device, {}, tokens).catch(error => { this.error(error) });
     }
 
-    triggerAlarmStatusChanged(device, tokens) {
-        this._alarm_status_changed.trigger(device, {}, tokens).catch(error => { this.error(error) });
+    async triggerAlarmStatusChanged(device, tokens) {
+        await this._alarm_status_changed.trigger(device, {}, tokens).catch(error => { this.error(error) });
     }
 
-    triggerInputSourceChanged(device, tokens) {
-        this._input_source_changed.trigger(device, {}, tokens).catch(error => { this.error(error) });
+    async triggerInputSourceChanged(device, tokens) {
+        await this._input_source_changed.trigger(device, {}, tokens).catch(error => { this.error(error) });
     }
 
     async onPair(session) {

@@ -1,7 +1,6 @@
 'use strict';
 
 const VehicleCharger = require('../../lib/devices/vehicleCharger.js');
-const utilFunctions = require('../../lib/util.js');
 const BaseDevice = require('../baseDevice.js');
 const enums = require('../../lib/enums.js');
 
@@ -65,83 +64,60 @@ class EvChargerDevice extends BaseDevice {
     }
 
     async _initializeEventListeners() {
-        let self = this;
+        this.api.on('properties', this._handlePropertiesEvent.bind(this));
+        this.api.on('readings', this._handleReadingsEvent.bind(this));
+        this.api.on('error', this._handleErrorEvent.bind(this));
+    }
 
-        self.api.on('properties', message => {
-
-            this.setSettings({
+    async _handlePropertiesEvent(message) {
+        try {
+            await this.setSettings({
                 productId: String(message.productId),
                 firmware: String(message.firmware),
                 serial: String(message.serial),
                 model: String(message.model)
-            }).catch(err => {
-                this.error(`Failed to update settings`, err);
             });
-        });
-
-        self.api.on('readings', message => {
-            const statusText = enums.decodeEvChargerStatusType(message.status);
-            const isCharging = statusText == enums.decodeEvChargerStatusType('Charging');
-            self._updateProperty('evcharger_charging', isCharging);
-            self._updateProperty('evcharger_charging_state', enums.decodeEnergyChargerMode(message.mode));
-
-            self._updateProperty('measure_power', message.power);
-            self._updateProperty('measure_current', message.current);
-            self._updateProperty('measure_time', message.chargingTime);
-            self._updateProperty('sensor_status', statusText);
-            self._updateProperty('measure_current.max', message.maxChargeCurrent);
-            self._updateProperty('sensor_status.mode', enums.decodeEvChargerModeType(message.mode));
-            self._updateProperty('meter_power', message.lifetimeEnergy);
-        });
-
-        self.api.on('error', error => {
-            self.error('Houston we have a problem', error);
-
-            let message = '';
-            if (utilFunctions.isError(error)) {
-                message = error.stack;
-            } else {
-                try {
-                    message = JSON.stringify(error, null, "  ");
-                } catch (e) {
-                    self.log('Failed to stringify object', e);
-                    message = 'Unknown error';
-                }
-            }
-
-            const timeString = new Date().toLocaleString('sv-SE', { hour12: false, timeZone: self.homey.clock.getTimezone() });
-            self.setSettings({ last_error: timeString + '\n' + message })
-                .catch(err => {
-                    self.error('Failed to update settings', err);
-                });
-        });
+        } catch (error) {
+            this.error('Failed to update EV charger properties settings:', error);
+        }
     }
 
-    _updateProperty(key, value) {
-        let self = this;
-        // Ignore unknown capabilities
-        if (self.hasCapability(key)) {
-            // All trigger logic only applies to changed values
-            if (self.isCapabilityValueChanged(key, value)) {
-                self.setCapabilityValue(key, value)
-                    .then(function () {
-                        if (key == 'sensor_status') {
-                            const tokens = {
-                                status: value
-                            }
-                            self.driver.triggerSensorStatusChanged(self, tokens);
-                        }
+    async _handleReadingsEvent(message) {
+        try {
+            await this._updateEvChargerProperties(message);
+        } catch (error) {
+            this.error('Failed to process EV charger readings event:', error);
+        }
+    }
 
-                    }).catch(reason => {
-                        self.error(reason);
-                    });
+    async _updateEvChargerProperties(message) {
+        const statusText = enums.decodeEvChargerStatusType(message.status);
+        const isCharging = statusText === enums.decodeEvChargerStatusType('Charging');
 
-            } else {
-                // Update value to refresh timestamp in app
-                self.setCapabilityValue(key, value)
-                    .catch(reason => {
-                        self.error(reason);
-                    });
+        await Promise.all([
+            // EV charger specific capabilities
+            this._updateProperty('evcharger_charging', isCharging),
+            this._updateProperty('evcharger_charging_state', enums.decodeEnergyChargerMode(message.mode)),
+
+            // Standard measurements
+            this._updateProperty('measure_power', message.power),
+            this._updateProperty('measure_current', message.current),
+            this._updateProperty('measure_time', message.chargingTime),
+            this._updateProperty('measure_current.max', message.maxChargeCurrent),
+            this._updateProperty('meter_power', message.lifetimeEnergy),
+
+            // Status information
+            this._updateProperty('sensor_status', statusText),
+            this._updateProperty('sensor_status.mode', enums.decodeEvChargerModeType(message.mode))
+        ]);
+    }
+
+    async _handlePropertyTriggers(key, value) {
+        if (key === 'sensor_status') {
+            try {
+                await this.driver.triggerSensorStatusChanged(this, { status: value });
+            } catch (error) {
+                this.error('Failed to trigger sensor status changed:', error);
             }
         }
     }
