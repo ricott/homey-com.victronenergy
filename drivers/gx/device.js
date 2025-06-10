@@ -3,7 +3,6 @@
 const VictronGX = require('../../lib/devices/victronGX.js');
 const { GX } = require('../../lib/modbus/registry/gx.js');
 const enums = require('../../lib/enums.js');
-const utilFunctions = require('../../lib/util.js');
 const BaseDevice = require('../baseDevice.js');
 
 class GXDevice extends BaseDevice {
