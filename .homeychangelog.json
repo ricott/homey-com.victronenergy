@@ -1,5 +1,5 @@
 {
-    "1.4.3": {
+    "1.4.4": {
         "en": "New Modbus socket handling, added new capabilities for EV chargers",
         "sv": "Ny Modbus socket hantering, samt nya egenskaper för billaddare"
     },
