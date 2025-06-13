@@ -1,4 +1,8 @@
 {
+    "1.4.5": {
+        "en": "Fixed problem with multiple temperature sensors of the same type",
+        "sv": "Fixat problem med flera temperatursensorer av samma typ"
+    },
     "1.4.4": {
         "en": "New Modbus socket handling, added new capabilities for EV chargers",
         "sv": "Ny Modbus socket hantering, samt nya egenskaper för billaddare"

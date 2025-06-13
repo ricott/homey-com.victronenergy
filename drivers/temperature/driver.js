@@ -14,7 +14,7 @@ class TemperatureDriver extends BaseDriver {
     }
 
     async onPair(session) {
-        return await super.pair(Temperature.productId, 'Temperature', session);
+        return await super.pair(Temperature.productId, 'Temperature', session, true);
     }
 
 }
