@@ -1,4 +1,8 @@
 {
+    "1.4.6": {
+        "en": "Fixed problem with triggers not firing",
+        "sv": "Fixat problem med triggers som inte startar"
+    },
     "1.4.5": {
         "en": "Fixed problem with multiple temperature sensors of the same type",
         "sv": "Fixat problem med flera temperatursensorer av samma typ"
