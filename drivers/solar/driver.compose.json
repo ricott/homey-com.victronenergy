@@ -9,6 +9,9 @@
         "small": "drivers/solar/assets/images/small.png"
     },
     "class": "solarpanel",
+    "energy": {
+        "meterPowerExportedCapability": "meter_power"
+    },
     "capabilities": [
         "sensor_status",
         "vebus_status",

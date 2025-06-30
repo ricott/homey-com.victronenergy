@@ -10,7 +10,7 @@ class EnergyMeterDriver extends BaseDriver {
     }
 
     async triggerGridSurplusChanged(device, tokens) {
-        await this._grid_surplus_changed.trigger(device, {}, tokens).catch(error => { this.error(error) });
+        await this._grid_surplus_changed.trigger(device, tokens, {}).catch(error => { this.error(error) });
     }
 
     async onPair(session) {

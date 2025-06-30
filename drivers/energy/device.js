@@ -26,10 +26,15 @@ class EnergyMeterDevice extends BaseDevice {
             if (surplusPower === 0 || surplusPower > minGridSuplusPower) {
                 this.setStoreValue('grid_surplus', surplusPower);
 
+                // Ensure all values are valid numbers
+                const power = Math.round(surplusPower) || 0;
+                const single_phase = Math.round(power / 230) || 0;
+                const three_phase = Math.round(power / 3 / 230) || 0;
+
                 const tokens = {
-                    power: surplusPower,
-                    single_phase: Math.round(surplusPower / 230),
-                    three_phase: Math.round(surplusPower / 3 / 230)
+                    power: power,
+                    single_phase: single_phase,
+                    three_phase: three_phase
                 };
 
                 try {
