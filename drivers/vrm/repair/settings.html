@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    Homey.setTitle(__('pair.vrm.title'));
+    Homey.setTitle(__('repair.vrm.title'));
     $(function () {
         $('#connect').click(function () {
             $('.vrm-error').hide();
@@ -17,32 +17,34 @@
                     mfa_token: mfaToken
                 };
 
-                Homey.emit('login', credentials).then(function (result) {
-                    hideLoading();
-                    if (!result) {
+                Homey.emit('repair', credentials).then(function (result) {
+                    if (result) {
+                        Homey.done();
+                    } else {
+                        hideLoading();
                         $('.vrm-error').show();
-                        $('.vrm-error-msg').html(__('pair.vrm.login_failed'));
+                        $('.vrm-error-msg').html(__('repair.vrm.repair_failed'));
                     }
                 }).catch(function (error) {
                     hideLoading();
                     $('.vrm-error').show();
-                    $('.vrm-error-msg').html(error.message || __('pair.vrm.login_failed'));
+                    $('.vrm-error-msg').html(error.message || __('repair.vrm.repair_failed'));
                 });
             } else {
                 $('.vrm-error').show();
-                $('.vrm-error-msg').html(__('pair.vrm.required_fields'));
+                $('.vrm-error-msg').html(__('repair.vrm.required_fields'));
             }
         });
         
         function showLoading() {
             $('#connect').prop('disabled', true);
-            $('#connect').html('<i class="fa fa-spinner fa-spin"></i> ' + __('pair.vrm.connecting'));
+            $('#connect').html('<i class="fa fa-spinner fa-spin"></i> ' + __('repair.vrm.connecting'));
             $('.vrm-error').hide();
         }
         
         function hideLoading() {
             $('#connect').prop('disabled', false);
-            $('#connect').html(__('pair.vrm.connect'));
+            $('#connect').html(__('repair.vrm.connect'));
         }
     })
 </script>
@@ -111,26 +113,26 @@
     }
 </style>
 
-<p data-i18n="pair.vrm.intro">Enter your VRM Portal credentials to connect your installation</p>
+<p data-i18n="repair.vrm.intro">Re-enter your VRM Portal credentials to refresh the authentication token</p>
 <div class="vrm-pairing">
     <div class="form-group">
-        <label for="username" data-i18n="pair.vrm.email">Email</label>
+        <label for="username" data-i18n="repair.vrm.email">Email</label>
         <input type="email" class="form-control" id="username" required />
     </div>
     
     <div class="form-group">
-        <label for="password" data-i18n="pair.vrm.password">Password</label>
+        <label for="password" data-i18n="repair.vrm.password">Password</label>
         <input type="password" class="form-control" id="password" required />
     </div>
     
     <div class="form-group">
-        <label for="mfa_token" data-i18n="pair.vrm.mfa_token">MFA Token (2FA Code)</label>
+        <label for="mfa_token" data-i18n="repair.vrm.mfa_token">MFA Token (2FA Code)</label>
         <input type="text" class="form-control" id="mfa_token" placeholder="123456" />
-        <div class="mfa-info" data-i18n="pair.vrm.mfa_info">Only fill this field if you have activated MFA (Multi-Factor Authentication) on your VRM account</div>
+        <div class="mfa-info" data-i18n="repair.vrm.mfa_info">Only fill this field if you have activated MFA (Multi-Factor Authentication) on your VRM account</div>
     </div>
     
     <div class="form-group buttons">
-        <button id="connect" class="button" data-i18n="pair.vrm.connect">Connect to VRM</button>
+        <button id="connect" class="button" data-i18n="repair.vrm.connect">Re-authenticate</button>
     </div>
 </div>
 

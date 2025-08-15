@@ -17,7 +17,22 @@
             "mfa_token": "MFA Token (2FA Code)",
             "mfa_info": "Only fill this field if you have activated MFA (Multi-Factor Authentication) on your VRM account",
             "connect": "Connect to VRM",
+            "connecting": "Connecting...",
             "login_failed": "Failed to login to VRM Portal. Please check your credentials.",
+            "required_fields": "Email and password are required fields."
+        }
+    },
+    "repair": {
+        "vrm": {
+            "title": "Re-authenticate VRM Portal",
+            "intro": "Re-enter your VRM Portal credentials to refresh the authentication token",
+            "email": "Email",
+            "password": "Password",
+            "mfa_token": "MFA Token (2FA Code)",
+            "mfa_info": "Only fill this field if you have activated MFA (Multi-Factor Authentication) on your VRM account",
+            "connect": "Re-authenticate",
+            "connecting": "Re-authenticating...",
+            "repair_failed": "Failed to re-authenticate with VRM Portal. Please check your credentials.",
             "required_fields": "Email and password are required fields."
         }
     }

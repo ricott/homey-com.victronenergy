@@ -17,7 +17,22 @@
             "mfa_token": "MFA Token (2FA Kod)",
             "mfa_info": "Fyll bara i detta fält om du har aktiverat MFA (Multifaktor-autentisering) på ditt VRM konto",
             "connect": "Anslut till VRM",
+            "connecting": "Ansluter...",
             "login_failed": "Misslyckades att logga in på VRM Portal. Kontrollera dina uppgifter.",
+            "required_fields": "E-post och lösenord är obligatoriska fält."
+        }
+    },
+    "repair": {
+        "vrm": {
+            "title": "Autentisera VRM Portal på nytt",
+            "intro": "Ange dina VRM Portal uppgifter på nytt för att uppdatera autentiseringstoken",
+            "email": "E-post",
+            "password": "Lösenord",
+            "mfa_token": "MFA Token (2FA Kod)",
+            "mfa_info": "Fyll bara i detta fält om du har aktiverat MFA (Multifaktor-autentisering) på ditt VRM konto",
+            "connect": "Autentisera på nytt",
+            "connecting": "Autentiserar på nytt...",
+            "repair_failed": "Misslyckades att autentisera på nytt med VRM Portal. Kontrollera dina uppgifter.",
             "required_fields": "E-post och lösenord är obligatoriska fält."
         }
     }

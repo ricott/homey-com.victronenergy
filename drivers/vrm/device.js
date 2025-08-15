@@ -51,6 +51,14 @@ class VRMDevice extends Homey.Device {
             }
         } catch (error) {
             this.logError(error);
+            
+            // Check if error is related to unauthorized access (expired token)
+            const errorMessage = error.message || '';
+            if (errorMessage.includes('401') || errorMessage.includes('Unauthorized') || errorMessage.includes('Invalid token')) {
+                this.logMessage('Token appears to be expired or invalid - marking device as unavailable');
+                await this.setUnavailable('VRM token has expired. Please use the repair function to re-authenticate.');
+                this.updateSetting('last_error', 'VRM token has expired. Please use the repair function to re-authenticate.');
+            }
         }
     }
 

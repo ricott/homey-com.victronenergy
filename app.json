@@ -3537,6 +3537,11 @@
           "template": "add_devices"
         }
       ],
+      "repair": [
+        {
+          "id": "settings"
+        }
+      ],
       "id": "vrm",
       "settings": [
         {
