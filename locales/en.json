@@ -8,6 +8,17 @@
         "modbus_vebus": "com.victronenergy.vebus",
         "modbus_battery": "com.victronenergy.battery",
         "connect": "Connect",
-        "battery_info": "* If you don't have a battery unitId please enter the value -1"
+        "battery_info": "* If you don't have a battery unitId please enter the value -1",
+        "vrm": {
+            "title": "Add VRM Portal device",
+            "intro": "Enter your VRM Portal credentials to connect your installation",
+            "email": "Email",
+            "password": "Password",
+            "mfa_token": "MFA Token (2FA Code)",
+            "mfa_info": "Only fill this field if you have activated MFA (Multi-Factor Authentication) on your VRM account",
+            "connect": "Connect to VRM",
+            "login_failed": "Failed to login to VRM Portal. Please check your credentials.",
+            "required_fields": "Email and password are required fields."
+        }
     }
 }  

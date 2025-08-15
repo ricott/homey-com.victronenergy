@@ -5,34 +5,38 @@ const VRM = require('../../lib/devices/vrm.js');
 class VRMDriver extends Homey.Driver {
 
     async onPair(session) {
+        const vrm = new VRM();
         let devices = [];
+        let loginResponse = null;
 
         session.setHandler('login', async (data) => {
             if (data.username == '' || data.password == '') {
                 throw new Error('User name and password is mandatory!');
             }
 
-            const vrm = new VRM();
-            const response = await vrm.login(data.username, data.password);
-            const installations = await vrm.getInstallations(response.token, response.userId);
+            loginResponse = await vrm.login(data.username, data.password, data.mfa_token || null);
+
+            try {
+                session.nextView();
+            } catch (error) {
+                this.error('Error:', error);
+            }
+        });
+
+        session.setHandler('list_devices', async (data) => {
+            const installations = await vrm.getInstallations(loginResponse.token, loginResponse.userId);
             installations.forEach(installation => {
                 devices.push({
                     name: installation.name,
                     data: {
                         id: installation.idSite,
-                        userId: response.userId
+                        userId: loginResponse.userId
                     },
                     store: {
-                        username: data.username,
-                        password: data.password
+                        token: loginResponse.token
                     }
                 });
             });
-
-            return true;
-        });
-
-        session.setHandler('list_devices', async (data) => {
             return devices;
         });
     }

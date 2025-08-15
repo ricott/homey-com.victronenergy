@@ -2,8 +2,6 @@
 const Homey = require('homey');
 const VRM = require('../../lib/devices/vrm.js');
 const utilFunctions = require('../../lib/util.js');
-const crypto = require('crypto');
-const algorithm = 'aes-256-cbc';
 
 const deviceClass = 'service';
 
@@ -22,13 +20,6 @@ class VRMDevice extends Homey.Device {
         //App was restarted, Zero out last error field
         this.updateSetting('last_error', '');
 
-        if (!this.homey.settings.get(`${this.getData().id}.username`)) {
-            //This is a newly added device, lets copy login details to homey settings
-            this.logMessage(`Storing credentials for user '${this.getStoreValue('username')}'`);
-            this.storeCredentialsEncrypted(this.getStoreValue('username'), this.getStoreValue('password'));
-        }
-
-        await this.refreshToken();
         await this.refreshForecast();
 
         this._initializeTimers();
@@ -63,62 +54,7 @@ class VRMDevice extends Homey.Device {
         }
     }
 
-    async refreshToken() {
-        this.logMessage('Generating new token');
-        try {
-            const vrm = new VRM();
-            const response = await vrm.login(this.getUsername(), this.getPassword());
-            this.setToken(response.token);
-            // If we successfully get a token, make sure device is available and clear any retry timers
-            await this.setAvailable();
-            this.updateSetting('last_error', '');
-            if (this._mfaRetryTimeout) {
-                this.homey.clearTimeout(this._mfaRetryTimeout);
-                this._mfaRetryTimeout = null;
-            }
-            if (this._retryTimeout) {
-                this.homey.clearTimeout(this._retryTimeout);
-                this._retryTimeout = null;
-            }
 
-        } catch (reason) {
-            this.logError(reason);
-            const errorMessage = reason.message || 'Unknown error occurred';
-
-            // Check if error is MFA related
-            if (errorMessage.includes('MFA enabled')) {
-                this.logMessage('MFA is enabled - setting device unavailable');
-                await this.setUnavailable('Multi-Factor Authentication is enabled on this VRM account. Please disable MFA or create a separate VRM account without MFA.');
-                this.updateSetting('last_error', 'MFA is enabled on your VRM account. Please disable MFA or create a separate account without MFA.');
-
-                // Schedule retry in 10 minutes
-                this.homey.clearTimeout(this._mfaRetryTimeout);
-                this._mfaRetryTimeout = this.homey.setTimeout(async () => {
-                    this.logMessage('Retrying login after MFA error...');
-                    await this.refreshToken();
-                }, 10 * 60 * 1000); // 10 minutes
-            }
-            // Check if error is invalid credentials
-            else if (errorMessage.includes('InvalidUserPassword') || errorMessage.includes('Username or password is invalid')) {
-                this.logMessage('Invalid credentials - setting device unavailable');
-                await this.setUnavailable('Invalid VRM credentials. Please update your username and password in the device settings.');
-                this.updateSetting('last_error', 'Invalid VRM credentials. Please update your username and password in the device settings.');
-            }
-            // Handle other types of errors (network issues, server errors, etc.)
-            else {
-                this.logMessage(`Login failed: ${errorMessage} - will retry in 5 minutes`);
-                await this.setUnavailable(`Temporary login failure: ${errorMessage}`);
-                this.updateSetting('last_error', `Temporary login failure: ${errorMessage}`);
-
-                // Schedule retry in 5 minutes for temporary failures
-                this.homey.clearTimeout(this._retryTimeout);
-                this._retryTimeout = this.homey.setTimeout(async () => {
-                    this.logMessage('Retrying login after temporary error...');
-                    await this.refreshToken();
-                }, 5 * 60 * 1000); // 5 minutes
-            }
-        }
-    }
 
     _initializeTimers() {
         this.logMessage('Adding timers');
@@ -127,13 +63,6 @@ class VRMDevice extends Homey.Device {
         this.homey.setInterval(async () => {
             await this.refreshForecast();
         }, 30 * 60 * 1000);
-
-        // Refresh token once per week (only if device is available)
-        this.homey.setInterval(async () => {
-            if (this.getAvailable()) {
-                await this.refreshToken();
-            }
-        }, 7 * 24 * 60 * 60 * 1000);
     }
 
     getToken() {
@@ -231,40 +160,7 @@ class VRMDevice extends Homey.Device {
         }
     }
 
-    storeCredentialsEncrypted(plainUser, plainPassword) {
-        this.logMessage(`Encrypting credentials for user '${plainUser}'`);
-        this.homey.settings.set(`${this.getData().id}.username`, this.encryptText(plainUser));
-        this.homey.settings.set(`${this.getData().id}.password`, this.encryptText(plainPassword));
 
-        //Remove unencrypted credentials passed from driver
-        this.unsetStoreValue('username');
-        this.unsetStoreValue('password');
-    }
-
-    getUsername() {
-        return this.decryptText(this.homey.settings.get(`${this.getData().id}.username`));
-    }
-
-    getPassword() {
-        return this.decryptText(this.homey.settings.get(`${this.getData().id}.password`));
-    }
-
-    encryptText(text) {
-        let iv = crypto.randomBytes(16);
-        let cipher = crypto.createCipheriv(algorithm, Buffer.from(Homey.env.ENCRYPTION_KEY), iv);
-        let encrypted = cipher.update(text);
-        encrypted = Buffer.concat([encrypted, cipher.final()]);
-        return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
-    }
-
-    decryptText(text) {
-        let iv = Buffer.from(text.iv, 'hex');
-        let encryptedText = Buffer.from(text.encryptedData, 'hex');
-        let decipher = crypto.createDecipheriv(algorithm, Buffer.from(Homey.env.ENCRYPTION_KEY), iv);
-        let decrypted = decipher.update(encryptedText);
-        decrypted = Buffer.concat([decrypted, decipher.final()]);
-        return decrypted.toString();
-    }
 
     async _updateProperty(key, value) {
         // Check if capability exists
@@ -302,17 +198,6 @@ class VRMDevice extends Homey.Device {
 
     onDeleted() {
         this.log(`Deleting VRM device '${this.getName()}' from Homey.`);
-
-        // Clear any pending retry timers
-        if (this._mfaRetryTimeout) {
-            this.homey.clearTimeout(this._mfaRetryTimeout);
-        }
-        if (this._retryTimeout) {
-            this.homey.clearTimeout(this._retryTimeout);
-        }
-
-        this.homey.settings.unset(`${this.getData().id}.username`);
-        this.homey.settings.unset(`${this.getData().id}.password`);
     }
 
     logMessage(message) {

@@ -8,6 +8,17 @@
         "modbus_vebus": "com.victronenergy.vebus",
         "modbus_battery": "com.victronenergy.battery",
         "connect": "Koppla",
-        "battery_info": "* Om du inte har ett batteri unitId ange värdet -1"
+        "battery_info": "* Om du inte har ett batteri unitId ange värdet -1",
+        "vrm": {
+            "title": "Lägg till VRM Portal enhet",
+            "intro": "Ange dina VRM Portal uppgifter för att ansluta din installation",
+            "email": "E-post",
+            "password": "Lösenord",
+            "mfa_token": "MFA Token (2FA Kod)",
+            "mfa_info": "Fyll bara i detta fält om du har aktiverat MFA (Multifaktor-autentisering) på ditt VRM konto",
+            "connect": "Anslut till VRM",
+            "login_failed": "Misslyckades att logga in på VRM Portal. Kontrollera dina uppgifter.",
+            "required_fields": "E-post och lösenord är obligatoriska fält."
+        }
     }
 }
