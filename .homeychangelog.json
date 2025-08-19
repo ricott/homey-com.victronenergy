@@ -1,4 +1,8 @@
 {
+    "1.4.8": {
+        "en": "Added support for VRM accounts using MFA (Multi-Factor Authentication)",
+        "sv": "Stöd tillagt för VRM konton som använder MFA (Multifaktorautentisering)"
+    },
     "1.4.7": {
         "en": "Fixed problem with triggers not firing",
         "sv": "Fixat problem med triggers som inte startar"
