@@ -1,4 +1,8 @@
 {
+    "1.5.0": {
+        "en": "Added setup instructions to all add device pages",
+        "sv": "Tillagt instruktioner till alla lägg till enhets sidor"
+    },
     "1.4.9": {
         "en": "Added support for VRM accounts using MFA (Multi-Factor Authentication). Added support for battery voltage on the Solar Charger device.",
         "sv": "Stöd tillagt för VRM konton som använder MFA (Multifaktorautentisering). Stöd tillagt för batterispänning på Solcellsregulator enheten."
