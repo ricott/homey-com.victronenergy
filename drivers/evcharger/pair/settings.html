@@ -1,6 +1,9 @@
 <script type="text/javascript">
     Homey.setTitle(__('pair.title'));
     $(function () {
+        // Auto-focus on the address field when page loads
+        $('#address').focus();
+        
         $('#connect').click(function () {
             $('.gx-error').hide();
             var inputaddress = $('#address').val();
@@ -51,21 +54,76 @@
     .form-group {
         width: 100%;
         display: block;
-        margin-bottom: 12px;
+        margin-bottom: 20px;
     }
 
     .form-group label {
         display: block;
-        margin-bottom: 4px;
-        font-weight: 500;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 14px;
     }
 
     .form-group input {
         width: 100%;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
+        padding: 12px 16px;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
         box-sizing: border-box;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background-color: #fff;
+        margin-bottom: 8px;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #0570de;
+        box-shadow: 0 0 0 3px rgba(5, 112, 222, 0.1);
+    }
+
+    .instructions {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border: 1px solid #cbd5e0;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .instructions h3 {
+        margin: 0 0 12px 0;
+        color: #1a365d;
+        font-size: 16px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .instructions h3 i {
+        margin-right: 8px;
+        color: #0570de;
+    }
+
+    .instructions ol {
+        margin: 12px 0 0 0;
+        padding-left: 20px;
+        color: #4a5568;
+    }
+
+    .instructions li {
+        margin-bottom: 8px;
+    }
+
+    .instructions code {
+        background-color: #edf2f7;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        color: #2d3748;
     }
 
     .gx-status,
@@ -84,41 +142,72 @@
     }
 
     .buttons {
-        padding-top: 14px;
+        padding-top: 8px;
     }
 
     .button {
-        background-color: #00c139 !important;
-        color: #fff;
-        padding: 10px 20px;
+        background: linear-gradient(135deg, #0570de 0%, #0c4a9e 100%);
+        color: #ffffff !important;
+        padding: 14px 28px;
         border: none;
-        border-radius: 4px;
+        border-radius: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
+        font-size: 16px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(5, 112, 222, 0.3);
+        min-width: 140px;
     }
 
     .button:disabled {
-        background-color: #ccc !important;
-        color: #999;
+        background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+        color: #ffffff !important;
         cursor: not-allowed;
-        opacity: 0.7;
+        opacity: 0.8;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
 
     .button:enabled:hover {
-        background-color: #00a82d !important;
+        background: linear-gradient(135deg, #0c4a9e 0%, #1a365d 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(5, 112, 222, 0.4);
+    }
+
+    .button:enabled:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(5, 112, 222, 0.3);
     }
 
     .messages {
-        padding-top: 14px;
+        padding-top: 8px;
+        padding-bottom: 4px;
     }
 
     .gx-error {
         display: none;
-        color: #ff6300;
+        color: #e53e3e;
+        background-color: #fed7d7;
+        border: 1px solid #feb2b2;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .gx-error i {
+        margin-right: 8px;
     }
 </style>
 
-<p data-i18n="pair.intro">Enter the details of your Victron device</p>
+<div class="instructions">
+    <h3><i class="fa fa-info-circle"></i>Setup Instructions</h3>
+    <p><strong>Before connecting, please ensure:</strong></p>
+    <ol>
+        <li><strong>Enable Modbus TCP:</strong> Modbus TCP is disabled by default on GX devices. You must manually enable it by navigating to <code>Settings → Services → Modbus TCP</code> and setting it to <strong>Enabled</strong>.</li>
+        <li><strong>Find your Modbus Unit ID:</strong> On your GX device, go to <code>Settings → Services → Modbus/TCP → Available services</code> to find the correct unit ID for your EV charger device (typically starts with <code>com.victronenergy.evcharger</code>).</li>
+        <li><strong>Network Access:</strong> Ensure your Homey can reach the GX device on the specified IP address and port (default: 502).</li>
+    </ol>
+</div>
+
 <div class="gx-pairing">
     <div class="form-group">
         <label for="address" data-i18n="pair.address">IP address</label>
@@ -130,11 +219,12 @@
         <label for="modbus_unitId" data-i18n="pair.modbus_unitId">com.victronenergy.evcharger</label>
         <input type="text" class="form-control" id="modbus_unitId" required />
     </div>
+    
+    <div class="messages">
+        <p class="gx-error"><i class="fa fa-times"></i> <span class="gx-error-msg"></span></p>
+    </div>
+    
     <div class="form-group buttons">
         <button id="connect" class="button" data-i18n="pair.connect">Connect</button>
     </div>
-</div>
-
-<div class="messages">
-    <p class="gx-error"><i class="fa fa-times"></i> <span class="gx-error-msg"></span></p>
 </div>

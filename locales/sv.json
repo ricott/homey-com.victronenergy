@@ -1,6 +1,6 @@
 {
     "pair": {
-        "title": "Lägg till en Victron GX enhet",
+        "title": "Lägg till en Victron enhet",
         "nosettings": "Fyll i alla obligatoriska fält",
         "intro": "Ange informationen för din GX enhet",
         "address": "IP Adress",
@@ -8,6 +8,7 @@
         "modbus_vebus": "com.victronenergy.vebus",
         "modbus_battery": "com.victronenergy.battery",
         "connect": "Koppla",
+        "connecting": "Ansluter...",
         "battery_info": "* Om du inte har ett batteri unitId ange värdet -1",
         "vrm": {
             "title": "Lägg till VRM Portal enhet",

@@ -1,6 +1,6 @@
 {
     "pair": {
-        "title": "Add a Victron GX device",
+        "title": "Add a Victron device",
         "nosettings": "Please fill in all the required fields.",
         "intro": "Enter the details of your Victron GX device",
         "address": "IP Address",
@@ -8,6 +8,7 @@
         "modbus_vebus": "com.victronenergy.vebus",
         "modbus_battery": "com.victronenergy.battery",
         "connect": "Connect",
+        "connecting": "Connecting...",
         "battery_info": "* If you don't have a battery unitId please enter the value -1",
         "vrm": {
             "title": "Add VRM Portal device",
