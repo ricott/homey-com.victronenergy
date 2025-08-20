@@ -59,7 +59,7 @@ class SolarChargerDevice extends BaseDevice {
             this._updateProperty('measure_voltage', message.voltage ? Math.round(message.voltage) : 0),
             this._updateProperty('meter_power.daily', message.dailyYield || 0),
             this._updateProperty('meter_power', message.totalYield || 0),
-            this._updateProperty('measure_voltage.battery', message.battery_voltage ? Math.round(message.battery_voltage) : 0)
+            this._updateProperty('measure_voltage.battery', message.battery_voltage || 0)
         ]);
     }
 }
