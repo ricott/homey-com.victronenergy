@@ -18,6 +18,7 @@
         "measure_power",
         "measure_current",
         "measure_voltage",
+        "measure_voltage.battery",
         "meter_power.daily",
         "meter_power"
     ],
@@ -44,6 +45,12 @@
             "title": {
                 "en": "Total Yield",
                 "sv": "Total produktion"
+            }
+        },
+        "measure_voltage.battery": {
+            "title": {
+                "en": "Battery Voltage",
+                "sv": "Batterispänning"
             }
         }
     },

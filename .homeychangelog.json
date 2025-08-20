@@ -1,7 +1,7 @@
 {
     "1.4.8": {
-        "en": "Added support for VRM accounts using MFA (Multi-Factor Authentication)",
-        "sv": "Stöd tillagt för VRM konton som använder MFA (Multifaktorautentisering)"
+        "en": "Added support for VRM accounts using MFA (Multi-Factor Authentication). Added support for battery voltage on the Solar Charger device.",
+        "sv": "Stöd tillagt för VRM konton som använder MFA (Multifaktorautentisering). Stöd tillagt för batterispänning på Solcellsregulator enheten."
     },
     "1.4.7": {
         "en": "Fixed problem with triggers not firing",
