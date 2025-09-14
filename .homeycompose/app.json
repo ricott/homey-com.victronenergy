@@ -1,6 +1,6 @@
 {
   "id": "com.victronenergy",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "compatibility": ">=12.4.5",
   "sdk": 3,
   "platforms": ["local"],

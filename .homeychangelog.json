@@ -1,4 +1,8 @@
 {
+    "1.5.1": {
+        "en": "Added support for multiple EV Charger devices",
+        "sv": "Stöd tillagt för flera EV Charger enheter"
+    },
     "1.5.0": {
         "en": "Added setup instructions to all add device pages",
         "sv": "Tillagt instruktioner till alla lägg till enhets sidor"

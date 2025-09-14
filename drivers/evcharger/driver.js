@@ -14,7 +14,7 @@ class EvChargerDriver extends BaseDriver {
     }
 
     async onPair(session) {
-        return await super.pair(EvCharger.productId, 'EV Charger', session);
+        return await super.pair(EvCharger.productId, 'EV Charger', session, true);
     }
 
 }
