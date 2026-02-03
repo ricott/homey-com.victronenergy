@@ -1,4 +1,8 @@
 {
+    "1.5.2": {
+        "en": "Maintenance",
+        "sv": "Underhåll"
+    },
     "1.5.1": {
         "en": "Added support for multiple EV Charger devices",
         "sv": "Stöd tillagt för flera EV Charger enheter"
