@@ -612,6 +612,25 @@ class VictronEnergyApp extends App {
                     return Promise.reject('Failed to set charger current');
                 });
         });
+
+        const set_dynamic_ess_green_mode = this.homey.flow.getActionCard('set_dynamic_ess_green_mode');
+        set_dynamic_ess_green_mode.registerRunListener(async (args) => {
+            this.log(`[${args.device.getName()}] Action 'set_dynamic_ess_green_mode' triggered`);
+            this.log(`[${args.device.getName()}] - mode: '${args.mode.id}' (${args.mode.name})`);
+
+            const isGreenModeOn = args.mode.id == 'true';
+            try {
+                await args.device.setDynamicESSGreenMode(isGreenModeOn);
+                return true;
+            } catch (error) {
+                throw new Error(`Failed to set Dynamic ESS green mode: ${error.message || error}`);
+            }
+        });
+        set_dynamic_ess_green_mode.registerArgumentAutocompleteListener('mode',
+            async (query, args) => {
+                return enums.getDynamicESSGreenMode();
+            }
+        );
     }
 }
 

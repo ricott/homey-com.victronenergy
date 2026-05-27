@@ -1,0 +1,33 @@
+{
+    "id": "set_dynamic_ess_green_mode",
+    "title": {
+        "en": "Set Dynamic ESS green/trade mode",
+        "sv": "Uppdatera Dynamic ESS grön/handelsläge"
+    },
+    "titleFormatted": {
+        "en": "Set Dynamic ESS to [[mode]]",
+        "sv": "Uppdatera Dynamic ESS till [[mode]]"
+    },
+    "hint": {
+        "en": "Switches Dynamic ESS between Green mode and Trade mode via the VRM API. Requires the VRM device to be added and authenticated."
+    },
+    "args": [
+        {
+            "name": "mode",
+            "type": "autocomplete",
+            "title": {
+                "en": "Mode",
+                "sv": "Läge"
+            }
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "placeholder": {
+                "en": "Select VRM device",
+                "sv": "Välj VRM enhet"
+            },
+            "filter": "driver_id=vrm"
+        }
+    ]
+}

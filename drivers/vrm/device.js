@@ -81,6 +81,25 @@ class VRMDevice extends Homey.Device {
         this.setStoreValue('token', token);
     }
 
+    async setDynamicESSGreenMode(isGreenModeOn) {
+        const vrm = new VRM();
+        const token = this.getToken();
+        const siteId = this.getData().id;
+        try {
+            await vrm.setDynamicESSGreenMode(token, siteId, isGreenModeOn);
+            this.logMessage(`Dynamic ESS green mode set to '${!!isGreenModeOn}'`);
+            return true;
+        } catch (error) {
+            this.logError(error);
+            const errorMessage = error.message || '';
+            if (errorMessage.includes('401') || errorMessage.includes('Unauthorized') || errorMessage.includes('Invalid token')) {
+                await this.setUnavailable('VRM token has expired. Please use the repair function to re-authenticate.');
+                this.updateSetting('last_error', 'VRM token has expired. Please use the repair function to re-authenticate.');
+            }
+            throw error;
+        }
+    }
+
     async removeCapabilityHelper(capability) {
         if (this.hasCapability(capability)) {
             try {
