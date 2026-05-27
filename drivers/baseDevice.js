@@ -19,7 +19,17 @@ class BaseDevice extends Device {
 
     async destroyGXSession() {
         if (this.api) {
-            await this.api.disconnect();
+            try {
+                this.api.removeAllListeners();
+            } catch (err) {
+                this.error('Failed to remove API listeners:', err);
+            }
+            try {
+                await this.api.disconnect();
+            } catch (err) {
+                this.error('Failed to disconnect API:', err);
+            }
+            this.api = null;
         }
     }
 
@@ -54,6 +64,10 @@ class BaseDevice extends Device {
     }
 
     async _updateProperty(key, value) {
+        // Bail out if the device has been removed/uninitialized
+        if (this._deleted) {
+            return;
+        }
         // Ignore unknown capabilities
         if (!this.hasCapability(key)) {
             return;
@@ -126,12 +140,35 @@ class BaseDevice extends Device {
 
     onDeleted() {
         this.logMessage(`Victron ${this.constructor.name} device deleted`);
+        this._deleted = true;
         // Clear any pending retry timer
         if (this._retryTimeout) {
             this.homey.clearTimeout(this._retryTimeout);
+            this._retryTimeout = null;
         }
-        this.api.disconnect();
-        this.api = null;
+        if (this.api) {
+            try {
+                this.api.removeAllListeners();
+            } catch (err) {
+                this.error('Failed to remove API listeners on delete:', err);
+            }
+            try {
+                this.api.disconnect();
+            } catch (err) {
+                this.error('Failed to disconnect API on delete:', err);
+            }
+            this.api = null;
+        }
+    }
+
+    async onUninit() {
+        this.logMessage(`Victron ${this.constructor.name} device uninit`);
+        this._deleted = true;
+        if (this._retryTimeout) {
+            this.homey.clearTimeout(this._retryTimeout);
+            this._retryTimeout = null;
+        }
+        await this.destroyGXSession();
     }
 
     async onSettings({ oldSettings, newSettings, changedKeys }) {

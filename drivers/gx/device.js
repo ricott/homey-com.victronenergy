@@ -176,6 +176,9 @@ class GXDevice extends BaseDevice {
     }
 
     async _handleReadingsEvent(message) {
+        if (this._deleted) {
+            return;
+        }
         try {
             this._initializePreviousReadings();
             await this._updateFlowTokens(message);
@@ -184,17 +187,24 @@ class GXDevice extends BaseDevice {
             await this._updateControlProperties(message);
             await this._updateDeviceSettings(message);
             await this.adjustChargeCurrent(message.batterySOC, message.maxChargeCurrent);
-            this.setStoreValue('previousReadings', message);
+            if (this._deleted) {
+                return;
+            }
+            await this.setStoreValue('previousReadings', message);
         } catch (error) {
             this.error('Failed to process readings event:', error);
         }
     }
 
     _initializePreviousReadings() {
+        if (this._deleted) {
+            return;
+        }
         let previousReadings = this.getStoreValue('previousReadings');
         if (previousReadings === null) {
             this.log('Previous readings is null');
-            this.setStoreValue('previousReadings', {});
+            this.setStoreValue('previousReadings', {})
+                .catch(err => this.error('Failed to initialize previousReadings:', err));
         }
     }
 

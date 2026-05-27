@@ -18,13 +18,21 @@ class EnergyMeterDevice extends BaseDevice {
     }
 
     async _handleGridSurplusChange(powerValue) {
+        if (this._deleted) {
+            return;
+        }
         const surplusPower = powerValue < 0 ? Math.abs(powerValue) : 0;
         const currentSurplus = this.getStoreValue('grid_surplus');
 
         if (currentSurplus !== surplusPower) {
             // Filter out false positives when surplus is bouncing (e.g., grid setpoint is set to 0)
             if (surplusPower === 0 || surplusPower > minGridSuplusPower) {
-                this.setStoreValue('grid_surplus', surplusPower);
+                try {
+                    await this.setStoreValue('grid_surplus', surplusPower);
+                } catch (error) {
+                    this.error('Failed to set grid_surplus store value:', error);
+                    return;
+                }
 
                 // Ensure all values are valid numbers
                 const power = Math.round(surplusPower) || 0;
