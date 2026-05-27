@@ -98,7 +98,7 @@ class BaseDevice extends Device {
     }
 
     async _handleErrorEvent(error) {
-        this.error('Houston we have a problem', error);
+        this.error('Houston we have a problem', utilFunctions.formatError(error));
 
         const errorMessage = this._formatErrorMessage(error);
         const timeString = new Date().toLocaleString('sv-SE', {
@@ -111,21 +111,12 @@ class BaseDevice extends Device {
                 last_error: `${timeString}\n${errorMessage}`
             });
         } catch (settingsError) {
-            this.error('Failed to update error settings:', settingsError);
+            this.error('Failed to update error settings:', utilFunctions.formatError(settingsError));
         }
     }
 
     _formatErrorMessage(error) {
-        if (utilFunctions.isError(error)) {
-            return error.stack;
-        }
-
-        try {
-            return JSON.stringify(error, null, '  ');
-        } catch (stringifyError) {
-            this.log('Failed to stringify error object:', stringifyError);
-            return 'Unknown error';
-        }
+        return utilFunctions.formatError(error);
     }
 
     isCapabilityValueChanged(key, value) {

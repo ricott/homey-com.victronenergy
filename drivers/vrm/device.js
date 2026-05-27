@@ -148,7 +148,7 @@ class VRMDevice extends Homey.Device {
     }
 
     logError(error) {
-        this.error(error);
+        this.error(utilFunctions.formatError(error));
 
         const errorMessage = this._formatErrorMessage(error);
         const dateTime = new Date().toISOString();
@@ -156,16 +156,7 @@ class VRMDevice extends Homey.Device {
     }
 
     _formatErrorMessage(error) {
-        if (utilFunctions.isError(error)) {
-            return error.stack;
-        }
-
-        try {
-            return JSON.stringify(error, null, '  ');
-        } catch (stringifyError) {
-            this.error('Failed to stringify error object:', stringifyError);
-            return error.toString();
-        }
+        return utilFunctions.formatError(error);
     }
 
 
