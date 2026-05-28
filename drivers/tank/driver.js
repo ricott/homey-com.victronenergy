@@ -19,7 +19,7 @@ class TankDriver extends BaseDriver {
     }
 
     async onPair(session) {
-        return await super.pair(Tank.productId, 'Tank', session);
+        return await super.pair(Tank.productId, 'Tank', session, true);
     }
 }
 module.exports = TankDriver;
