@@ -1,13 +1,11 @@
 'use strict';
 
 const { App } = require('homey');
-const { Log } = require('homey-log');
 const enums = require('./lib/enums.js');
 const conditionHandler = require('./lib/conditionHandler.js');
 
 class VictronEnergyApp extends App {
     async onInit() {
-        this.homeyLog = new Log({ homey: this.homey });
         await this.loadConditions();
         await this.loadActions();
         this.log(`Victron Energy v${this.getAppVersion()} has been initialized`);

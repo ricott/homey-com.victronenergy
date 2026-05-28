@@ -20,14 +20,28 @@ class VRMDevice extends Homey.Device {
         //App was restarted, Zero out last error field
         this.updateSetting('last_error', '');
 
+        // Warn users still on the deprecated Bearer token scheme
+        await this._checkAuthScheme();
+
         await this.refreshForecast();
 
         this._initializeTimers();
     }
 
+    async _checkAuthScheme() {
+        const tokenType = this.getStoreValue('tokenType');
+        if (tokenType !== VRM.AUTH_ACCESS_TOKEN) {
+            this.logMessage('Stored credential is a (deprecated) bearer token. Repair the device to migrate to a personal access token.');
+            try {
+                await this.setWarning(this.homey.__('vrm.bearer_deprecated') ||
+                    'VRM Bearer authentication is deprecated as of 2026-06-01. Please repair this device to upgrade to a personal access token.');
+            } catch (_) { /* setWarning may not be available on older Homey versions */ }
+        }
+    }
+
     async refreshForecast() {
         const vrm = new VRM();
-        const token = this.getToken();
+        const credentials = this.getCredentials();
         const deviceId = this.getData().id;
 
         const forecastRequests = [
@@ -39,13 +53,13 @@ class VRMDevice extends Homey.Device {
 
         // Process all forecasts concurrently
         await Promise.allSettled(
-            forecastRequests.map(request => this._processForecastRequest(vrm, request, token, deviceId))
+            forecastRequests.map(request => this._processForecastRequest(vrm, request, credentials, deviceId))
         );
     }
 
-    async _processForecastRequest(vrm, request, token, deviceId) {
+    async _processForecastRequest(vrm, request, credentials, deviceId) {
         try {
-            const forecast = await vrm[request.method](token, deviceId);
+            const forecast = await vrm[request.method](credentials, deviceId);
             if (!isNaN(forecast)) {
                 await this._updateProperty(request.capability, forecast / 1000);
             }
@@ -81,12 +95,23 @@ class VRMDevice extends Homey.Device {
         this.setStoreValue('token', token);
     }
 
+    /**
+     * Returns the credentials object expected by the VRM API client.
+     * Defaults to bearer for legacy installs that haven't been repaired yet.
+     */
+    getCredentials() {
+        return {
+            token: this.getStoreValue('token'),
+            type: this.getStoreValue('tokenType') || VRM.AUTH_BEARER
+        };
+    }
+
     async setDynamicESSGreenMode(isGreenModeOn) {
         const vrm = new VRM();
-        const token = this.getToken();
+        const credentials = this.getCredentials();
         const siteId = this.getData().id;
         try {
-            await vrm.setDynamicESSGreenMode(token, siteId, isGreenModeOn);
+            await vrm.setDynamicESSGreenMode(credentials, siteId, isGreenModeOn);
             this.logMessage(`Dynamic ESS green mode set to '${!!isGreenModeOn}'`);
             return true;
         } catch (error) {
@@ -214,8 +239,23 @@ class VRMDevice extends Homey.Device {
         // }
     }
 
-    onDeleted() {
+    async onDeleted() {
         this.log(`Deleting VRM device '${this.getName()}' from Homey.`);
+
+        // Best-effort: revoke the personal access token created for this device
+        // so it doesn't linger in the user's VRM account.
+        const idAccessToken = this.getStoreValue('idAccessToken');
+        const tokenType = this.getStoreValue('tokenType');
+        if (idAccessToken && tokenType === VRM.AUTH_ACCESS_TOKEN) {
+            try {
+                const vrm = new VRM();
+                const userId = this.getData().userId;
+                await vrm.deleteAccessToken(this.getCredentials(), userId, idAccessToken);
+                this.log(`Revoked access token ${idAccessToken} for deleted device.`);
+            } catch (error) {
+                this.error(`Failed to revoke access token ${idAccessToken} on delete: ${utilFunctions.formatError(error)}`);
+            }
+        }
     }
 
     logMessage(message) {

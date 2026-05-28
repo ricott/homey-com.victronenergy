@@ -3,8 +3,6 @@
   "version": "0.9.9",
   "main": "app.js",
   "dependencies": {
-    "enum": "^3.0.4",
-    "homey-log": "^2.1.2",
     "jsmodbus": "^4.0.10",
     "node-ssh": "^13.2.1"
   },
