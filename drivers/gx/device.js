@@ -67,6 +67,31 @@ class GXDevice extends BaseDevice {
         await this.addCapabilityHelper('measure_current.maxCharge');
         await this.addCapabilityHelper('measure_current.importPeakshaving');
         await this.addCapabilityHelper('dynamic_ess_mode');
+
+        // Migration: scheduling actions moved from SSH to MQTT in 1.5.3.
+        // Seed an mqtt_port for devices that pre-date the new settings and
+        // wipe any stored SSH credentials so they don't linger in the device
+        // settings forever.
+        await this._migrateSshToMqtt();
+    }
+
+    async _migrateSshToMqtt() {
+        try {
+            const settings = this.getSettings();
+            const updates = {};
+            if (settings.mqtt_port === undefined || settings.mqtt_port === null || settings.mqtt_port === '') {
+                updates.mqtt_port = 1883;
+            }
+            if (Object.keys(updates).length > 0) {
+                await this.setSettings(updates);
+                this.logMessage('Seeded default MQTT port (1883) on existing device');
+            }
+            // Note: legacy ssh_user / ssh_private_key settings have been removed
+            // from the manifest. They will be cleared when the user opens the
+            // device settings UI and Homey reconciles against the new schema.
+        } catch (error) {
+            this.error('Failed to migrate SSH settings to MQTT:', error);
+        }
     }
 
     async handleAlarmStatuses(message) {
@@ -168,6 +193,35 @@ class GXDevice extends BaseDevice {
         this.api.on('properties', this._handlePropertiesEvent.bind(this));
         this.api.on('readings', this._handleReadingsEvent.bind(this));
         this.api.on('error', this._handleErrorEvent.bind(this));
+    }
+
+    /**
+     * Returns options for the MQTT client based on this device's settings.
+     * The host is implicit (the API client uses this.options.host already).
+     * Username and password are optional and only needed when the user has
+     * enabled the GX "Local Security Profile" on the broker.
+     */
+    getMqttOptions() {
+        const settings = this.getSettings();
+        const opts = {
+            port: Number(settings.mqtt_port) || 1883
+        };
+        if (settings.mqtt_username) opts.username = settings.mqtt_username;
+        if (settings.mqtt_password) opts.password = settings.mqtt_password;
+        return opts;
+    }
+
+    /**
+     * Returns the VRM portal id for this GX device, used as the MQTT topic
+     * prefix. Throws a clear error when not yet known (e.g. modbus polling
+     * hasn't completed at least once since onInit).
+     */
+    getPortalId() {
+        const portalId = this.getSetting('vrmId');
+        if (!portalId) {
+            throw new Error('VRM portal ID not yet available. Wait for the device to poll the GX once and try again.');
+        }
+        return portalId;
     }
 
     _handlePropertiesEvent(message) {

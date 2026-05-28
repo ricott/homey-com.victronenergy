@@ -1,7 +1,7 @@
 {
     "1.5.3": {
-        "en": "Migrated VRM authentication to personal access tokens (Bearer is deprecated by Victron from 2026-06-01). Existing VRM devices need to be repaired once to upgrade. New flow action to switch Dynamic ESS between Green mode and Trade mode (via VRM API). Improved error logging and device cleanup on removal.",
-        "sv": "Migrerade VRM-autentisering till personliga åtkomsttokens (Bearer fasas ut av Victron från 2026-06-01). Befintliga VRM-enheter behöver repareras en gång för att uppgraderas. Ny handling för att växla Dynamic ESS mellan Grönt läge och Handelsläge (via VRM API). Förbättrad felloggning och uppstädning vid borttagning av enhet."
+        "en": "Migrated VRM authentication to personal access tokens (Bearer is deprecated by Victron from 2026-06-01). Existing VRM devices need to be repaired once to upgrade. New flow action to switch Dynamic ESS between Green mode and Trade mode (via VRM API). Replaced SSH-based charging schedule actions with MQTT (no more private key in device settings, no native dependencies). Improved error logging and device cleanup on removal.",
+        "sv": "Migrerade VRM-autentisering till personliga åtkomsttokens (Bearer fasas ut av Victron från 2026-06-01). Befintliga VRM-enheter behöver repareras en gång för att uppgraderas. Ny handling för att växla Dynamic ESS mellan Grönt läge och Handelsläge (via VRM API). Bytt ut SSH mot MQTT för laddschema-handlingar (ingen privat nyckel i enhetsinställningar, inga native-beroenden). Förbättrad felloggning och uppstädning vid borttagning av enhet."
     },
     "1.5.2": {
         "en": "Maintenance",

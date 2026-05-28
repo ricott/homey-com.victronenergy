@@ -2525,34 +2525,48 @@
         {
           "type": "group",
           "label": {
-            "en": "SSH",
-            "sv": "SSH"
+            "en": "MQTT (for charging schedule actions)",
+            "sv": "MQTT (för laddschema)"
           },
           "children": [
             {
-              "id": "ssh_user",
-              "type": "text",
-              "value": "root",
+              "id": "mqtt_port",
+              "type": "number",
+              "step": 1,
+              "value": 1883,
               "label": {
-                "en": "User",
-                "sv": "User"
+                "en": "Port",
+                "sv": "Port"
               },
               "hint": {
-                "en": "Normally the user is root unless you have made a custom setup.",
-                "sv": "Vanligen heter användaren root, om ingen speciell uppsättning gjorts."
+                "en": "MQTT broker port on the GX device. Default is 1883. Enable the broker under Settings -> Services -> MQTT on LAN on the GX.",
+                "sv": "MQTT-portnummer på GX-enheten. Standard är 1883. Aktivera MQTT under Inställningar -> Tjänster -> MQTT on LAN på GX-enheten."
               }
             },
             {
-              "id": "ssh_private_key",
-              "type": "textarea",
+              "id": "mqtt_username",
+              "type": "text",
               "value": "",
               "label": {
-                "en": "SSH private key",
-                "sv": "SSH privat nyckel"
+                "en": "Username (optional)",
+                "sv": "Användarnamn (valfritt)"
               },
               "hint": {
-                "en": "Paste the entire private key file content, including BEGIN and END lines",
-                "sv": "Klistra in hela innehållet från den privata nyckelfilen, inklusive BEGIN och END raderna"
+                "en": "Only required if you have enabled the Local Security Profile on the GX MQTT broker.",
+                "sv": "Behövs bara om du aktiverat Local Security Profile på GX-enhetens MQTT-broker."
+              }
+            },
+            {
+              "id": "mqtt_password",
+              "type": "password",
+              "value": "",
+              "label": {
+                "en": "Password (optional)",
+                "sv": "Lösenord (valfritt)"
+              },
+              "hint": {
+                "en": "Only required if you have enabled the Local Security Profile on the GX MQTT broker.",
+                "sv": "Behövs bara om du aktiverat Local Security Profile på GX-enhetens MQTT-broker."
               }
             }
           ]

@@ -277,8 +277,8 @@ class VictronEnergyApp extends App {
             //this.log(`[${args.device.getName()}] - schedule: '${args.schedule.id}' (${args.schedule.name})`);
 
             return args.device.api.isChargingScheduleEnabled(
-                args.device.getSetting('ssh_user'),
-                args.device.getSetting('ssh_private_key'),
+                args.device.getMqttOptions(),
+                args.device.getPortalId(),
                 args.schedule.id
             )
                 .then(function (result) {
@@ -303,8 +303,8 @@ class VictronEnergyApp extends App {
             this.log(`[${args.device.getName()}] - schedule: '${args.schedule.id}' (${args.schedule.name})`);
 
             return args.device.api.enableChargingSchedule(
-                args.device.getSetting('ssh_user'),
-                args.device.getSetting('ssh_private_key'),
+                args.device.getMqttOptions(),
+                args.device.getPortalId(),
                 args.schedule.id
             )
                 .then(function (result) {
@@ -325,8 +325,8 @@ class VictronEnergyApp extends App {
             this.log(`[${args.device.getName()}] - schedule: '${args.schedule.id}' (${args.schedule.name})`);
 
             return args.device.api.disableChargingSchedule(
-                args.device.getSetting('ssh_user'),
-                args.device.getSetting('ssh_private_key'),
+                args.device.getMqttOptions(),
+                args.device.getPortalId(),
                 args.schedule.id
             )
                 .then(function (result) {
@@ -351,8 +351,8 @@ class VictronEnergyApp extends App {
             this.log(`[${args.device.getName()}] - soc: '${args.soc}'`);
 
             return args.device.api.createChargingSchedule(
-                args.device.getSetting('ssh_user'),
-                args.device.getSetting('ssh_private_key'),
+                args.device.getMqttOptions(),
+                args.device.getPortalId(),
                 args.schedule.id,
                 args.day.id,
                 args.start,
