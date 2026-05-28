@@ -16,6 +16,8 @@ class BatteryDevice extends BaseDevice {
 
         await this.removeCapabilityHelper('battery_status');
         await this.addCapabilityHelper('battery_charging_state');
+        await this.addCapabilityHelper('meter_power.charged');
+        await this.addCapabilityHelper('meter_power.discharged');
     }
 
     async setupGXSession(host, port, modbus_unitId, refreshInterval) {
@@ -59,6 +61,8 @@ class BatteryDevice extends BaseDevice {
             this._updateProperty('measure_temperature', message.temperature),
             this._updateProperty('measure_voltage.minCell', message.minCellVoltage),
             this._updateProperty('measure_voltage.maxCell', message.maxCellVoltage),
+            this._updateProperty('meter_power.charged', message.chargedEnergy),
+            this._updateProperty('meter_power.discharged', message.dischargedEnergy),
             this._updateProperty('battery_charging_state', enums.decodeBatteryStatus(message.status)),
             this._updateProperty('alarm_generic', (message.alarm || 0) === 2)
         ]);

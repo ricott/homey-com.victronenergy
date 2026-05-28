@@ -1634,7 +1634,9 @@
         "lan"
       ],
       "energy": {
-        "homeBattery": true
+        "homeBattery": true,
+        "meterPowerImportedCapability": "meter_power.charged",
+        "meterPowerExportedCapability": "meter_power.discharged"
       },
       "capabilities": [
         "measure_battery",
@@ -1645,7 +1647,9 @@
         "measure_current",
         "measure_temperature",
         "measure_voltage.minCell",
-        "measure_voltage.maxCell"
+        "measure_voltage.maxCell",
+        "meter_power.charged",
+        "meter_power.discharged"
       ],
       "capabilitiesOptions": {
         "measure_voltage.minCell": {
@@ -1658,6 +1662,18 @@
           "title": {
             "en": "Maximum cell voltage",
             "sv": "Maximal cellspänning"
+          }
+        },
+        "meter_power.charged": {
+          "title": {
+            "en": "Charged Energy",
+            "sv": "Laddad energi"
+          }
+        },
+        "meter_power.discharged": {
+          "title": {
+            "en": "Discharged Energy",
+            "sv": "Urladdad energi"
           }
         }
       },

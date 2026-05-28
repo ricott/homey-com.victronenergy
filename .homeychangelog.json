@@ -1,7 +1,7 @@
 {
     "1.5.4": {
-        "en": "Fixed problem with multiple tank sensors of the same type",
-        "sv": "Fixat problem med flera tanksensorer av samma typ"
+        "en": "Battery devices now report charged and discharged energy, making them visible in Homey Energy. Fixed problem with multiple tank sensors of the same type.",
+        "sv": "Batterienheter rapporterar nu laddad och urladdad energi, vilket gör dem synliga i Homey Energi. Fixat problem med flera tanksensorer av samma typ."
     },
     "1.5.3": {
         "en": "Migrated VRM authentication to personal access tokens (Bearer is deprecated by Victron from 2026-06-01). Existing VRM devices need to be repaired once to upgrade. New flow action to switch Dynamic ESS between Green mode and Trade mode (via VRM API). Replaced SSH-based charging schedule actions with MQTT (no more private key in device settings, no native dependencies). Improved error logging and device cleanup on removal.",
