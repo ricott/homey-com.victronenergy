@@ -4,7 +4,7 @@
   "main": "app.js",
   "dependencies": {
     "jsmodbus": "^4.0.10",
-    "mqtt": "^5.15.1"
+    "mqtt": "^5.15.2"
   },
   "scripts": {},
   "author": "Richard Barkestam",
