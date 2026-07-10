@@ -13,7 +13,8 @@ class BaseDevice extends Device {
             this.getSettings().address,
             this.getSettings().port,
             this.getSettings().modbus_unitId,
-            this.getSettings().refreshInterval
+            this.getSettings().refreshInterval,
+            this.getSettings().timeout
         );
     }
 
@@ -33,10 +34,10 @@ class BaseDevice extends Device {
         }
     }
 
-    async initializeGXSession(host, port, modbus_unitId, refreshInterval) {
+    async initializeGXSession(host, port, modbus_unitId, refreshInterval, timeout) {
         try {
             await this.destroyGXSession();
-            await this.setupGXSession(host, port, modbus_unitId, refreshInterval);
+            await this.setupGXSession(host, port, modbus_unitId, refreshInterval, timeout);
             // Connection successful, make sure device is marked as available
             await this.setAvailable();
             // Clear any existing retry timer on successful connection
@@ -57,7 +58,7 @@ class BaseDevice extends Device {
             // Schedule a retry after 10 minutes
             this._retryTimeout = this.homey.setTimeout(() => {
                 this.logMessage('Retrying connection...');
-                this.initializeGXSession(host, port, modbus_unitId, refreshInterval)
+                this.initializeGXSession(host, port, modbus_unitId, refreshInterval, timeout)
                     .catch(err => this.error('Retry failed:', err));
             }, 10 * 60 * 1000); // 10 minutes
         }
@@ -164,7 +165,7 @@ class BaseDevice extends Device {
 
     async onSettings({ oldSettings, newSettings, changedKeys }) {
         let changeConn = false;
-        let host, port, modbus_unitId, refreshInterval;
+        let host, port, modbus_unitId, refreshInterval, timeout;
         if (changedKeys.indexOf("address") > -1) {
             this.logMessage(`Address value was change to: '${newSettings.address}'`);
             host = newSettings.address;
@@ -189,13 +190,20 @@ class BaseDevice extends Device {
             changeConn = true;
         }
 
+        if (changedKeys.indexOf("timeout") > -1) {
+            this.logMessage(`Timeout value was change to: '${newSettings.timeout}'`);
+            timeout = newSettings.timeout;
+            changeConn = true;
+        }
+
         if (changeConn) {
             //We need to re-initialize the GX session since setting(s) are changed
             this.initializeGXSession(
                 host || this.getSettings().address,
                 port || this.getSettings().port,
                 modbus_unitId || this.getSettings().modbus_unitId,
-                refreshInterval || this.getSettings().refreshInterval
+                refreshInterval || this.getSettings().refreshInterval,
+                timeout || this.getSettings().timeout
             );
         }
     }

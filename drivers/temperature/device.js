@@ -6,12 +6,13 @@ const BaseDevice = require('../baseDevice.js');
 
 class TemperatureDevice extends BaseDevice {
 
-    async setupGXSession(host, port, modbus_unitId, refreshInterval) {
+    async setupGXSession(host, port, modbus_unitId, refreshInterval, timeout) {
         this.api = new TempSensor({
             host: host,
             port: port,
             modbus_unitId: modbus_unitId,
             refreshInterval: Math.max(60, refreshInterval),
+            timeout: timeout,
             device: this
         });
 

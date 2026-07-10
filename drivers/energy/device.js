@@ -54,12 +54,13 @@ class EnergyMeterDevice extends BaseDevice {
         }
     }
 
-    async setupGXSession(host, port, modbus_unitId, refreshInterval) {
+    async setupGXSession(host, port, modbus_unitId, refreshInterval, timeout) {
         this.api = new EnergyMeter({
             host: host,
             port: port,
             modbus_unitId: modbus_unitId,
             refreshInterval: refreshInterval,
+            timeout: timeout,
             device: this
         });
 

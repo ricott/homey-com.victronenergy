@@ -1,4 +1,8 @@
 {
+    "1.5.5": {
+        "en": "Added a configurable Modbus timeout setting for all Modbus device types, which helps devices that respond slowly stay connected. Added optional anonymous error reporting to help diagnose Modbus connection problems.",
+        "sv": "Lade till en inställbar Modbus timeout för alla Modbus-enhetstyper, vilket hjälper enheter som svarar långsamt att behålla anslutningen. Lade till valfri anonym felrapportering för att underlätta diagnos av Modbus-anslutningsproblem."
+    },
     "1.5.4": {
         "en": "Battery devices now report charged and discharged energy, making them visible in Homey Energy. Fixed problem with multiple tank sensors of the same type.",
         "sv": "Batterienheter rapporterar nu laddad och urladdad energi, vilket gör dem synliga i Homey Energi. Fixat problem med flera tanksensorer av samma typ."

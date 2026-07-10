@@ -20,12 +20,13 @@ class BatteryDevice extends BaseDevice {
         await this.addCapabilityHelper('meter_power.discharged');
     }
 
-    async setupGXSession(host, port, modbus_unitId, refreshInterval) {
+    async setupGXSession(host, port, modbus_unitId, refreshInterval, timeout) {
         this.api = new Battery({
             host: host,
             port: port,
             modbus_unitId: modbus_unitId,
             refreshInterval: refreshInterval,
+            timeout: timeout,
             device: this
         });
 

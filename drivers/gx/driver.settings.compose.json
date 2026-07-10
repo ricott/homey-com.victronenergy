@@ -70,6 +70,27 @@
                     "en": "To see a list of available devices, and their Address, go to Settings -> Services -> Modbus/TCP -> Available services.",
                     "sv": "För att se listan av enheter, gå till Inställningar -> Tjänster -> Modbus/TCP -> Tillgängliga tjänster."
                 }
+            },
+            {
+                "id": "timeout",
+                "type": "number",
+                "value": 5,
+                "step": 1,
+                "attr": {
+                    "min": 1,
+                    "max": 60
+                },
+                "units": {
+                    "en": "s"
+                },
+                "label": {
+                    "en": "Modbus timeout (s)",
+                    "sv": "Modbus timeout (s)"
+                },
+                "hint": {
+                    "en": "Seconds to wait for a response to each Modbus request before it is treated as failed. Increase (e.g. 10-15) if the device responds slowly.",
+                    "sv": "Antal sekunder att vänta på svar på varje Modbus-förfrågan innan den räknas som misslyckad. Öka (t.ex. 10-15) om enheten svarar långsamt."
+                }
             }
         ]
     },

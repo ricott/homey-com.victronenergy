@@ -3,6 +3,7 @@
   "version": "0.9.9",
   "main": "app.js",
   "dependencies": {
+    "@sentry/node": "^7.120.4",
     "jsmodbus": "^4.0.10",
     "mqtt": "^5.15.2"
   },

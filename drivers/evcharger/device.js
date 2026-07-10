@@ -29,12 +29,13 @@ class EvChargerDevice extends BaseDevice {
         await this.removeCapabilityHelper('onoff');
     }
 
-    async setupGXSession(host, port, modbus_unitId, refreshInterval) {
+    async setupGXSession(host, port, modbus_unitId, refreshInterval, timeout) {
         this.api = new VehicleCharger({
             host: host,
             port: port,
             modbus_unitId: modbus_unitId,
             refreshInterval: refreshInterval,
+            timeout: timeout,
             device: this
         });
 
