@@ -1,54 +1,93 @@
 <script type="text/javascript">
     Homey.setTitle(__('repair.vrm.title'));
     $(function () {
-        // Auto-focus on the username field when page loads
-        $('#username').focus();
-        
-        $('#connect').click(function () {
+        $('#access_token').focus();
+
+        function showError(message) {
+            $('.vrm-error').show();
+            $('.vrm-error-msg').html(message);
+        }
+
+        function hideError() {
             $('.vrm-error').hide();
-            var username = $('#username').val();
-            var password = $('#password').val();
-            var mfaToken = $('#mfa_token').val();
+        }
 
-            if (username != '' && password != '') {
-                // Show loading state
-                showLoading();
-                
-                var credentials = {
-                    username: username,
-                    password: password,
-                    mfa_token: mfaToken
-                };
+        function setBusy(busy, button, busyLabel, idleLabel) {
+            $('.button').prop('disabled', busy);
+            button.html(busy ? '<i class="fa fa-spinner fa-spin"></i> ' + busyLabel : idleLabel);
+        }
 
-                Homey.emit('repair', credentials).then(function (result) {
-                    if (result) {
-                        Homey.done();
-                    } else {
-                        hideLoading();
-                        $('.vrm-error').show();
-                        $('.vrm-error-msg').html(__('repair.vrm.repair_failed'));
-                    }
-                }).catch(function (error) {
-                    hideLoading();
-                    $('.vrm-error').show();
-                    $('.vrm-error-msg').html(error.message || __('repair.vrm.repair_failed'));
-                });
-            } else {
-                $('.vrm-error').show();
-                $('.vrm-error-msg').html(__('repair.vrm.required_fields'));
-            }
+        $('#show-password-method').click(function (e) {
+            e.preventDefault();
+            hideError();
+            $('#method-token').hide();
+            $('#method-password').show();
+            $('#username').focus();
         });
-        
-        function showLoading() {
-            $('#connect').prop('disabled', true);
-            $('#connect').html('<i class="fa fa-spinner fa-spin"></i> ' + __('repair.vrm.connecting'));
-            $('.vrm-error').hide();
-        }
-        
-        function hideLoading() {
-            $('#connect').prop('disabled', false);
-            $('#connect').html(__('repair.vrm.connect'));
-        }
+
+        $('#show-token-method').click(function (e) {
+            e.preventDefault();
+            hideError();
+            $('#method-password').hide();
+            $('#method-token').show();
+            $('#access_token').focus();
+        });
+
+        $('#connect-token').click(function () {
+            hideError();
+            var token = $('#access_token').val().trim();
+
+            if (token === '') {
+                showError(__('repair.vrm.token_required'));
+                return;
+            }
+
+            var button = $('#connect-token');
+            setBusy(true, button, __('repair.vrm.connecting'), __('repair.vrm.connect_token'));
+
+            Homey.emit('repair_token', { access_token: token }).then(function (result) {
+                if (result) {
+                    Homey.done();
+                } else {
+                    setBusy(false, button, false, __('repair.vrm.connect_token'));
+                    showError(__('repair.vrm.repair_failed'));
+                }
+            }).catch(function (error) {
+                setBusy(false, button, false, __('repair.vrm.connect_token'));
+                showError(error.message || __('repair.vrm.repair_failed'));
+            });
+        });
+
+        $('#connect').click(function () {
+            hideError();
+            var username = $('#username').val().trim();
+            var password = $('#password').val();
+            var mfaToken = $('#mfa_token').val().trim();
+
+            if (username === '' || password === '') {
+                showError(__('repair.vrm.required_fields'));
+                return;
+            }
+
+            var button = $('#connect');
+            setBusy(true, button, __('repair.vrm.connecting'), __('repair.vrm.connect'));
+
+            Homey.emit('repair', {
+                username: username,
+                password: password,
+                mfa_token: mfaToken
+            }).then(function (result) {
+                if (result) {
+                    Homey.done();
+                } else {
+                    setBusy(false, button, false, __('repair.vrm.connect'));
+                    showError(__('repair.vrm.repair_failed'));
+                }
+            }).catch(function (error) {
+                setBusy(false, button, false, __('repair.vrm.connect'));
+                showError(error.message || __('repair.vrm.repair_failed'));
+            });
+        });
     })
 </script>
 
@@ -65,7 +104,8 @@
         font-weight: 500;
     }
 
-    .form-group input {
+    .form-group input,
+    .form-group textarea {
         width: 100%;
         padding: 12px 16px;
         border: 2px solid #e1e8ed;
@@ -75,20 +115,54 @@
         transition: all 0.3s ease;
         background-color: #fff;
         margin-bottom: 8px;
+        font-family: inherit;
     }
 
-    .form-group input:focus {
+    .form-group textarea {
+        resize: vertical;
+        min-height: 72px;
+        font-family: monospace;
+        font-size: 12px;
+        word-break: break-all;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
         outline: none;
         border-color: #0570de;
         box-shadow: 0 0 0 3px rgba(5, 112, 222, 0.1);
     }
 
-    .mfa-info {
+    .mfa-info,
+    .token-info {
         margin-top: 8px;
         margin-bottom: 12px;
         font-size: 12px;
         color: #666;
-        font-style: italic;
+    }
+
+    .token-info ol {
+        margin: 6px 0 0 18px;
+        padding: 0;
+    }
+
+    .token-info li {
+        margin-bottom: 3px;
+    }
+
+    .method-switch {
+        padding-top: 4px;
+        font-size: 13px;
+    }
+
+    .method-switch a {
+        color: #0570de;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    #method-password {
+        display: none;
     }
 
     .buttons {
@@ -148,29 +222,62 @@
     }
 </style>
 
-<p data-i18n="repair.vrm.intro">Re-enter your VRM Portal credentials to refresh the authentication token</p>
 <div class="vrm-pairing">
-    <div class="form-group">
-        <label for="username" data-i18n="repair.vrm.email">Email</label>
-        <input type="email" class="form-control" id="username" required />
+    <div id="method-token">
+        <p data-i18n="repair.vrm.token_intro">Paste a VRM personal access token to restore the connection</p>
+
+        <div class="form-group">
+            <label for="access_token" data-i18n="repair.vrm.token_label">Personal access token</label>
+            <textarea class="form-control" id="access_token" rows="3" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+            <div class="token-info">
+                <span data-i18n="repair.vrm.token_info">Create the token in the VRM Portal:</span>
+                <ol>
+                    <li data-i18n="repair.vrm.token_step1">Open vrm.victronenergy.com and sign in</li>
+                    <li data-i18n="repair.vrm.token_step2">Go to Preferences &rarr; Integrations &rarr; Access tokens</li>
+                    <li data-i18n="repair.vrm.token_step3">Add a token, name it "Homey", and copy it right away (it is shown only once)</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="form-group buttons">
+            <button id="connect-token" class="button" data-i18n="repair.vrm.connect_token">Save token</button>
+        </div>
+
+        <div class="method-switch">
+            <a id="show-password-method" data-i18n="repair.vrm.use_password">Use email and password instead</a>
+        </div>
     </div>
-    
-    <div class="form-group">
-        <label for="password" data-i18n="repair.vrm.password">Password</label>
-        <input type="password" class="form-control" id="password" required />
+
+    <div id="method-password">
+        <p data-i18n="repair.vrm.intro">Re-enter your VRM Portal credentials to refresh the authentication token</p>
+
+        <div class="form-group">
+            <label for="username" data-i18n="repair.vrm.email">Email</label>
+            <input type="email" class="form-control" id="username" required />
+        </div>
+
+        <div class="form-group">
+            <label for="password" data-i18n="repair.vrm.password">Password</label>
+            <input type="password" class="form-control" id="password" required />
+        </div>
+
+        <div class="form-group">
+            <label for="mfa_token" data-i18n="repair.vrm.mfa_token">MFA Token (2FA Code)</label>
+            <input type="text" class="form-control" id="mfa_token" placeholder="123456" />
+            <div class="mfa-info" data-i18n="repair.vrm.mfa_info">Only fill this field if you have activated MFA (Multi-Factor Authentication) on your VRM account</div>
+        </div>
+
+        <div class="form-group buttons">
+            <button id="connect" class="button" data-i18n="repair.vrm.connect">Re-authenticate</button>
+        </div>
+
+        <div class="method-switch">
+            <a id="show-token-method" data-i18n="repair.vrm.use_token">Use an access token instead</a>
+        </div>
+        <div class="token-info" data-i18n="repair.vrm.password_deprecated">Victron is phasing out email/password logins for the VRM API. If your account uses Victron OneID, password login fails even with the correct password - use an access token.</div>
     </div>
-    
-    <div class="form-group">
-        <label for="mfa_token" data-i18n="repair.vrm.mfa_token">MFA Token (2FA Code)</label>
-        <input type="text" class="form-control" id="mfa_token" placeholder="123456" />
-        <div class="mfa-info" data-i18n="repair.vrm.mfa_info">Only fill this field if you have activated MFA (Multi-Factor Authentication) on your VRM account</div>
-    </div>
-    
+
     <div class="messages">
         <p class="vrm-error"><i class="fa fa-times"></i> <span class="vrm-error-msg"></span></p>
-    </div>
-    
-    <div class="form-group buttons">
-        <button id="connect" class="button" data-i18n="repair.vrm.connect">Re-authenticate</button>
     </div>
 </div>

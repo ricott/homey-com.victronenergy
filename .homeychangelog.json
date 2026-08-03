@@ -1,4 +1,8 @@
 {
+    "1.5.6": {
+        "en": "VRM devices can now be connected with a personal access token created in the VRM Portal. This is the only method that works for accounts migrated to Victron OneID, where Victron no longer accepts email and password for the API, and it also avoids the 2FA code prompt. Failed VRM logins now show the reason reported by VRM instead of a generic error.",
+        "sv": "VRM-enheter kan nu anslutas med en personlig åtkomsttoken skapad i VRM-portalen. Det är den enda metoden som fungerar för konton som migrerats till Victron OneID, där Victron inte längre accepterar e-post och lösenord mot API:et, och den slipper dessutom 2FA-koden. Misslyckad VRM-inloggning visar nu orsaken som VRM rapporterar i stället för ett allmänt felmeddelande."
+    },
     "1.5.5": {
         "en": "Added a configurable Modbus timeout setting for all Modbus device types, which helps devices that respond slowly stay connected. Added optional anonymous error reporting to help diagnose Modbus connection problems.",
         "sv": "Lade till en inställbar Modbus timeout för alla Modbus-enhetstyper, vilket hjälper enheter som svarar långsamt att behålla anslutningen. Lade till valfri anonym felrapportering för att underlätta diagnos av Modbus-anslutningsproblem."

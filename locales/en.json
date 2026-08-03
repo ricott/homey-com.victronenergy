@@ -1,4 +1,7 @@
 {
+    "vrm": {
+        "bearer_deprecated": "VRM Bearer authentication is deprecated. Repair this device and paste a VRM personal access token to keep it working."
+    },
     "pair": {
         "title": "Add a Victron device",
         "nosettings": "Please fill in all the required fields.",
@@ -20,7 +23,18 @@
             "connect": "Connect to VRM",
             "connecting": "Connecting...",
             "login_failed": "Failed to login to VRM Portal. Please check your credentials.",
-            "required_fields": "Email and password are required fields."
+            "required_fields": "Email and password are required fields.",
+            "token_intro": "Connect your installation with a VRM personal access token",
+            "token_label": "Personal access token",
+            "token_info": "Create the token in the VRM Portal:",
+            "token_step1": "Open vrm.victronenergy.com and sign in",
+            "token_step2": "Go to Preferences → Integrations → Access tokens",
+            "token_step3": "Add a token, name it \"Homey\", and copy it right away (it is shown only once)",
+            "token_required": "An access token is required.",
+            "connect_token": "Connect to VRM",
+            "use_password": "Use email and password instead",
+            "use_token": "Use an access token instead",
+            "password_deprecated": "Victron is phasing out email/password logins for the VRM API. If your account uses Victron OneID, password login fails even with the correct password - use an access token."
         }
     },
     "repair": {
@@ -34,7 +48,18 @@
             "connect": "Re-authenticate",
             "connecting": "Re-authenticating...",
             "repair_failed": "Failed to re-authenticate with VRM Portal. Please check your credentials.",
-            "required_fields": "Email and password are required fields."
+            "required_fields": "Email and password are required fields.",
+            "token_intro": "Paste a VRM personal access token to restore the connection",
+            "token_label": "Personal access token",
+            "token_info": "Create the token in the VRM Portal:",
+            "token_step1": "Open vrm.victronenergy.com and sign in",
+            "token_step2": "Go to Preferences → Integrations → Access tokens",
+            "token_step3": "Add a token, name it \"Homey\", and copy it right away (it is shown only once)",
+            "token_required": "An access token is required.",
+            "connect_token": "Save token",
+            "use_password": "Use email and password instead",
+            "use_token": "Use an access token instead",
+            "password_deprecated": "Victron is phasing out email/password logins for the VRM API. If your account uses Victron OneID, password login fails even with the correct password - use an access token."
         }
     }
 }  

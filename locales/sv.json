@@ -1,4 +1,7 @@
 {
+    "vrm": {
+        "bearer_deprecated": "VRM Bearer-autentisering är utfasad. Reparera enheten och klistra in en personlig åtkomsttoken från VRM för att den ska fortsätta fungera."
+    },
     "pair": {
         "title": "Lägg till en Victron enhet",
         "nosettings": "Fyll i alla obligatoriska fält",
@@ -20,7 +23,18 @@
             "connect": "Anslut till VRM",
             "connecting": "Ansluter...",
             "login_failed": "Misslyckades att logga in på VRM Portal. Kontrollera dina uppgifter.",
-            "required_fields": "E-post och lösenord är obligatoriska fält."
+            "required_fields": "E-post och lösenord är obligatoriska fält.",
+            "token_intro": "Anslut din anläggning med en personlig åtkomsttoken från VRM",
+            "token_label": "Personlig åtkomsttoken",
+            "token_info": "Skapa token i VRM-portalen:",
+            "token_step1": "Öppna vrm.victronenergy.com och logga in",
+            "token_step2": "Gå till Inställningar → Integrationer → Åtkomsttokens",
+            "token_step3": "Skapa en token, kalla den \"Homey\" och kopiera den direkt (den visas bara en gång)",
+            "token_required": "En åtkomsttoken krävs.",
+            "connect_token": "Anslut till VRM",
+            "use_password": "Använd e-post och lösenord i stället",
+            "use_token": "Använd en åtkomsttoken i stället",
+            "password_deprecated": "Victron fasar ut inloggning med e-post och lösenord mot VRM API. Om ditt konto använder Victron OneID misslyckas lösenordsinloggning även med rätt lösenord - använd en åtkomsttoken."
         }
     },
     "repair": {
@@ -34,7 +48,18 @@
             "connect": "Autentisera på nytt",
             "connecting": "Autentiserar på nytt...",
             "repair_failed": "Misslyckades att autentisera på nytt med VRM Portal. Kontrollera dina uppgifter.",
-            "required_fields": "E-post och lösenord är obligatoriska fält."
+            "required_fields": "E-post och lösenord är obligatoriska fält.",
+            "token_intro": "Klistra in en personlig åtkomsttoken från VRM för att återställa anslutningen",
+            "token_label": "Personlig åtkomsttoken",
+            "token_info": "Skapa token i VRM-portalen:",
+            "token_step1": "Öppna vrm.victronenergy.com och logga in",
+            "token_step2": "Gå till Inställningar → Integrationer → Åtkomsttokens",
+            "token_step3": "Skapa en token, kalla den \"Homey\" och kopiera den direkt (den visas bara en gång)",
+            "token_required": "En åtkomsttoken krävs.",
+            "connect_token": "Spara token",
+            "use_password": "Använd e-post och lösenord i stället",
+            "use_token": "Använd en åtkomsttoken i stället",
+            "password_deprecated": "Victron fasar ut inloggning med e-post och lösenord mot VRM API. Om ditt konto använder Victron OneID misslyckas lösenordsinloggning även med rätt lösenord - använd en åtkomsttoken."
         }
     }
 }
