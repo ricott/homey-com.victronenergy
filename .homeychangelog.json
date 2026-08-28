@@ -1,4 +1,8 @@
 {
+    "1.5.7": {
+        "en": "Fixed the Dynamic ESS green/trade mode action, which reported a conflict from VRM and left the mode unchanged on installations that already had a Dynamic ESS configuration.",
+        "sv": "Rättat handlingen för Dynamic ESS grönt läge/handelsläge, som fick ett konfliktfel från VRM och lämnade läget oförändrat på anläggningar som redan hade en Dynamic ESS-konfiguration."
+    },
     "1.5.6": {
         "en": "VRM devices can now be connected with a personal access token created in the VRM Portal. This is the only method that works for accounts migrated to Victron OneID, where Victron no longer accepts email and password for the API, and it also avoids the 2FA code prompt. Failed VRM logins now show the reason reported by VRM instead of a generic error.",
         "sv": "VRM-enheter kan nu anslutas med en personlig åtkomsttoken skapad i VRM-portalen. Det är den enda metoden som fungerar för konton som migrerats till Victron OneID, där Victron inte längre accepterar e-post och lösenord mot API:et, och den slipper dessutom 2FA-koden. Misslyckad VRM-inloggning visar nu orsaken som VRM rapporterar i stället för ett allmänt felmeddelande."
