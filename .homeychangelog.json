@@ -1,4 +1,8 @@
 {
+    "1.5.8": {
+        "en": "Devices from more than one GX can now be added, also when they share the same Modbus unit ID. Fixed Solar Charger power reading being capped at 6553 W.",
+        "sv": "Enheter från fler än en GX kan nu läggas till, även när de har samma Modbus unit ID. Rättat att effekten för solcellsregulatorn begränsades till 6553 W."
+    },
     "1.5.7": {
         "en": "Fixed the Dynamic ESS green/trade mode action, which reported a conflict from VRM and left the mode unchanged on installations that already had a Dynamic ESS configuration.",
         "sv": "Rättat handlingen för Dynamic ESS grönt läge/handelsläge, som fick ett konfliktfel från VRM och lämnade läget oförändrat på anläggningar som redan hade en Dynamic ESS-konfiguration."

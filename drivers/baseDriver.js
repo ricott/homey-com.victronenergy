@@ -28,14 +28,19 @@ class BaseDriver extends Driver {
         });
 
         session.setHandler('list_devices', async () => {
-            const deviceId = String(
+            const sanitize = (value) => String(value).replace(/[^a-z0-9]/gi, '');
+            const displayId = sanitize(
                 useUnitIdAsIdentifier ? settings.modbus_unitId : discoveryResponse.returnValue
-            ).replace(/[^a-z0-9]/gi, '');
+            );
+            // Unit IDs are only unique per GX, so include the address to allow multiple GX devices
+            const deviceId = useUnitIdAsIdentifier
+                ? `${sanitize(settings.address)}_${displayId}`
+                : displayId;
 
             if (discoveryResponse.outcome === 'success') {
                 this.log(`Found ${deviceName} with id: ${deviceId}`);
                 devices.push({
-                    name: `${deviceName} (${deviceId})`,
+                    name: `${deviceName} (${displayId})`,
                     data: {
                         id: deviceId
                     },
