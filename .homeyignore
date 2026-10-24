@@ -7,3 +7,7 @@ README.*
 # Development files
 .gitignore
 .github/
+
+# Agent tooling
+.claude/
+.kiro/
